@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Luis-Cobo-Garc-a-s-workspace-f5nl1p.eu-central-1.xata.sh/db/the-original-fries-cms",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}
