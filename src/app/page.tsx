@@ -1,52 +1,23 @@
-"use client";
-import {
-  Button,
-  InputText,
-  Command,
-  CommandInput,
-  CommandGroup,
-  CommandEmpty,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "../components/ui";
+import { auth as getServerSession } from "@/auth";
+import Chat from "./components/Chat";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession();
+
   return (
     <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
       <main className='flex flex-col gap-8 row-start-2 items-center sm:items-start'>
         <div className='flex flex-col gap-4 items-center'>
           <h1 className='text-4xl font-bold'>Welcome To CMS</h1>
-          <InputText
-            label='User'
-            testID='innput'
-            type='text'
-            onChange={() => console.log("on change")}
-          />
-          <Button
-            variant='default'
-            size='default'
-            onClick={() => console.log("click")}
-          >
-            Click me
-          </Button>
-          <Command>
-            <CommandInput placeholder='Type a command or search...' />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup heading='Suggestions'>
-                <CommandItem>Calendar</CommandItem>
-                <CommandItem>Search Emoji</CommandItem>
-                <CommandItem>Calculator</CommandItem>
-              </CommandGroup>
-              <CommandSeparator />
-              <CommandGroup heading='Settings'>
-                <CommandItem>Profile</CommandItem>
-                <CommandItem>Billing</CommandItem>
-                <CommandItem>Settings</CommandItem>
-              </CommandGroup>
-            </CommandList>
-          </Command>
+
+          {!session?.user?.email && (
+            <div>You need to log in to use this chat.</div>
+          )}
+          {session?.user?.email && (
+            <>
+              <Chat />
+            </>
+          )}
         </div>
       </main>
     </div>

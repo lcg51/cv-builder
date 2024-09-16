@@ -3,12 +3,13 @@ import "./InputText.css";
 
 export type InputTextProps = {
   icon?: React.ReactNode;
-  label: string;
+  label?: string;
   onChange: (e: string) => void;
   onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
   defaultValue?: string;
   type: string;
+  placeholder?: string;
   testID: string;
 };
 
@@ -21,6 +22,7 @@ export const InputText = ({
   onFocus,
   onBlur,
   label,
+  placeholder,
   testID,
   type,
 }: InputTextProps) => {
@@ -51,8 +53,8 @@ export const InputText = ({
 
   const inputWrapperClass = useMemo(() => {
     const arrayClass: { [key in InputClassNames]: boolean } = {
-      'inputText__wrapper': true,
-      'inputText__wrapper--focused': isFocused,
+      inputText__wrapper: true,
+      "inputText__wrapper--focused": isFocused,
     };
     return Object.keys(arrayClass)
       .map((key) => (arrayClass[key] ? key : ""))
@@ -61,8 +63,8 @@ export const InputText = ({
 
   const inputLabelClass = useMemo(() => {
     const arrayClass: { [key in InputClassNames]: boolean } = {
-      'inputText__label': true,
-      'inputText__label--focused': isFocused || charLength > 0,
+      inputText__label: true,
+      "inputText__label--focused": isFocused || charLength > 0,
     };
     return Object.keys(arrayClass)
       .map((key) => (arrayClass[key] ? key : ""))
@@ -86,6 +88,7 @@ export const InputText = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleChange(e.target.value)
           }
+          placeholder={placeholder}
           onFocus={(e: FocusEvent<HTMLInputElement>) => handleOnFocus(e)}
           onBlur={(e: FocusEvent<HTMLInputElement>) => handleOnBlur(e)}
         />
