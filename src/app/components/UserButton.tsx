@@ -1,6 +1,5 @@
 "use client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,35 +19,35 @@ export type UserButtonProps = {
   onSignOut: () => Promise<void>;
 };
 
-export default function UserButton({ onSignIn, onSignOut }: UserButtonProps) {
-  const { data: session, status } = useSession();
+export default function UserButton({ onSignOut }: UserButtonProps) {
+  const { data: session } = useSession();
 
   return (
     <div>
-      {status === "authenticated" && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className='flex items-center gap-2 px-2 py-1.5 text-left text-sm transition-all'>
             <Avatar>
               <AvatarImage src={session?.user?.image ?? ""} />
               <AvatarFallback>
                 {getFirstTwoCapitalLetters(session?.user?.name)}
               </AvatarFallback>
             </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() => {
-                onSignOut();
-              }}
-            >
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
-      {status === "unauthenticated" && (
-        <Button onClick={() => onSignIn()}>Sign in</Button>
-      )}
+            <div className='overflow-hidden text-xs text-muted-foreground'>
+              <div className='line-clamp-1'>{session?.user?.email}</div>
+            </div>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => {
+              onSignOut();
+            }}
+          >
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

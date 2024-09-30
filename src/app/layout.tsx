@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { auth, signIn, signOut } from "@/auth";
-import UserButton from "./components/UserButton";
+import { auth } from "@/auth";
 import localFont from "next/font/local";
 import "./globals.css";
-import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,23 +41,6 @@ export default async function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <header className='ext-white font-bold bg-green-900 text-2xl p-2 mb-3 rounded-b-lg shadow-gray-700 shadow-lg flex'>
-            <div className='flex flex-grow'>
-              <Link href='/'>CMS</Link>
-            </div>
-            <div>
-              <UserButton
-                onSignIn={async () => {
-                  "use server";
-                  await signIn();
-                }}
-                onSignOut={async () => {
-                  "use server";
-                  await signOut();
-                }}
-              />
-            </div>
-          </header>
           {children}
         </body>
       </html>
