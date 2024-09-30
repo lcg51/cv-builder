@@ -26,12 +26,17 @@ export default function UserButton({ onSignOut }: UserButtonProps) {
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar>
-            <AvatarImage src={session?.user?.image ?? ""} />
-            <AvatarFallback>
-              {getFirstTwoCapitalLetters(session?.user?.name)}
-            </AvatarFallback>
-          </Avatar>
+          <div className='flex items-center gap-2 px-2 py-1.5 text-left text-sm transition-all'>
+            <Avatar>
+              <AvatarImage src={session?.user?.image ?? ""} />
+              <AvatarFallback>
+                {getFirstTwoCapitalLetters(session?.user?.name)}
+              </AvatarFallback>
+            </Avatar>
+            <div className='overflow-hidden text-xs text-muted-foreground'>
+              <div className='line-clamp-1'>{session?.user?.email}</div>
+            </div>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
