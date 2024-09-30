@@ -2,9 +2,7 @@
 
 import {
   Atom,
-  Bird,
   BookOpen,
-  Bot,
   Code2,
   Eclipse,
   Frame,
@@ -17,15 +15,11 @@ import {
   Settings2,
   SquareTerminal,
   Star,
-  Turtle,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
-import { StorageCard } from "@/components/storage-card";
 import { TeamSwitcher } from "@/components/team-switcher";
+import UserButton from "@/app/components/UserButton";
 import {
   Sidebar,
   SidebarContent,
@@ -34,6 +28,9 @@ import {
   SidebarItem,
   SidebarLabel,
 } from "@/components/ui/sidebar";
+
+import { logIn, logOut } from "../server-actions/session";
+
 const data = {
   teams: [
     {
@@ -81,31 +78,6 @@ const data = {
           url: "#",
           icon: Settings2,
           description: "Configure your playground",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-          icon: Rabbit,
-          description: "Our fastest model for general use cases.",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-          icon: Bird,
-          description: "Performance and speed for efficiency.",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-          icon: Turtle,
-          description: "The most powerful model for complex computations.",
         },
       ],
     },
@@ -196,7 +168,7 @@ const data = {
       icon: Send,
     },
   ],
-  projects: [
+  test: [
     {
       name: "Design Engineering",
       url: "#",
@@ -258,20 +230,10 @@ export function AppSidebar() {
           <SidebarLabel>Platform</SidebarLabel>
           <NavMain items={data.navMain} searchResults={data.searchResults} />
         </SidebarItem>
-        <SidebarItem>
-          <SidebarLabel>Projects</SidebarLabel>
-          <NavProjects projects={data.projects} />
-        </SidebarItem>
-        <SidebarItem className='mt-auto'>
-          <SidebarLabel>Help</SidebarLabel>
-          <NavSecondary items={data.navSecondary} />
-        </SidebarItem>
-        <SidebarItem>
-          <StorageCard />
-        </SidebarItem>
+        <SidebarItem></SidebarItem>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <UserButton onSignIn={logIn} onSignOut={logOut} />
       </SidebarFooter>
     </Sidebar>
   );
