@@ -50,6 +50,7 @@ export default function Chat() {
       <div className='flex border-t-2 border-t-gray-500 pt-3 mt-3'>
         <InputText
           placeholder='Question'
+          name='message'
           defaultValue={message}
           type='text'
           testID='chatInput'
