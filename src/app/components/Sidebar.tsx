@@ -1,15 +1,11 @@
 "use client";
-
 import {
   Atom,
   BookOpen,
   Code2,
   Eclipse,
-  Frame,
   History,
   LifeBuoy,
-  Map,
-  PieChart,
   Rabbit,
   Send,
   Settings2,
@@ -29,7 +25,8 @@ import {
   SidebarLabel,
 } from "@/components/ui/sidebar";
 
-import { logIn, logOut } from "../server-actions/session";
+import { signOut } from "../server-actions/session";
+import { UserProps } from "@/lib/models";
 
 const data = {
   teams: [
@@ -168,23 +165,6 @@ const data = {
       icon: Send,
     },
   ],
-  test: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
   searchResults: [
     {
       title: "Routing Fundamentals",
@@ -219,7 +199,11 @@ const data = {
   ],
 };
 
-export function AppSidebar() {
+export type AppSideBarProps = {
+  user: UserProps;
+};
+
+export function AppSidebar({ user }: AppSideBarProps) {
   return (
     <Sidebar>
       <SidebarHeader>
@@ -233,7 +217,7 @@ export function AppSidebar() {
         <SidebarItem></SidebarItem>
       </SidebarContent>
       <SidebarFooter>
-        <UserButton onSignIn={logIn} onSignOut={logOut} />
+        <UserButton onSignOut={signOut} user={user} />
       </SidebarFooter>
     </Sidebar>
   );

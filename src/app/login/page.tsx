@@ -1,7 +1,5 @@
 import Image from "next/image";
 
-import { auth as getServerSession } from "@/auth";
-import { redirect } from "next/navigation";
 import LoginForm from "../components/LoginForm";
 import {
   Card,
@@ -10,13 +8,13 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Message } from "../components/FormMessage";
 
-export default async function Login() {
-  const session = await getServerSession();
-
-  if (session) {
-    redirect("/dashboard");
-  }
+export default async function Login({
+  searchParams,
+}: {
+  searchParams: Message;
+}) {
   return (
     <div className='w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]'>
       <div className='h-screen flex items-center justify-center'>
@@ -28,7 +26,7 @@ export default async function Login() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <LoginForm />
+            <LoginForm searchParams={searchParams} />
           </CardContent>
         </Card>
       </div>
