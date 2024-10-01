@@ -1,8 +1,8 @@
 "use server";
 import { SidebarLayout } from "@/components/ui/sidebar";
 import { AppSidebar } from "../components/Sidebar";
-import { auth as getServerSession } from "@/auth";
-import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { UserProps } from "@/lib/models";
 
 export default async function Layout({
   children,
@@ -10,17 +10,14 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const { cookies } = await import("next/headers");
-  const session = await getServerSession();
 
-  if (!session) {
-    redirect("/login");
-  }
+  const { data } = await createClient().auth.getUser();
 
   return (
     <SidebarLayout
       defaultOpen={cookies().get("sidebar:state")?.value === "true"}
     >
-      <AppSidebar />
+      <AppSidebar user={data.user as unknown as UserProps} />
       <main className='flex flex-1 flex-col p-2 transition-all duration-300 ease-in-out'>
         {children}
       </main>

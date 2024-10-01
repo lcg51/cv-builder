@@ -4,11 +4,12 @@ import "./InputText.css";
 export type InputTextProps = {
   icon?: React.ReactNode;
   label?: string;
-  onChange: (e: string) => void;
+  onChange?: (e: string) => void;
   onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
   defaultValue?: string;
   type: string;
+  name: string;
   placeholder?: string;
   testID: string;
 };
@@ -22,6 +23,7 @@ export const InputText = ({
   onFocus,
   onBlur,
   label,
+  name,
   placeholder,
   testID,
   type,
@@ -48,7 +50,7 @@ export const InputText = ({
   const handleChange = (nextValue: string) => {
     setCharLength(nextValue.length);
     setValue(nextValue);
-    onChange(value);
+    onChange?.(value);
   };
 
   const inputWrapperClass = useMemo(() => {
@@ -84,6 +86,7 @@ export const InputText = ({
           data-testid={testID}
           id={testID}
           type={type}
+          name={name}
           className='inputText__input'
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleChange(e.target.value)

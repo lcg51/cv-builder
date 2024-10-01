@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
-import { auth } from "@/auth";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -25,25 +23,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
-  if (session?.user) {
-    session.user = {
-      name: session.user.name,
-      email: session.user.email,
-      image: session.user.image,
-    };
-  }
-
   return (
-    <SessionProvider basePath='/api/auth' session={session}>
-      <html lang='en'>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </html>
-    </SessionProvider>
+    <html lang='en'>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
   );
 }

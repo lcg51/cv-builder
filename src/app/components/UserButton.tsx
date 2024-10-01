@@ -6,8 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { useSession } from "next-auth/react";
+import { UserProps } from "@/lib/models";
 
 function getFirstTwoCapitalLetters(str?: string | null) {
   const match = (str || "").match(/[A-Z]/g);
@@ -15,26 +14,24 @@ function getFirstTwoCapitalLetters(str?: string | null) {
 }
 
 export type UserButtonProps = {
-  onSignIn: () => Promise<void>;
   onSignOut: () => Promise<void>;
+  user: UserProps | null;
 };
 
-export default function UserButton({ onSignOut }: UserButtonProps) {
-  const { data: session } = useSession();
-
+export default function UserButton({ onSignOut, user }: UserButtonProps) {
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className='flex items-center gap-2 px-2 py-1.5 text-left text-sm transition-all'>
             <Avatar>
-              <AvatarImage src={session?.user?.image ?? ""} />
+              <AvatarImage src={user?.image ?? ""} />
               <AvatarFallback>
-                {getFirstTwoCapitalLetters(session?.user?.name)}
+                {getFirstTwoCapitalLetters(user?.name)}
               </AvatarFallback>
             </Avatar>
             <div className='overflow-hidden text-xs text-muted-foreground'>
-              <div className='line-clamp-1'>{session?.user?.email}</div>
+              <div className='line-clamp-1'>{user?.email}</div>
             </div>
           </div>
         </DropdownMenuTrigger>
