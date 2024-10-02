@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Home, Package, Package2 } from "lucide-react";
+import { Package2 } from "lucide-react";
 import { useDashboardNavItems } from "@/hooks/useNavItems";
 
 export function AppSidebar() {
