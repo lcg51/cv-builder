@@ -28,8 +28,6 @@ export const signOut = async () => {
 
   const { error } = await supabase.auth.signOut();
 
-  console.log("signOut error", error);
-
   if(error) {
     return encodedRedirect("error", "/login", error.message);
   }
