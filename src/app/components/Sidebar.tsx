@@ -1,224 +1,35 @@
 "use client";
-import {
-  Atom,
-  BookOpen,
-  Code2,
-  Eclipse,
-  History,
-  LifeBuoy,
-  Rabbit,
-  Send,
-  Settings2,
-  SquareTerminal,
-  Star,
-} from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { TeamSwitcher } from "@/components/team-switcher";
-import UserButton from "@/app/components/UserButton";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarItem,
-  SidebarLabel,
-} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { Home, Package, Package2 } from "lucide-react";
+import { useDashboardNavItems } from "@/hooks/useNavItems";
 
-import { signOut } from "../server-actions/session";
-import { UserProps } from "@/lib/models";
-
-const data = {
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: Atom,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: Eclipse,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Rabbit,
-      plan: "Free",
-    },
-  ],
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-          icon: History,
-          description: "View your recent prompts",
-        },
-        {
-          title: "Starred",
-          url: "#",
-          icon: Star,
-          description: "Browse your starred prompts",
-        },
-        {
-          title: "Settings",
-          url: "#",
-          icon: Settings2,
-          description: "Configure your playground",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "API",
-      url: "#",
-      icon: Code2,
-      items: [
-        {
-          title: "Chat",
-          url: "#",
-        },
-        {
-          title: "Completion",
-          url: "#",
-        },
-        {
-          title: "Images",
-          url: "#",
-        },
-        {
-          title: "Video",
-          url: "#",
-        },
-        {
-          title: "Speech",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  searchResults: [
-    {
-      title: "Routing Fundamentals",
-      teaser:
-        "The skeleton of every application is routing. This page will introduce you to the fundamental concepts of routing for the web and how to handle routing in Next.js.",
-      url: "#",
-    },
-    {
-      title: "Layouts and Templates",
-      teaser:
-        "The special files layout.js and template.js allow you to create UI that is shared between routes. This page will guide you through how and when to use these special files.",
-      url: "#",
-    },
-    {
-      title: "Data Fetching, Caching, and Revalidating",
-      teaser:
-        "Data fetching is a core part of any application. This page goes through how you can fetch, cache, and revalidate data in React and Next.js.",
-      url: "#",
-    },
-    {
-      title: "Server and Client Composition Patterns",
-      teaser:
-        "When building React applications, you will need to consider what parts of your application should be rendered on the server or the client. ",
-      url: "#",
-    },
-    {
-      title: "Server Actions and Mutations",
-      teaser:
-        "Server Actions are asynchronous functions that are executed on the server. They can be used in Server and Client Components to handle form submissions and data mutations in Next.js applications.",
-      url: "#",
-    },
-  ],
-};
-
-export type AppSideBarProps = {
-  user: UserProps;
-};
-
-export function AppSidebar({ user }: AppSideBarProps) {
+export function AppSidebar() {
+  const navItems = useDashboardNavItems();
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarItem>
-          <SidebarLabel>Platform</SidebarLabel>
-          <NavMain items={data.navMain} searchResults={data.searchResults} />
-        </SidebarItem>
-        <SidebarItem></SidebarItem>
-      </SidebarContent>
-      <SidebarFooter>
-        <UserButton onSignOut={signOut} user={user} />
-      </SidebarFooter>
-    </Sidebar>
+    <div className='flex h-full max-h-screen flex-col gap-2'>
+      <div className='flex h-full max-h-screen flex-col gap-2'>
+        <div className='flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6'>
+          <Link href='/' className='flex items-center gap-2 font-semibold'>
+            <Package2 className='h-6 w-6' />
+            <span className=''>The original fries</span>
+          </Link>
+        </div>
+        <div className='flex-1'>
+          <nav className='grid items-start px-2 text-sm font-medium lg:px-4'>
+            {navItems.map((item) => (
+              <Link
+                href={item.href}
+                key={item.href}
+                className='flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground'
+              >
+                {item.icon && item.icon}
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </div>
   );
 }
