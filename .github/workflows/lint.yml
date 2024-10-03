@@ -36,5 +36,5 @@ jobs:
             # ESLint and Prettier must be in `package.json`
             - run: npm ci
 
-            - name: Run lint-staged
-              run: npx lint-staged --diff="${GITHUB_BASE_REF}...${GITHUB_HEAD_REF}"
+            - name: Run linter
+              run: npx eslint --fix
