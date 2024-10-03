@@ -1,8 +1,8 @@
 'use server';
-import { AppSidebar } from '../components/Sidebar';
+import { AppSidebar } from '../../components/Sidebar';
 import { createClient } from '@/utils/supabase/server';
 import { UserProps } from '@/lib/models';
-import TopBar from '../components/TopBar';
+import TopBar from '../../components/TopBar';
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 	const { data } = await createClient().auth.getUser();
