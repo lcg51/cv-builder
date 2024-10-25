@@ -26,8 +26,6 @@ type ProductProps = {
 export default function ProductsList({ products }: { products: ProductProps[] }) {
 	const { push } = useRouter();
 
-	console.log('ProductsList', products);
-
 	return products.length > 0 ? (
 		<TabsContent value="all">
 			<Card x-chunk="dashboard-06-chunk-0">
