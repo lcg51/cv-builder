@@ -1,20 +1,45 @@
-import { type NextRequest } from "next/server";
-import { updateSession } from "@/utils/supabase/middleware";
+import { NextResponse, type NextRequest } from 'next/server';
+import { auth as googleAuth } from './auth';
+
+export const API_AUTH_PREFIX = '/api/auth';
+
+export const AUTH_ROUTES = ['/login'];
+
+export const PROTECTED_ROUTES = [
+	'/admin'
+	// your other protected routes
+];
+
+export const auth = googleAuth;
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+	const pathname = request.nextUrl.pathname;
+
+	const session = await auth();
+	const isAccessingAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
+	const isAcessingProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
+
+	if (session && isAccessingAuthRoute) {
+		return NextResponse.redirect(new URL('/admin', request.url));
+	}
+
+	if (!session && isAcessingProtectedRoute) {
+		return NextResponse.redirect(new URL('/login', request.url));
+	}
+
+	return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
-     * Feel free to modify this pattern to include more paths.
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+	matcher: [
+		/*
+		 * Match all request paths except:
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
+		 * Feel free to modify this pattern to include more paths.
+		 */
+		'/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+	]
 };

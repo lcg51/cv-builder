@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ThemeProvider } from './providers/ThemeProvider';
 import localFont from 'next/font/local';
 import './globals.css';
 
@@ -25,7 +26,11 @@ export default async function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+					{children}
+				</ThemeProvider>
+			</body>
 		</html>
 	);
 }

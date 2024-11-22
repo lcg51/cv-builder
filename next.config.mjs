@@ -9,7 +9,7 @@ const nextConfig = {
 			},
 			{
 				source: '/admin',
-				destination: '/admin/products',
+				destination: '/admin/resume',
 				permanent: true
 			}
 		];

@@ -56,7 +56,7 @@ export default function TopBar({ user }: TopBarProps) {
 				<DropdownMenuTrigger asChild>
 					<Button variant="secondary" size="icon" className="rounded-full">
 						<Avatar>
-							<AvatarImage src={user?.image ?? ''} />
+							<AvatarImage src={user?.image} />
 							<AvatarFallback>{getFirstTwoCapitalLetters(user?.email)}</AvatarFallback>
 						</Avatar>
 						<CircleUser className="h-5 w-5" />
