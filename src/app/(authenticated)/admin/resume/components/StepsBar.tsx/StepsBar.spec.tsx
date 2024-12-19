@@ -6,9 +6,9 @@ import { StepsBar } from './StepsBar';
 describe('StepsBar', () => {
 	it('should sort items correctly', () => {
 		const items = [
-			{ title: 'Step 1', active: false },
-			{ title: 'Step 2', active: true },
-			{ title: 'Step 3', active: false }
+			{ title: 'Step 1', active: false, component: () => <div>Step 1</div> },
+			{ title: 'Step 2', active: true, component: () => <div>Step 2</div> },
+			{ title: 'Step 3', active: false, component: () => <div>Step 3</div> }
 		];
 		const { getAllByText } = render(<StepsBar items={items} />);
 		const titles = getAllByText(/Step/).map(el => el.textContent);
@@ -17,9 +17,9 @@ describe('StepsBar', () => {
 
 	it('should calculate filled bar width correctly', () => {
 		const items = [
-			{ title: 'Step 1', active: true },
-			{ title: 'Step 2', active: true },
-			{ title: 'Step 3', active: false }
+			{ title: 'Step 1', active: true, component: () => <div>Step 1</div> },
+			{ title: 'Step 2', active: true, component: () => <div>Step 2</div> },
+			{ title: 'Step 3', active: false, component: () => <div>Step 3</div> }
 		];
 		const { container } = render(<StepsBar items={items} />);
 		const filledBar = container.querySelector('.steps-bar--fill');
@@ -28,9 +28,9 @@ describe('StepsBar', () => {
 
 	it('should render correct number of active and inactive bullets', () => {
 		const items = [
-			{ title: 'Step 1', active: true },
-			{ title: 'Step 2', active: false },
-			{ title: 'Step 3', active: true }
+			{ title: 'Step 1', active: true, component: () => <div>Step 1</div> },
+			{ title: 'Step 2', active: false, component: () => <div>Step 2</div> },
+			{ title: 'Step 3', active: true, component: () => <div>Step 3</div> }
 		];
 		const { container } = render(<StepsBar items={items} />);
 		const activeBullets = container.querySelectorAll('.bullet.active');

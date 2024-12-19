@@ -14,6 +14,7 @@
 .bullet.active {
 	background-color: rgb(22, 136, 254);
 	border: 2px solid rgb(22, 136, 254);
+	cursor: pointer;
 }
 
 .steps-bar {
