@@ -1,6 +1,6 @@
 'use client';
 import { useCallback } from 'react';
-import { AddButton } from './components/AddButton';
+import { AddButton } from './components/AddButton/AddButton';
 import { useRouter } from 'next/navigation';
 
 export default function Resume() {
