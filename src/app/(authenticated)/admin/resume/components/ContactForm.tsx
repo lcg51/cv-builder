@@ -28,7 +28,7 @@ const formSchema = z.object({
 	})
 });
 
-export const CreateForm = () => {
+export const ContactForm = () => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -49,6 +49,7 @@ export const CreateForm = () => {
 	}
 	return (
 		<Form {...form}>
+			<h3>Please enter your contact info</h3>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 					<FormField
@@ -132,7 +133,7 @@ export const CreateForm = () => {
 						)}
 					/>
 				</div>
-				<Button type="submit">Submit</Button>
+				<Button type="submit">Next Step</Button>
 			</form>
 		</Form>
 	);
