@@ -25,7 +25,6 @@ export const StepsBar = ({ items, onNextStepCallback }: StepsBarProps) => {
 	}, [items]);
 
 	const filledBarWidth = useMemo(() => {
-		console.log('entra');
 		const itemBarWidth = 100 / items.length;
 		const activeItems = items.filter(item => item.active);
 		const itemsTotalWidth = itemBarWidth * activeItems.length;
