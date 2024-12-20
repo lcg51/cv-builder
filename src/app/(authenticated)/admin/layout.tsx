@@ -9,9 +9,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
 	return (
 		<div>
-			{/* <div className="hidden border-r bg-muted/40 md:block">
-				<AppSidebar />
-			</div> */}
 			<div className="flex flex-col">
 				<Suspense fallback={<div>Loading...</div>}>
 					<TopBar user={session?.user as unknown as UserProps} />

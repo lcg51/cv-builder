@@ -16,7 +16,7 @@ const formSchema = z.object({
 	})
 });
 
-export const ExperienceForm = () => {
+export const EducationForm = () => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -33,7 +33,7 @@ export const ExperienceForm = () => {
 	}
 	return (
 		<Form {...form}>
-			<h3>Tell us about the experience</h3>
+			<h3>Enter your education information</h3>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 					<FormField
