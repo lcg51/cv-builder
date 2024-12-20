@@ -10,7 +10,7 @@ describe('StepsBar', () => {
 			{ title: 'Step 2', active: true, component: () => <div>Step 2</div> },
 			{ title: 'Step 3', active: false, component: () => <div>Step 3</div> }
 		];
-		const { getAllByText } = render(<StepsBar items={items} />);
+		const { getAllByText } = render(<StepsBar items={items} onNextStepCallback={() => {}} />);
 		const titles = getAllByText(/Step/).map(el => el.textContent);
 		expect(titles).toEqual(['Step 2', 'Step 1', 'Step 3']);
 	});
@@ -21,7 +21,7 @@ describe('StepsBar', () => {
 			{ title: 'Step 2', active: true, component: () => <div>Step 2</div> },
 			{ title: 'Step 3', active: false, component: () => <div>Step 3</div> }
 		];
-		const { container } = render(<StepsBar items={items} />);
+		const { container } = render(<StepsBar items={items} onNextStepCallback={() => {}} />);
 		const filledBar = container.querySelector('.steps-bar--fill');
 		expect(filledBar).toHaveStyle('width: calc(66.66666666666666%)');
 	});
@@ -32,7 +32,7 @@ describe('StepsBar', () => {
 			{ title: 'Step 2', active: false, component: () => <div>Step 2</div> },
 			{ title: 'Step 3', active: true, component: () => <div>Step 3</div> }
 		];
-		const { container } = render(<StepsBar items={items} />);
+		const { container } = render(<StepsBar items={items} onNextStepCallback={() => {}} />);
 		const activeBullets = container.querySelectorAll('.bullet.active');
 		const inactiveBullets = container.querySelectorAll('.bullet:not(.active)');
 		expect(activeBullets.length).toBe(2);

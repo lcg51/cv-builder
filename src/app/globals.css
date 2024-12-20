@@ -9,13 +9,19 @@
 
 :root {
 	--background: #ffffff;
-	--foreground: #171717;
+	--foreground: #322938;
+	--primary: #89a194;
+	--secondary: #cfc89a;
+	--orange: #cc883a;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: #0a0a0a;
+		--background: #322938;
 		--foreground: #ededed;
+		--primary: #89a194;
+		--secondary: #cfc89a;
+		--orange: #cc883a;
 	}
 }
 
@@ -33,6 +39,7 @@ h3 {
 	font-style: normal;
 	line-height: 1.29;
 	letter-spacing: normal;
+	color: var(--primary);
 }
 
 @layer utilities {
@@ -53,7 +60,7 @@ h3 {
 		--primary-foreground: 0 0% 98%;
 		--secondary: 0 0% 96.1%;
 		--secondary-foreground: 0 0% 9%;
-		--muted: 0 0% 96.1%;
+		--muted: 148 11% 58%;
 		--muted-foreground: 0 0% 45.1%;
 		--accent: 0 0% 96.1%;
 		--accent-foreground: 0 0% 9%;
@@ -80,7 +87,7 @@ h3 {
 		--primary-foreground: 0 0% 9%;
 		--secondary: 0 0% 14.9%;
 		--secondary-foreground: 0 0% 98%;
-		--muted: 0 0% 14.9%;
+		--muted: 148 11% 58%;
 		--muted-foreground: 0 0% 63.9%;
 		--accent: 0 0% 14.9%;
 		--accent-foreground: 0 0% 98%;
