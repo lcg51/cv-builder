@@ -2,8 +2,16 @@
 import { Button } from '@/components/ui';
 import Image from 'next/image';
 import { loginBG } from '../../assets';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 
 export default function Home() {
+	const { push } = useRouter();
+
+	const onClick = useCallback(() => {
+		push('/resume/create');
+	}, []);
+
 	return (
 		<div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
 			<div className="h-screen flex justify-center">
@@ -43,7 +51,7 @@ export default function Home() {
 						Name] today and take the next step towards your professional success.
 					</p>
 
-					<Button variant="destructive" size="lg">
+					<Button variant="destructive" size="lg" onClick={onClick}>
 						Start creating your CV
 					</Button>
 				</div>

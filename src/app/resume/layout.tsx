@@ -1,6 +1,6 @@
 'use server';
 import { UserProps } from '@/lib/models';
-import TopBar from '../../components/TopBar';
+import TopBar from '../components/TopBar';
 import { auth } from '@/auth';
 import { Suspense } from 'react';
 
