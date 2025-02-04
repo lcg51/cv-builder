@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import './StepsBar.css';
-import { useWindowSize } from '@/app/util';
+import { useWindowSize } from '../../util/hooks/useWindowSize';
 
 export type StepsBarItemsProps = {
 	title: string;
@@ -93,7 +93,7 @@ export const StepsBar = ({ items, onNextStepCallback }: StepsBarProps) => {
 	);
 
 	return (
-		<div className="flex flex-col justify-between w-full">
+		<div className="flex flex-col w-full">
 			<div className="flex justify-between w-full relative">
 				<div className={`steps-bar`}></div>
 				<div
