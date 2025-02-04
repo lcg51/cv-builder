@@ -1,9 +1,10 @@
 'use client';
-import { StepsBar, StepsBarItemsProps } from '@/app/components/StepsBar.tsx/StepsBar';
+import React, { useState } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { ExperienceForm } from '../components/ExperienceForm';
 import { EducationForm } from '../components/EducationForm';
-import { useState } from 'react';
+import { TemplatePreview } from '../../components/TemplatePreview/TemplatePreview';
+import { StepsBar, StepsBarItemsProps } from '../../components/StepsBar/StepsBar';
 
 export default function CreateResume() {
 	const [items, setItems] = useState<StepsBarItemsProps[]>([
@@ -20,8 +21,9 @@ export default function CreateResume() {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col">
+		<div className="flex h-full">
 			<StepsBar items={items} onNextStepCallback={updateItems} />
+			<TemplatePreview />
 		</div>
 	);
 }
