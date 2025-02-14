@@ -8,10 +8,10 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 
 const formSchema = z.object({
-	firstname: z.string().min(2, {
+	firstName: z.string().min(2, {
 		message: 'Username must be at least 2 characters.'
 	}),
-	secondname: z.string().min(2, {
+	lastName: z.string().min(2, {
 		message: 'Username must be at least 2 characters.'
 	}),
 	email: z.string().min(2, {
@@ -28,12 +28,17 @@ const formSchema = z.object({
 	})
 });
 
-export const ContactForm = ({ onSuccess }: { onSuccess?: () => void }) => {
+export type ContactFormPropsType = {
+	onFieldChange?: (key: string, value: string) => void;
+	onSuccess?: () => void;
+};
+
+export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstname: '',
-			secondname: '',
+			firstName: '',
+			lastName: '',
 			email: '',
 			phone: '',
 			address: '',
@@ -55,28 +60,42 @@ export const ContactForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 					<FormField
 						control={form.control}
-						name="firstname"
+						name="firstName"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>First name</FormLabel>
 								<FormControl>
-									<Input placeholder="First name" {...field} />
+									<Input
+										placeholder="First name"
+										{...field}
+										onChange={ev => {
+											field.onChange(ev);
+											onFieldChange?.('firstName', ev.target.value);
+										}}
+									/>
 								</FormControl>
-								<FormDescription>This is your public display name.</FormDescription>
+								<FormDescription>This is your public first name.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 					<FormField
 						control={form.control}
-						name="secondname"
+						name="lastName"
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Second name</FormLabel>
 								<FormControl>
-									<Input placeholder="Second Name" {...field} />
+									<Input
+										placeholder="Second Name"
+										{...field}
+										onChange={ev => {
+											field.onChange(ev);
+											onFieldChange?.('lastName', ev.target.value);
+										}}
+									/>
 								</FormControl>
-								<FormDescription>This is your public display name.</FormDescription>
+								<FormDescription>This is your public last name.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -88,7 +107,14 @@ export const ContactForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input placeholder="Email" {...field} />
+									<Input
+										placeholder="Email"
+										{...field}
+										onChange={ev => {
+											field.onChange(ev);
+											onFieldChange?.('email', ev.target.value);
+										}}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -101,7 +127,14 @@ export const ContactForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 							<FormItem>
 								<FormLabel>Phone</FormLabel>
 								<FormControl>
-									<Input placeholder="Phone" {...field} />
+									<Input
+										placeholder="Phone"
+										{...field}
+										onChange={ev => {
+											field.onChange(ev);
+											onFieldChange?.('phone', ev.target.value);
+										}}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -114,7 +147,14 @@ export const ContactForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 							<FormItem>
 								<FormLabel>Address</FormLabel>
 								<FormControl>
-									<Input placeholder="Address" {...field} />
+									<Input
+										placeholder="Address"
+										{...field}
+										onChange={ev => {
+											field.onChange(ev);
+											onFieldChange?.('address', ev.target.value);
+										}}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -127,7 +167,14 @@ export const ContactForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 							<FormItem>
 								<FormLabel>Postal code</FormLabel>
 								<FormControl>
-									<Input placeholder="Postal code" {...field} />
+									<Input
+										placeholder="Postal code"
+										{...field}
+										onChange={ev => {
+											field.onChange(ev);
+											onFieldChange?.('postalCode', ev.target.value);
+										}}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

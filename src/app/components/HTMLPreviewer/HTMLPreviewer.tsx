@@ -2,87 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import './HtmlPreviewer.css';
 import { TemplatePreview } from '../TemplatePreview/TemplatePreview';
+import { UserDataType } from '@/app/models/user';
 
-type UserPortoflioType = {
-	name: string;
-	role: string;
-	location: string;
-	phone: string;
-	email: string;
-	linkedin: string;
-	github: string;
-	education: {
-		degree: string;
-		university: string;
-	};
-	workExperience: Array<{
-		company: string;
-		role: string;
-		startDate: string;
-		endDate: string;
-		location: string;
-		description: string;
-	}>;
-	skills: Array<{ category: string; description: string }>;
-};
-
-export const HtmlPreviewer = () => {
+export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [htmlInput, setHtmlInput] = useState('');
-
-	const userData: UserPortoflioType = {
-		name: 'John Doe',
-		role: 'Software Engineer',
-		location: 'San Francisco, CA',
-		phone: '123-456-7890',
-		email: 'johndoe@gmail.com',
-		linkedin: 'https://www.linkedin.com/in/johndoe',
-		github: 'https://www.github.com/johndoe',
-		education: {
-			degree: 'Bachelor of Science in Computer Science',
-			university: 'University of California, Berkeley'
-		},
-		workExperience: [
-			{
-				company: 'Google',
-				role: 'Software Engineer',
-				startDate: 'Jan 2020',
-				endDate: 'Present',
-				location: 'Mountain View, CA',
-				description: 'Worked on the Google Search team to improve search results for users.'
-			},
-			{
-				company: 'Facebook',
-				role: 'Software Engineer Intern',
-				startDate: 'May 2019',
-				endDate: 'Aug 2019',
-				location: 'Menlo Park, CA',
-				description: 'Developed new features for the Facebook app using React Native.'
-			}
-		],
-		skills: [
-			{
-				category: 'Programming Languages',
-				description: 'JavaScript, Python, Java, C++'
-			},
-			{
-				category: 'Web Technologies',
-				description: 'HTML, CSS, React, Node.js'
-			}
-		]
-	};
 
 	const template = `
         <div class="cv p-14 items-center flex flex-col justify-center bg-secondary">
             <div class="cv-header w-full">
                 <div class="cv-header__wrapper">
-                    <div class="cv-header__text">P | S</div>
+                    <div class="cv-header__text">${userData?.firstName.charAt(0).toUpperCase()} | ${userData?.lastName.charAt(0).toUpperCase()}</div>
                     <div>
-                        <div class="name-title">${userData.name}</div>
+                        <div class="name-title">${userData?.firstName} ${userData?.lastName}</div>
                     </div>
                     <div class="header-role">
                         <div class="header-role--bar"></div>
                         <div class="click-to-edit-wrapper">
-                            <div class="header-role--title">${userData.role}</div>
+                            <div class="header-role--title">${userData?.role}</div>
                         </div>
                         <div class="header-role--bar"></div>
                     </div>
@@ -90,13 +26,13 @@ export const HtmlPreviewer = () => {
                         <div class="header-icons__item">
                             <div class="">{/* <MapIcon /> */}</div>
                             <div>
-                                <div class="header-icons__item--text">${userData.location}</div>
+                                <div class="header-icons__item--text">${userData?.location}</div>
                             </div>
                         </div>
                         <div class="header-icons__item">
                             <div class="">{/* <PhoneIcon /> */}</div>
                             <div>
-                                <div class="header-icons__item--text">${userData.phone}</div>
+                                <div class="header-icons__item--text">${userData?.phone}</div>
                             </div>
                         </div>
                         <div class="header-icons__item">
@@ -151,10 +87,10 @@ export const HtmlPreviewer = () => {
                         <div class="education">
                             <div class="dZuYuB">
                                 <div>
-                                    <span class="education_degree">${userData.education.degree}</span>
+                                    <span class="education_degree">${userData?.education.degree}</span>
                                 </div>
                                 <div>
-                                    <div class="education__university">${userData.education.university}</div>
+                                    <div class="education__university">${userData?.education.university}</div>
                                 </div>
                             </div>
                         </div>
@@ -167,13 +103,13 @@ export const HtmlPreviewer = () => {
                             <div class="links-section">
                                 <div class="links-section__item">
                                     <div class="links-section__name">LinkedIn:</div>
-                                    <a href="${userData.linkedin}" class="links-section__link">
+                                    <a href="${userData?.linkedin}" class="links-section__link">
                                         MyLinkedIn
                                     </a>
                                 </div>
                                 <div class="links-section__item">
                                     <div class="links-section__name">Github:</div>
-                                    <a href="${userData.github}" class="links-section__link">
+                                    <a href="${userData?.github}" class="links-section__link">
                                         My github
                                     </a>
                                 </div>
