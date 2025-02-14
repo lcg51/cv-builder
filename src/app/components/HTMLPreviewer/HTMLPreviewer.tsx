@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import './HtmlPreviewer.css';
 import { TemplatePreview } from '../TemplatePreview/TemplatePreview';
 import { UserDataType } from '@/app/models/user';
 
