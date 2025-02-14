@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { ExperienceForm } from '../components/ExperienceForm';
 import { EducationForm } from '../components/EducationForm';
-import { TemplatePreview } from '../../components/TemplatePreview/TemplatePreview';
 import { StepsBar, StepsBarItemsProps } from '../../components/StepsBar/StepsBar';
+import { HtmlPreviewer } from '@/app/components/HTMLPreviewer/HTMLPreviewer';
 
 export default function CreateResume() {
 	const [items, setItems] = useState<StepsBarItemsProps[]>([
@@ -23,7 +23,7 @@ export default function CreateResume() {
 	return (
 		<div className="flex h-full">
 			<StepsBar items={items} onNextStepCallback={updateItems} />
-			<TemplatePreview />
+			<HtmlPreviewer />
 		</div>
 	);
 }
