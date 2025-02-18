@@ -21,7 +21,8 @@ export type UserDataType = {
 	firstName: string;
 	lastName: string;
 	role: string;
-	location: string;
+	city: string;
+	postalCode: string;
 	phone: string;
 	email: string;
 	linkedin: string;
@@ -35,7 +36,8 @@ export const defaultUserData: UserDataType = {
 	firstName: 'John',
 	lastName: 'Doe',
 	role: 'Software Engineer',
-	location: 'San Francisco, CA',
+	city: 'San Francisco, CA',
+	postalCode: '94102',
 	phone: '123-456-7890',
 	email: 'johndoe@gmail.com',
 	linkedin: 'https://www.linkedin.com/in/johndoe',

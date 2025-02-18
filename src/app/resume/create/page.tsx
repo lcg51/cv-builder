@@ -28,7 +28,7 @@ export default function CreateResume() {
 		{
 			title: 'Contact',
 			active: true,
-			component: () => <ContactForm onFieldChange={updateUserValue} />
+			component: ContactForm
 		},
 		{ title: 'Experience', active: false, component: ExperienceForm },
 		{ title: 'Education', active: false, component: EducationForm },
@@ -47,7 +47,7 @@ export default function CreateResume() {
 
 	return (
 		<div className="flex h-full">
-			<StepsBar items={items} onNextStepCallback={updateItems} />
+			<StepsBar items={items} onNextStepCallback={updateItems} onFieldChangeCallback={updateUserValue} />
 			<HtmlPreviewer userData={userData} />
 		</div>
 	);
