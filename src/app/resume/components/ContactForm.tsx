@@ -14,13 +14,18 @@ const formSchema = z.object({
 	lastName: z.string().min(2, {
 		message: 'Username must be at least 2 characters.'
 	}),
-	email: z.string().min(2, {
-		message: 'Username must be at least 2 characters.'
-	}),
+	email: z
+		.string()
+		.min(2, {
+			message: 'Username must be at least 2 characters.'
+		})
+		.email({
+			message: 'Invalid email address.'
+		}),
 	phone: z.string().min(2, {
 		message: 'Username must be at least 2 characters.'
 	}),
-	address: z.string().min(2, {
+	city: z.string().min(2, {
 		message: 'Username must be at least 2 characters.'
 	}),
 	postalCode: z.string().min(2, {
@@ -41,7 +46,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 			lastName: '',
 			email: '',
 			phone: '',
-			address: '',
+			city: '',
 			postalCode: ''
 		}
 	});
@@ -142,17 +147,17 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 					/>
 					<FormField
 						control={form.control}
-						name="address"
+						name="city"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Address</FormLabel>
+								<FormLabel>City</FormLabel>
 								<FormControl>
 									<Input
-										placeholder="Address"
+										placeholder="city"
 										{...field}
 										onChange={ev => {
 											field.onChange(ev);
-											onFieldChange?.('address', ev.target.value);
+											onFieldChange?.('city', ev.target.value);
 										}}
 									/>
 								</FormControl>

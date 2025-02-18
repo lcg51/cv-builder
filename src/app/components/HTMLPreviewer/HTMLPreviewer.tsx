@@ -25,7 +25,7 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                         <div class="header-icons__item">
                             <div class="">{/* <MapIcon /> */}</div>
                             <div>
-                                <div class="header-icons__item--text">${userData?.location}</div>
+                                <div class="header-icons__item--text">${userData?.city}, ${userData?.postalCode}</div>
                             </div>
                         </div>
                         <div class="header-icons__item">
