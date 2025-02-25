@@ -6,13 +6,13 @@ import { useWindowSize } from '../../util/hooks/useWindowSize';
 export type StepsBarItemsProps = {
 	title: string;
 	active: boolean;
-	component: FC<{ onSuccess?: () => void; onFieldChange?: (key: string, value: string) => void }>;
+	component: FC<{ onSuccess?: () => void; onFieldChange?: (key: string, value: unknown) => void }>;
 };
 
 export type StepsBarProps = {
 	items: StepsBarItemsProps[];
 	onNextStepCallback: (newItems: StepsBarItemsProps[]) => void;
-	onFieldChangeCallback: (key: string, value: string) => void;
+	onFieldChangeCallback: (key: string, value: unknown) => void;
 };
 
 export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback }: StepsBarProps) => {

@@ -25,11 +25,7 @@ export default function CreateResume() {
 	const setUserDataValue = userDataStore((state: UserDataStoreType) => state.setUserDataValue);
 	const userData = userDataStore((state: UserDataStoreType) => state.userData);
 	const [items, setItems] = useState<StepsBarItemsProps[]>([
-		{
-			title: 'Contact',
-			active: true,
-			component: ContactForm
-		},
+		{ title: 'Contact', active: true, component: ContactForm },
 		{ title: 'Experience', active: false, component: ExperienceForm },
 		{ title: 'Education', active: false, component: EducationForm },
 		{ title: 'Skills', active: false, component: ContactForm },
@@ -41,8 +37,8 @@ export default function CreateResume() {
 		setItems(newItems);
 	};
 
-	const updateUserValue = useCallback((key: string, value: string) => {
-		setUserDataValue(key, value);
+	const updateUserValue = useCallback((key: string, value: unknown) => {
+		setUserDataValue(key, value as string);
 	}, []);
 
 	return (
