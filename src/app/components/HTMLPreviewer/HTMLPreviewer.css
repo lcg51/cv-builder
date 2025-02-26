@@ -1,0 +1,11 @@
+.html-previewer {
+	position: absolute;
+	top: 0px;
+	left: 50vw;
+	height: 967px;
+	overflow-y: scroll;
+	flex: 1 1 0%;
+	user-select: none;
+	z-index: 3;
+	width: 46vw;
+}
