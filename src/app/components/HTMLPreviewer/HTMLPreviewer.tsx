@@ -168,9 +168,7 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                                     <div class="experience-item">
                                         <div class="work-experience__role">${exp.jobTitle}</div>
                                         <div class="work-experience__role-description">
-                                            <span>
-                                                ${exp.description}
-                                            </span>
+                                            ${exp.description}
                                         </div>
                                     </div>
                                 </div>

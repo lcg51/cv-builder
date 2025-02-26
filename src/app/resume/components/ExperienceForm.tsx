@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/components/ui/date-picker';
 import { WorkExperienceType } from '@/app/models/user';
+import { Textarea } from '@/components/ui/textarea';
 
 const formSchema = z.object({
 	jobTitle: z.string().min(2, {
@@ -75,27 +76,29 @@ export const ExperienceForm = ({ onSuccess, onFieldChange }: ExperienceFormProps
 				{showForm && (
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-								<FormField
-									control={form.control}
-									name="jobTitle"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Job title</FormLabel>
-											<FormControl>
-												<Input
-													placeholder="Job title"
-													{...field}
-													onChange={ev => {
-														field.onChange(ev);
-														updateExperience();
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+							<div className="flex flex-col space-y-8">
+								<div className="grow-[25vw]">
+									<FormField
+										control={form.control}
+										name="jobTitle"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Job title</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Job title"
+														{...field}
+														onChange={ev => {
+															field.onChange(ev);
+															updateExperience();
+														}}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
 								<FormField
 									control={form.control}
 									name="company"
@@ -136,7 +139,12 @@ export const ExperienceForm = ({ onSuccess, onFieldChange }: ExperienceFormProps
 										<FormItem>
 											<FormLabel>End Date</FormLabel>
 											<FormControl>
-												<DatePicker onChange={date => field.onChange(date)} />
+												<DatePicker
+													onChange={date => {
+														field.onChange(date);
+														console.log(date);
+													}}
+												/>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
@@ -162,11 +170,32 @@ export const ExperienceForm = ({ onSuccess, onFieldChange }: ExperienceFormProps
 										</FormItem>
 									)}
 								/>
+								<FormField
+									control={form.control}
+									name="description"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Description</FormLabel>
+											<FormControl>
+												<Textarea
+													{...field}
+													onChange={ev => {
+														field.onChange(ev);
+														updateExperience();
+													}}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 							</div>
 						</form>
 					</Form>
 				)}
-				<Button onClick={onAddNewExperience}>Add Experience</Button>
+				<Button className="pt-4" onClick={onAddNewExperience}>
+					Add Experience
+				</Button>
 			</div>
 
 			<Button type="submit">Next Step</Button>
