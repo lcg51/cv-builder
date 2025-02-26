@@ -43,7 +43,9 @@ export default function CreateResume() {
 
 	return (
 		<div className="flex h-full">
-			<StepsBar items={items} onNextStepCallback={updateItems} onFieldChangeCallback={updateUserValue} />
+			<div className="w-1/2 h-full">
+				<StepsBar items={items} onNextStepCallback={updateItems} onFieldChangeCallback={updateUserValue} />
+			</div>
 			<HtmlPreviewer userData={userData} />
 		</div>
 	);

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { TemplatePreview } from '../TemplatePreview/TemplatePreview';
 import { UserDataType } from '@/app/models/user';
+import './HtmlPreviewer.css';
 
 export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [htmlInput, setHtmlInput] = useState('');
@@ -168,9 +169,7 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                                     <div class="experience-item">
                                         <div class="work-experience__role">${exp.jobTitle}</div>
                                         <div class="work-experience__role-description">
-                                            <span>
-                                                ${exp.description}
-                                            </span>
+                                            ${exp.description}
                                         </div>
                                     </div>
                                 </div>
