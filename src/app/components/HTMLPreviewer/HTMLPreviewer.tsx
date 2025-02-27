@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { TemplatePreview } from '../TemplatePreview/TemplatePreview';
 import { UserDataType } from '@/app/models/user';
-import './HtmlPreviewer.css';
+import './HTMLPreviewer.css';
 
 export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [htmlInput, setHtmlInput] = useState('');
