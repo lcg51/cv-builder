@@ -5,13 +5,11 @@ import { WorkExperienceType } from '@/app/models/user';
 import { ExperienceForm } from './ExperienceForm';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
+import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
 
-export type ExperienceProps = {
-	onSuccess?: () => void;
-	onFieldChange?: (key: string, value: unknown) => void;
-};
+export type ExperienceProps = StepsBarComponentProps;
 
-export const Experience = ({ onSuccess, onFieldChange }: ExperienceProps) => {
+export const Experience = ({ initialValues, onSuccess, onFieldChange }: ExperienceProps) => {
 	const [experienceForms, setExperienceForms] = useState<number[]>([]);
 
 	const addExperienceForm = () => {
@@ -42,6 +40,7 @@ export const Experience = ({ onSuccess, onFieldChange }: ExperienceProps) => {
 						<ExperienceForm
 							onFormChange={value => handleFormChange(index.toString(), value)}
 							onSuccess={onSuccess}
+							experienceForm={initialValues?.workExperience[index]}
 						/>
 						<span
 							className="absolute top-[-20px] right-0 cursor-pointer"

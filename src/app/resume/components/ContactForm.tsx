@@ -2,10 +2,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import React, { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	firstName: z.string().min(2, {
@@ -33,23 +35,25 @@ const formSchema = z.object({
 	})
 });
 
-export type ContactFormPropsType = {
-	onFieldChange?: (key: string, value: string) => void;
-	onSuccess?: () => void;
-};
+export type ContactFormPropsType = StepsBarComponentProps;
 
-export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) => {
+export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: ContactFormPropsType) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstName: '',
-			lastName: '',
-			email: '',
-			phone: '',
-			city: '',
-			postalCode: ''
+			...initialValues
 		}
 	});
+
+	useEffect(() => {
+		console.log('form', form);
+		const subscription = form.watch(values => {
+			Object.entries(values).forEach(([key, value]) => {
+				onFieldChange?.(key, value);
+			});
+		});
+		return () => subscription.unsubscribe();
+	}, [form.watch, onFieldChange]);
 
 	// 2. Define a submit handler.
 	function onSubmit(values: z.infer<typeof formSchema>) {
@@ -72,14 +76,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 							<FormItem>
 								<FormLabel>First name</FormLabel>
 								<FormControl>
-									<Input
-										placeholder="First name"
-										{...field}
-										onChange={ev => {
-											field.onChange(ev);
-											onFieldChange?.('firstName', ev.target.value);
-										}}
-									/>
+									<Input placeholder="First name" {...field} />
 								</FormControl>
 								<FormDescription>This is your public first name.</FormDescription>
 								<FormMessage />
@@ -93,14 +90,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 							<FormItem>
 								<FormLabel>Second name</FormLabel>
 								<FormControl>
-									<Input
-										placeholder="Second Name"
-										{...field}
-										onChange={ev => {
-											field.onChange(ev);
-											onFieldChange?.('lastName', ev.target.value);
-										}}
-									/>
+									<Input placeholder="Second Name" {...field} />
 								</FormControl>
 								<FormDescription>This is your public last name.</FormDescription>
 								<FormMessage />
@@ -114,14 +104,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 							<FormItem>
 								<FormLabel>Email</FormLabel>
 								<FormControl>
-									<Input
-										placeholder="Email"
-										{...field}
-										onChange={ev => {
-											field.onChange(ev);
-											onFieldChange?.('email', ev.target.value);
-										}}
-									/>
+									<Input placeholder="Email" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -134,14 +117,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 							<FormItem>
 								<FormLabel>Phone</FormLabel>
 								<FormControl>
-									<Input
-										placeholder="Phone"
-										{...field}
-										onChange={ev => {
-											field.onChange(ev);
-											onFieldChange?.('phone', ev.target.value);
-										}}
-									/>
+									<Input placeholder="Phone" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -154,14 +130,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 							<FormItem>
 								<FormLabel>City</FormLabel>
 								<FormControl>
-									<Input
-										placeholder="city"
-										{...field}
-										onChange={ev => {
-											field.onChange(ev);
-											onFieldChange?.('city', ev.target.value);
-										}}
-									/>
+									<Input placeholder="city" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -174,14 +143,7 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 							<FormItem>
 								<FormLabel>Postal code</FormLabel>
 								<FormControl>
-									<Input
-										placeholder="Postal code"
-										{...field}
-										onChange={ev => {
-											field.onChange(ev);
-											onFieldChange?.('postalCode', ev.target.value);
-										}}
-									/>
+									<Input placeholder="Postal code" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
