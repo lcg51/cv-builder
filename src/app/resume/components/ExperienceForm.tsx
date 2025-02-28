@@ -32,11 +32,13 @@ const formSchema = z.object({
 export type ExperienceFormPropsType = {
 	onFormChange?: (value: WorkExperienceType) => void;
 	onSuccess?: () => void;
+	experienceForm?: WorkExperienceType;
 };
-export const ExperienceForm = ({ onSuccess, onFormChange }: ExperienceFormPropsType) => {
+export const ExperienceForm = ({ experienceForm, onFormChange }: ExperienceFormPropsType) => {
+	console.log('experienceForm', experienceForm);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
+		defaultValues: (experienceForm as WorkExperienceType as z.infer<typeof formSchema>) || {
 			jobTitle: '',
 			company: '',
 			startDate: new Date(),
@@ -51,16 +53,10 @@ export const ExperienceForm = ({ onSuccess, onFormChange }: ExperienceFormPropsT
 		onFormChange?.(formValues as unknown as WorkExperienceType);
 	}, [form, onFormChange]);
 
-	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
-		onSuccess?.();
-	}
-
 	return (
-		<div className="pb-8">
+		<div className="pb-4">
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+				<form className="space-y-8">
 					<div className="flex flex-col space-y-8">
 						<div className="grow-[25vw]">
 							<FormField
@@ -111,7 +107,7 @@ export const ExperienceForm = ({ onSuccess, onFormChange }: ExperienceFormPropsT
 								<FormItem>
 									<FormLabel>Start Date</FormLabel>
 									<FormControl>
-										<DatePicker onChange={date => field.onChange(date)} />
+										<DatePicker {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -124,12 +120,7 @@ export const ExperienceForm = ({ onSuccess, onFormChange }: ExperienceFormPropsT
 								<FormItem>
 									<FormLabel>End Date</FormLabel>
 									<FormControl>
-										<DatePicker
-											onChange={date => {
-												field.onChange(date);
-												console.log(date);
-											}}
-										/>
+										<DatePicker {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

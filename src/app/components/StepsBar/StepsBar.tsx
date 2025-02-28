@@ -2,20 +2,28 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import './StepsBar.css';
 import { useWindowSize } from '../../util/hooks/useWindowSize';
+import { UserDataType } from '@/app/models/user';
+
+export type StepsBarComponentProps = {
+	onSuccess?: () => void;
+	onFieldChange?: (key: string, value: unknown) => void;
+	initialValues?: UserDataType;
+};
 
 export type StepsBarItemsProps = {
 	title: string;
 	active: boolean;
-	component: FC<{ onSuccess?: () => void; onFieldChange?: (key: string, value: unknown) => void }>;
+	component: FC<StepsBarComponentProps>;
 };
 
 export type StepsBarProps = {
 	items: StepsBarItemsProps[];
 	onNextStepCallback: (newItems: StepsBarItemsProps[]) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
+	initialValues?: UserDataType;
 };
 
-export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback }: StepsBarProps) => {
+export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, initialValues }: StepsBarProps) => {
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 	const { width } = useWindowSize();
 
@@ -51,7 +59,11 @@ export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback }: S
 			return (
 				selectedIndex === index && (
 					<div key={index}>
-						<ComponentView onSuccess={onSetNextStep} onFieldChange={onFieldChangeCallback} />
+						<ComponentView
+							onSuccess={onSetNextStep}
+							onFieldChange={onFieldChangeCallback}
+							initialValues={initialValues}
+						/>
 					</div>
 				)
 			);
