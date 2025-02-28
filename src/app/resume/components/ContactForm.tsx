@@ -60,9 +60,11 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 	}
 	return (
 		<Form {...form}>
-			<h3>Please enter your contact info</h3>
+			<div className="mb-4">
+				<h3>Please enter your contact info</h3>
+			</div>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-2">
 					<FormField
 						control={form.control}
 						name="firstName"
@@ -186,7 +188,9 @@ export const ContactForm = ({ onFieldChange, onSuccess }: ContactFormPropsType) 
 						)}
 					/>
 				</div>
-				<Button type="submit">Next Step</Button>
+				<div className="flex justify-end">
+					<Button type="submit">Next Step</Button>
+				</div>
 			</form>
 		</Form>
 	);

@@ -58,7 +58,7 @@ export const ExperienceForm = ({ onSuccess, onFormChange }: ExperienceFormPropsT
 	}
 
 	return (
-		<div className="pb-8">
+		<div className="pb-4">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 					<div className="flex flex-col space-y-8">
