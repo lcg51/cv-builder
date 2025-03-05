@@ -46,7 +46,6 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 	});
 
 	useEffect(() => {
-		console.log('form', form);
 		const subscription = form.watch(values => {
 			Object.entries(values).forEach(([key, value]) => {
 				onFieldChange?.(key, value);
