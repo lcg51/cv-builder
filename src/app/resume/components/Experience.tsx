@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { WorkExperienceType } from '@/app/models/user';
 import { ExperienceForm } from './ExperienceForm';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ export type ExperienceProps = StepsBarComponentProps;
 
 export const Experience = ({ initialValues, onSuccess, onFieldChange }: ExperienceProps) => {
 	const [experienceForms, setExperienceForms] = useState<number[]>([]);
+	const formRefs = useRef<{ [key: number]: HTMLFormElement | null }>({});
 
 	const addExperienceForm = () => {
 		setExperienceForms(prevForms => [...prevForms, prevForms.length]);
@@ -28,6 +29,25 @@ export const Experience = ({ initialValues, onSuccess, onFieldChange }: Experien
 		setExperienceForms(prevForms => prevForms.filter((_, i) => i !== index));
 	};
 
+	const validateForms = () => {
+		let allValid = true;
+		Object.values(formRefs.current).forEach(form => {
+			if (form && !form.checkValidity()) {
+				allValid = false;
+				form.reportValidity();
+			}
+		});
+		console.log('allValid', allValid);
+		if (allValid) {
+			Object.values(formRefs.current).forEach(form => {
+				if (form) {
+					form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+				}
+				onSuccess?.();
+			});
+		}
+	};
+
 	return (
 		<div>
 			<div className="mb-4">
@@ -39,8 +59,9 @@ export const Experience = ({ initialValues, onSuccess, onFieldChange }: Experien
 					<div key={formIndex} className="relative">
 						<ExperienceForm
 							onFormChange={value => handleFormChange(index.toString(), value)}
-							onSuccess={onSuccess}
+							onSuccess={validateForms}
 							experienceForm={initialValues?.workExperience[index]}
+							ref={el => (formRefs.current[formIndex] = el)}
 						/>
 						<span
 							className="absolute top-[-20px] right-0 cursor-pointer"
@@ -61,7 +82,9 @@ export const Experience = ({ initialValues, onSuccess, onFieldChange }: Experien
 			</div>
 
 			<div className="flex justify-end">
-				<Button type="submit">Next Step</Button>
+				<Button type="button" onClick={validateForms}>
+					Next Step
+				</Button>
 			</div>
 		</div>
 	);

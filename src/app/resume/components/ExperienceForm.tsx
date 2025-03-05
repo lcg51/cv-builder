@@ -2,7 +2,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import React, { useCallback } from 'react';
+import React, { useEffect, forwardRef } from 'react';
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -34,140 +34,127 @@ export type ExperienceFormPropsType = {
 	onSuccess?: () => void;
 	experienceForm?: WorkExperienceType;
 };
-export const ExperienceForm = ({ experienceForm, onFormChange }: ExperienceFormPropsType) => {
-	console.log('experienceForm', experienceForm);
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: (experienceForm as WorkExperienceType as z.infer<typeof formSchema>) || {
-			jobTitle: '',
-			company: '',
-			startDate: new Date(),
-			endDate: new Date(),
-			location: '',
-			description: ''
+
+export const ExperienceForm = forwardRef<HTMLFormElement, ExperienceFormPropsType>(
+	({ experienceForm, onFormChange, onSuccess }, ref) => {
+		const form = useForm<z.infer<typeof formSchema>>({
+			resolver: zodResolver(formSchema),
+			defaultValues: (experienceForm as WorkExperienceType as z.infer<typeof formSchema>) || {
+				jobTitle: '',
+				company: '',
+				startDate: new Date(),
+				endDate: new Date(),
+				location: '',
+				description: ''
+			}
+		});
+
+		useEffect(() => {
+			const subscription = form.watch(values => {
+				onFormChange?.(values as unknown as WorkExperienceType);
+			});
+			return () => subscription.unsubscribe();
+		}, [form.watch, onFormChange, ref]);
+
+		function onSubmit(values: z.infer<typeof formSchema>) {
+			// Do something with the form values.
+			// ✅ This will be type-safe and validated.
+			console.log(values);
+			onSuccess?.();
 		}
-	});
 
-	const updateExperience = useCallback(() => {
-		const formValues = form.getValues();
-		onFormChange?.(formValues as unknown as WorkExperienceType);
-	}, [form, onFormChange]);
-
-	return (
-		<div className="pb-4">
-			<Form {...form}>
-				<form className="space-y-8">
-					<div className="flex flex-col space-y-8">
-						<div className="grow-[25vw]">
+		return (
+			<div className="pb-4">
+				<Form {...form}>
+					<form ref={ref} className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+						<div className="flex flex-col space-y-8">
+							<div className="flex space-x-4">
+								<FormField
+									control={form.control}
+									name="jobTitle"
+									render={({ field }) => (
+										<FormItem className="w-1/2">
+											<FormLabel>Job title</FormLabel>
+											<FormControl>
+												<Input placeholder="Job title" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="company"
+									render={({ field }) => (
+										<FormItem className="w-1/2">
+											<FormLabel>Employer</FormLabel>
+											<FormControl>
+												<Input placeholder="Employer" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+							<div className="flex space-x-4">
+								<FormField
+									control={form.control}
+									name="startDate"
+									render={({ field }) => (
+										<FormItem className="w-1/3">
+											<FormLabel>Start Date</FormLabel>
+											<FormControl>
+												<DatePicker {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="endDate"
+									render={({ field }) => (
+										<FormItem className="w-1/3">
+											<FormLabel>End Date</FormLabel>
+											<FormControl>
+												<DatePicker {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="location"
+									render={({ field }) => (
+										<FormItem className="w-1/3">
+											<FormLabel>City</FormLabel>
+											<FormControl>
+												<Input placeholder="City" {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
 							<FormField
 								control={form.control}
-								name="jobTitle"
+								name="description"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Job title</FormLabel>
+										<FormLabel>Description</FormLabel>
 										<FormControl>
-											<Input
-												placeholder="Job title"
-												{...field}
-												onChange={ev => {
-													field.onChange(ev);
-													updateExperience();
-												}}
-											/>
+											<Textarea {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
 						</div>
-						<FormField
-							control={form.control}
-							name="company"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Employer</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="Employer"
-											{...field}
-											onChange={ev => {
-												field.onChange(ev);
-												updateExperience();
-											}}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="startDate"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Start Date</FormLabel>
-									<FormControl>
-										<DatePicker {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="endDate"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>End Date</FormLabel>
-									<FormControl>
-										<DatePicker {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="location"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>City</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="City"
-											{...field}
-											onChange={ev => {
-												field.onChange(ev);
-												updateExperience();
-											}}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Description</FormLabel>
-									<FormControl>
-										<Textarea
-											{...field}
-											onChange={ev => {
-												field.onChange(ev);
-												updateExperience();
-											}}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-				</form>
-			</Form>
-		</div>
-	);
-};
+					</form>
+				</Form>
+			</div>
+		);
+	}
+);
+ExperienceForm.displayName = 'ExperienceForm';
