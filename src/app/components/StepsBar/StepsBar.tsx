@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import './StepsBar.css';
 import { useWindowSize } from '../../util/hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
@@ -18,28 +18,44 @@ export type StepsBarItemsProps = {
 
 export type StepsBarProps = {
 	items: StepsBarItemsProps[];
+	activeStep: number;
 	onNextStepCallback: (newItems: StepsBarItemsProps[]) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
 };
 
-export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, initialValues }: StepsBarProps) => {
-	const [selectedIndex, setSelectedIndex] = useState<number>(0);
+export const StepsBar = ({
+	activeStep,
+	items,
+	onNextStepCallback,
+	onFieldChangeCallback,
+	initialValues
+}: StepsBarProps) => {
+	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
 	const { width } = useWindowSize();
+
+	useEffect(() => {
+		setSelectedIndex(activeStep);
+	}, [activeStep]);
 
 	const isTabletResolution = width < 1024;
 
 	const sortedItems = useMemo(() => {
-		return items.sort(a => (a.active ? -1 : 1));
-	}, [items]);
+		return items
+			.sort(a => (a.active ? -1 : 1))
+			.map((item, index) => {
+				const newItem = { ...item, active: index <= selectedIndex };
+				return newItem;
+			});
+	}, [items, selectedIndex]);
 
 	const filledBarWidth = useMemo(() => {
-		const itemBarWidth = 100 / items.length;
-		const activeItems = items.filter(item => item.active);
+		const itemBarWidth = 100 / sortedItems.length;
+		const activeItems = sortedItems.filter(item => item.active);
 		const itemsTotalWidth = itemBarWidth * activeItems.length;
 		const filledBarWidth = isTabletResolution ? itemsTotalWidth : itemsTotalWidth - itemBarWidth / 2;
 		return filledBarWidth;
-	}, [items, isTabletResolution]);
+	}, [sortedItems, isTabletResolution]);
 
 	const onSetNextStep = useCallback(() => {
 		if (selectedIndex === items.length - 1) return;
