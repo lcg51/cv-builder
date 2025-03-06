@@ -6,8 +6,8 @@ export type SkillType = {
 export type WorkExperienceType = {
 	company: string;
 	jobTitle: string;
-	startDate: Date | string;
-	endDate: Date | string;
+	startDate: Date;
+	endDate: Date;
 	location: string;
 	description: string;
 };
@@ -50,18 +50,10 @@ export const defaultUserData: UserDataType = {
 		{
 			company: 'Google',
 			jobTitle: 'Software Engineer',
-			startDate: 'Jan 2020',
-			endDate: 'Present',
+			startDate: new Date(),
+			endDate: new Date(),
 			location: 'Mountain View, CA',
 			description: 'Worked on the Google Search team to improve search results for users.'
-		},
-		{
-			company: 'Facebook',
-			jobTitle: 'Software Engineer Intern',
-			startDate: 'May 2019',
-			endDate: 'Aug 2019',
-			location: 'Menlo Park, CA',
-			description: 'Developed new features for the Facebook app using React Native.'
 		}
 	],
 	skills: [

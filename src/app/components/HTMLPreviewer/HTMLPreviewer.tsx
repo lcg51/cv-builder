@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { TemplatePreview } from '../TemplatePreview/TemplatePreview';
 import { UserDataType } from '@/app/models/user';
 import './HTMLPreviewer.css';
+import { format } from 'date-fns';
 
 export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [htmlInput, setHtmlInput] = useState('');
@@ -159,7 +160,7 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                                         </div>
                                         <div class="work-experience__time">
                                             <div>
-                                                <span>${exp.startDate}&nbsp;-&nbsp;${exp.endDate} </span>
+                                                <span>${format(exp.startDate, 'PPP')}&nbsp;-&nbsp;${format(exp.endDate, 'PPP')} </span>
                                             </div>
                                             <div>
                                                 <span> ${exp.location} </span>
