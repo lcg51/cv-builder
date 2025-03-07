@@ -15,6 +15,10 @@ export type WorkExperienceType = {
 export type EducationType = {
 	degree: string;
 	university: string;
+	fieldOfStudy: string;
+	finishDate: Date;
+	city: string;
+	description: string;
 };
 
 export type UserDataType = {
@@ -27,7 +31,7 @@ export type UserDataType = {
 	email: string;
 	linkedin: string;
 	github: string;
-	education: EducationType;
+	education: Array<EducationType>;
 	workExperience: Array<WorkExperienceType>;
 	skills: Array<SkillType>;
 };
@@ -42,10 +46,16 @@ export const defaultUserData: UserDataType = {
 	email: 'johndoe@gmail.com',
 	linkedin: 'https://www.linkedin.com/in/johndoe',
 	github: 'https://www.github.com/johndoe',
-	education: {
-		degree: 'Bachelor of Science in Computer Science',
-		university: 'University of California, Berkeley'
-	},
+	education: [
+		{
+			degree: 'Bachelor of Science in Computer Science',
+			university: 'University of California, Berkeley',
+			fieldOfStudy: 'Computer Science',
+			finishDate: new Date(),
+			city: 'Berkeley, CA',
+			description: 'Graduated with honors.'
+		}
+	],
 	workExperience: [
 		{
 			company: 'Google',

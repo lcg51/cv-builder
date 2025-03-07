@@ -86,14 +86,29 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                             <span> EDUCATION </span>
                         </div>
                         <div class="education">
-                            <div class="dZuYuB">
-                                <div>
-                                    <span class="education_degree">${userData?.education.degree}</span>
+                            ${userData.education
+								.map(
+									edu => `
+                                <div class="dZuYuB">
+                                    <div>
+                                        <span class="education_degree">${edu.degree}</span>
+                                    </div>
+                                    <div>
+                                        <div class="education__university">${edu.university}</div>
+                                    </div>
+                                    <div>
+                                        <div class="education__city">${edu.city}</div>
+                                    </div>
+                                    <div>
+                                        <div class="education__date">${format(edu.finishDate, 'PPP')}</div>
+                                    </div>
+                                    <div>
+                                        <div class="education__description">${edu.description}</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="education__university">${userData?.education.university}</div>
-                                </div>
-                            </div>
+                            `
+								)
+								.join('')}
                         </div>
                     </div>
                     <div id="SOCIAL_LINKS-block" class="enCnDQ jcDrNn">
