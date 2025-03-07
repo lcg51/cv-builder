@@ -60,8 +60,7 @@ export const Experience = ({ initialValues, onSuccess, onFieldChange }: Experien
 		return () => subscription.unsubscribe();
 	}, [watch, onFieldChange]);
 
-	const onSubmit = (values: z.infer<typeof formSchema>) => {
-		console.log('Form submitted:', values);
+	const onSubmit = () => {
 		onSuccess?.();
 	};
 
