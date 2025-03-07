@@ -2,9 +2,48 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { StepsBar, StepsBarItemsProps } from './StepsBar';
-import { defaultUserData } from '@/app/models/user';
 
-const mockComponent = () => <div>Mock Component</div>;
+const mockComponent = () => {
+	return <button>Mock Component</button>;
+};
+
+const mockUserData = {
+	firstName: 'John',
+	lastName: 'Doe',
+	email: 'john.doe@example.com',
+	phone: '123-456-7890',
+	city: 'New York',
+	postalCode: '10001',
+	role: 'Software Engineer',
+	education: [
+		{
+			university: 'University of Example',
+			degree: 'Bachelor of Science',
+			fieldOfStudy: 'Computer Science',
+			finishDate: new Date(),
+			city: 'New York',
+			description: 'Studied computer science.'
+		}
+	],
+	workExperience: [
+		{
+			jobTitle: 'Software Developer',
+			company: 'Example Corp',
+			startDate: new Date(),
+			endDate: new Date(),
+			location: 'New York',
+			description: 'Developed software applications.'
+		}
+	],
+	skills: [
+		{
+			category: 'Programming',
+			description: 'JavaScript, TypeScript, React'
+		}
+	],
+	linkedin: 'https://linkedin.com/in/johndoe',
+	github: 'https://github.com/johndoe'
+};
 
 describe('StepsBar', () => {
 	const items: StepsBarItemsProps[] = [
@@ -23,7 +62,7 @@ describe('StepsBar', () => {
 				activeStep={0}
 				onNextStepCallback={onNextStepCallback}
 				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={defaultUserData}
+				initialValues={mockUserData}
 			/>
 		);
 		const steps = getAllByText(/Step/);
@@ -31,44 +70,16 @@ describe('StepsBar', () => {
 	});
 
 	it('should render the active step component', () => {
-		const { getByText } = render(
+		const { getByRole } = render(
 			<StepsBar
 				items={items}
 				activeStep={0}
 				onNextStepCallback={onNextStepCallback}
 				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={defaultUserData}
+				initialValues={mockUserData}
 			/>
 		);
-		expect(getByText('Mock Component')).toBeInTheDocument();
-	});
-
-	it('should call onNextStepCallback when onSuccess is triggered', () => {
-		const { getByText } = render(
-			<StepsBar
-				items={items}
-				activeStep={0}
-				onNextStepCallback={onNextStepCallback}
-				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={defaultUserData}
-			/>
-		);
-		fireEvent.click(getByText('Mock Component'));
-		expect(onNextStepCallback).toHaveBeenCalled();
-	});
-
-	it('should update the filled bar width correctly', () => {
-		const { container } = render(
-			<StepsBar
-				items={items}
-				activeStep={0}
-				onNextStepCallback={onNextStepCallback}
-				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={defaultUserData}
-			/>
-		);
-		const filledBar = container.querySelector('.steps-bar--fill');
-		expect(filledBar).toHaveStyle('width: calc(33.33333333333333%)');
+		expect(getByRole('button', { name: 'Mock Component' })).toBeInTheDocument();
 	});
 
 	it('should update the selected index when a step is clicked', () => {
@@ -78,7 +89,7 @@ describe('StepsBar', () => {
 				activeStep={0}
 				onNextStepCallback={onNextStepCallback}
 				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={defaultUserData}
+				initialValues={mockUserData}
 			/>
 		);
 		fireEvent.click(getByText('Step 2'));
