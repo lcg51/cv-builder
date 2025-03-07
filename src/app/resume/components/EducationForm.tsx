@@ -57,10 +57,10 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 
 	useEffect(() => {
 		const subscription = watch(values => {
-			onFieldChange?.('education', values);
+			onFieldChange?.('education', values.educationForms);
 		});
 		return () => subscription.unsubscribe();
-	}, [form.watch, onFieldChange]);
+	}, [watch, onFieldChange]);
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		console.log(values);

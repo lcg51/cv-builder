@@ -66,7 +66,7 @@ export const StepsBar = ({
 		onNextStepCallback(newItems);
 
 		setSelectedIndex(selectedIndex + 1);
-	}, [setSelectedIndex]);
+	}, [selectedIndex, items, onNextStepCallback]);
 
 	const stepsViewRender = useMemo(() => {
 		return items.map(({ component }, index) => {
@@ -84,7 +84,7 @@ export const StepsBar = ({
 				)
 			);
 		});
-	}, [items, selectedIndex]);
+	}, [items, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues]);
 
 	const stepsTabsRender = useMemo(() => {
 		if (isTabletResolution)
@@ -111,7 +111,7 @@ export const StepsBar = ({
 				<div className={`bullet ${item.active ? 'active' : ''}`}></div>
 			</div>
 		));
-	}, [items, selectedIndex, isTabletResolution]);
+	}, [sortedItems, selectedIndex, isTabletResolution]);
 
 	const onClickStepItem = useCallback(
 		({ item, index }: { item: StepsBarItemsProps; index: number }) => {
