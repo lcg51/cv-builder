@@ -4,7 +4,7 @@ const config: Config.InitialOptions = {
 	preset: 'ts-jest',
 	testEnvironment: 'jest-environment-jsdom',
 	transform: {
-		'^.+\\.(ts|tsx)$': 'babel-jest'
+		'^.+\\.(ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.ts' }]
 	},
 	moduleNameMapper: {
 		'\\.(css|less|scss|sass)$': 'identity-obj-proxy'

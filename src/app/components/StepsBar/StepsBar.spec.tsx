@@ -1,10 +1,15 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { StepsBar, StepsBarItemsProps } from './StepsBar';
+import { StepsBar, StepsBarComponentProps, StepsBarItemsProps } from './StepsBar';
 
-const mockComponent = () => {
-	return <button>Mock Component</button>;
+const mockComponent1 = ({ onSuccess }: StepsBarComponentProps) => {
+	return <button onClick={onSuccess}>Mock Component 1</button>;
+};
+
+const mockComponent2 = () => {
+	return <button>Mock Component 2</button>;
 };
 
 const mockUserData = {
@@ -46,14 +51,19 @@ const mockUserData = {
 };
 
 describe('StepsBar', () => {
+	const user = userEvent.setup();
 	const items: StepsBarItemsProps[] = [
-		{ title: 'Step 1', active: true, component: mockComponent },
-		{ title: 'Step 2', active: false, component: mockComponent },
-		{ title: 'Step 3', active: false, component: mockComponent }
+		{ title: 'Step 1', active: true, component: mockComponent1 },
+		{ title: 'Step 2', active: false, component: mockComponent2 }
 	];
 
 	const onNextStepCallback = jest.fn();
 	const onFieldChangeCallback = jest.fn();
+	const setSelectedIndex = jest.fn();
+
+	beforeEach(() => {
+		jest.spyOn(React, 'useState').mockImplementation(() => [0, setSelectedIndex]);
+	});
 
 	it('should render the correct number of steps', () => {
 		const { getAllByText } = render(
@@ -66,7 +76,7 @@ describe('StepsBar', () => {
 			/>
 		);
 		const steps = getAllByText(/Step/);
-		expect(steps.length).toBe(3);
+		expect(steps.length).toBe(2);
 	});
 
 	it('should render the active step component', () => {
@@ -79,11 +89,11 @@ describe('StepsBar', () => {
 				initialValues={mockUserData}
 			/>
 		);
-		expect(getByRole('button', { name: 'Mock Component' })).toBeInTheDocument();
+		expect(getByRole('button', { name: 'Mock Component 1' })).toBeInTheDocument();
 	});
 
-	it('should update the selected index when a step is clicked', () => {
-		const { getByText } = render(
+	it('should update the selected index when a step is clicked', async () => {
+		const { getByRole } = render(
 			<StepsBar
 				items={items}
 				activeStep={0}
@@ -92,7 +102,16 @@ describe('StepsBar', () => {
 				initialValues={mockUserData}
 			/>
 		);
-		fireEvent.click(getByText('Step 2'));
-		expect(getByText('Mock Component')).toBeInTheDocument();
+
+		await act(() => {
+			user.click(getByRole('button', { name: 'Mock Component 1' }));
+		});
+
+		await waitFor(() => {
+			expect(onNextStepCallback).toHaveBeenCalledWith([
+				{ title: 'Step 1', active: true, component: mockComponent1 },
+				{ title: 'Step 2', active: true, component: mockComponent2 }
+			]);
+		});
 	});
 });
