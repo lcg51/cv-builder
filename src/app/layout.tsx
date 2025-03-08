@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from './providers/ThemeProvider';
 import './globals.css';
+import React from 'react';
 
 export const metadata: Metadata = {
 	title: 'Portfolio App',

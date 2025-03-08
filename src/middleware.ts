@@ -13,21 +13,26 @@ export const PROTECTED_ROUTES = [
 export const auth = googleAuth;
 
 export async function middleware(request: NextRequest) {
-	const pathname = request.nextUrl.pathname;
+	try {
+		const pathname = request.nextUrl.pathname;
 
-	const session = await auth();
-	const isAccessingAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
-	const isAcessingProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
+		const session = await auth();
+		const isAccessingAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
+		const isAcessingProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
 
-	if (session && isAccessingAuthRoute) {
-		return NextResponse.redirect(new URL('/admin', request.url));
+		if (session && isAccessingAuthRoute) {
+			return NextResponse.redirect(new URL('/admin', request.url));
+		}
+
+		if (!session && isAcessingProtectedRoute) {
+			return NextResponse.redirect(new URL('/login', request.url));
+		}
+
+		return NextResponse.next();
+	} catch (error) {
+		console.error(error);
+		return NextResponse.error();
 	}
-
-	if (!session && isAcessingProtectedRoute) {
-		return NextResponse.redirect(new URL('/login', request.url));
-	}
-
-	return NextResponse.next();
 }
 
 export const config = {
