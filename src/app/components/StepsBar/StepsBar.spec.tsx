@@ -53,8 +53,8 @@ const mockUserData = {
 describe('StepsBar', () => {
 	const user = userEvent.setup();
 	const items: StepsBarItemsProps[] = [
-		{ title: 'Step 1', active: true, component: mockComponent1 },
-		{ title: 'Step 2', active: false, component: mockComponent2 }
+		{ title: 'Step 1', active: true, isClickable: true, component: mockComponent1 },
+		{ title: 'Step 2', active: false, isClickable: false, component: mockComponent2 }
 	];
 
 	const onNextStepCallback = jest.fn();

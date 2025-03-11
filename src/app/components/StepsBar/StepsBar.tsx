@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import './StepsBar.css';
 import { useWindowSize } from '../../util/hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
@@ -13,63 +13,60 @@ export type StepsBarComponentProps = {
 export type StepsBarItemsProps = {
 	title: string;
 	active: boolean;
+	isClickable: boolean;
 	component: FC<StepsBarComponentProps>;
 };
 
 export type StepsBarProps = {
 	items: StepsBarItemsProps[];
-	activeStep: number;
-	onNextStepCallback: (newItems: StepsBarItemsProps[]) => void;
+	activeStep?: number;
+	onNextStepCallback?: (stepIndex: number) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
 };
 
-export const StepsBar = ({
-	activeStep,
-	items,
-	onNextStepCallback,
-	onFieldChangeCallback,
-	initialValues
-}: StepsBarProps) => {
-	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
+export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, initialValues }: StepsBarProps) => {
+	const [selectedIndex, setSelectedIndex] = useState<number>(0);
+	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
 	const { width } = useWindowSize();
-
-	useEffect(() => {
-		setSelectedIndex(activeStep);
-	}, [activeStep]);
-
 	const isTabletResolution = width < 1024;
 
-	const sortedItems = useMemo(() => {
-		return items
-			.sort(a => (a.active ? -1 : 1))
-			.map((item, index) => {
-				const newItem = { ...item, active: index <= selectedIndex };
-				return newItem;
-			});
-	}, [items, selectedIndex]);
+	const onSetNextStep = useCallback(() => {
+		if (selectedIndex === stepItems.length - 1) return;
+		const newItems = stepItems.map((item, index) => ({
+			...item,
+			active: index <= selectedIndex + 1,
+			isClickable: index <= selectedIndex + 1
+		}));
+		setStepItems(newItems);
+		setSelectedIndex(selectedIndex + 1);
+		onNextStepCallback?.(selectedIndex + 1);
+	}, [selectedIndex, stepItems]);
 
 	const filledBarWidth = useMemo(() => {
-		const itemBarWidth = 100 / sortedItems.length;
-		const activeItems = sortedItems.filter(item => item.active);
+		const itemBarWidth = 100 / stepItems.length;
+		const activeItems = stepItems.filter(item => item.active);
 		const itemsTotalWidth = itemBarWidth * activeItems.length;
 		const filledBarWidth = isTabletResolution ? itemsTotalWidth : itemsTotalWidth - itemBarWidth / 2;
 		return filledBarWidth;
-	}, [sortedItems, isTabletResolution]);
+	}, [items, isTabletResolution, selectedIndex]);
 
-	const onSetNextStep = useCallback(() => {
-		if (selectedIndex === items.length - 1) return;
-		const newItems = items.map((item, index) => {
-			if (index === selectedIndex + 1) item.active = true;
-			return item;
-		});
-		onNextStepCallback(newItems);
+	const onClickStepItem = useCallback(
+		({ item, index }: { item: StepsBarItemsProps; index: number }) => {
+			if (!item.active) return;
 
-		setSelectedIndex(selectedIndex + 1);
-	}, [selectedIndex, items, onNextStepCallback]);
+			const newItems = stepItems.map((item, stepIndex) => ({
+				...item,
+				active: stepIndex <= index
+			}));
+			setStepItems(newItems);
+			setSelectedIndex(index);
+		},
+		[setSelectedIndex]
+	);
 
 	const stepsViewRender = useMemo(() => {
-		return items.map(({ component }, index) => {
+		return stepItems.map(({ component }, index) => {
 			const ComponentView = component;
 
 			return (
@@ -84,11 +81,11 @@ export const StepsBar = ({
 				)
 			);
 		});
-	}, [items, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues]);
+	}, [stepItems, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues]);
 
 	const stepsTabsRender = useMemo(() => {
 		if (isTabletResolution)
-			return sortedItems.map((item, index) => {
+			return stepItems.map((item, index) => {
 				return (
 					selectedIndex === index && (
 						<div
@@ -101,7 +98,7 @@ export const StepsBar = ({
 					)
 				);
 			});
-		return sortedItems.map((item, index) => (
+		return stepItems.map((item, index) => (
 			<div
 				key={index}
 				className={`flex flex-col flex-1 items-center relative ${item.active ? 'cursor-pointer' : ''}`}
@@ -111,15 +108,7 @@ export const StepsBar = ({
 				<div className={`bullet ${item.active ? 'active' : ''}`}></div>
 			</div>
 		));
-	}, [sortedItems, selectedIndex, isTabletResolution]);
-
-	const onClickStepItem = useCallback(
-		({ item, index }: { item: StepsBarItemsProps; index: number }) => {
-			if (!item.active) return;
-			setSelectedIndex(index);
-		},
-		[setSelectedIndex]
-	);
+	}, [stepItems, selectedIndex, isTabletResolution, onClickStepItem]);
 
 	return (
 		<div className="flex flex-col w-full">
