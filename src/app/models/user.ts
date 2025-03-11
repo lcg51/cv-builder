@@ -1,6 +1,6 @@
 export type SkillType = {
-	category: string;
-	description: string;
+	title: string;
+	level: number[];
 };
 
 export type WorkExperienceType = {
@@ -68,12 +68,8 @@ export const defaultUserData: UserDataType = {
 	],
 	skills: [
 		{
-			category: 'Programming Languages',
-			description: 'JavaScript, Python, Java, C++'
-		},
-		{
-			category: 'Web Technologies',
-			description: 'HTML, CSS, React, Node.js'
+			title: 'JavaScript',
+			level: [50]
 		}
 	]
 };

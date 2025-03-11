@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { EducationForm } from '../components/EducationForm';
 import { Experience } from '../components/Experience';
+import { SkillsForm } from '../components/SkillsForm';
 import { StepsBar } from '@/app/components/StepsBar/StepsBar';
 import { HtmlPreviewer } from '@/app/components/HTMLPreviewer/HTMLPreviewer';
 import { create } from 'zustand';
@@ -42,7 +43,7 @@ export default function CreateResume() {
 		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
 		{ title: 'Experience', active: false, isClickable: false, component: Experience },
 		{ title: 'Education', active: false, isClickable: false, component: EducationForm },
-		{ title: 'Skills', active: false, isClickable: false, component: ContactForm },
+		{ title: 'Skills', active: false, isClickable: false, component: SkillsForm },
 		{ title: 'About', active: false, isClickable: false, component: ContactForm },
 		{ title: 'Finish it', active: false, isClickable: false, component: ContactForm }
 	];

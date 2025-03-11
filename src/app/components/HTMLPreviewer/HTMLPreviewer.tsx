@@ -204,8 +204,8 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 								.map(
 									skill => `
                             <div class="skills-container__paragraph">
-                                <span class="skills-container--bold">${skill.category}:</span>
-                                ${skill.description}
+                                <span class="skills-container--bold">${skill.title}:</span>
+                                ${skill.level}
                             </div>
                             `
 								)
