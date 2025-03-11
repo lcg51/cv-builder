@@ -39,29 +39,31 @@ export default function CreateResume() {
 	const activeStep = userDataStore((state: UserDataStoreType) => state.activeStep);
 	const setActiveStep = userDataStore((state: UserDataStoreType) => state.setActiveStep);
 	const initialSteps = [
-		{ title: 'Contact', active: true, component: ContactForm },
-		{ title: 'Experience', active: false, component: Experience },
-		{ title: 'Education', active: false, component: EducationForm },
-		{ title: 'Skills', active: false, component: ContactForm },
-		{ title: 'About', active: false, component: ContactForm },
-		{ title: 'Finish it', active: false, component: ContactForm }
+		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
+		{ title: 'Experience', active: false, isClickable: false, component: Experience },
+		{ title: 'Education', active: false, isClickable: false, component: EducationForm },
+		{ title: 'Skills', active: false, isClickable: false, component: ContactForm },
+		{ title: 'About', active: false, isClickable: false, component: ContactForm },
+		{ title: 'Finish it', active: false, isClickable: false, component: ContactForm }
 	];
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
 		setUserDataValue(key, value as string);
 	}, []);
 
-	const onSetNextStep = useCallback(() => {
-		if (activeStep === initialSteps.length - 1) return;
-		setActiveStep(activeStep + 1);
-	}, [activeStep, initialSteps]);
+	const onSetNextStep = useCallback(
+		(activeStepIndex: number) => {
+			if (activeStepIndex === initialSteps.length - 1) return;
+			setActiveStep(activeStepIndex);
+		},
+		[activeStep, initialSteps]
+	);
 
 	return (
 		<div className="flex h-full">
 			<div className="w-1/2 h-full">
 				<StepsBar
 					items={initialSteps}
-					activeStep={activeStep}
 					onNextStepCallback={onSetNextStep}
 					onFieldChangeCallback={updateUserValue}
 					initialValues={userData}
