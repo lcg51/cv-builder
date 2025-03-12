@@ -1,5 +1,6 @@
 'use client';
 import React, { useCallback } from 'react';
+import { AboutForm } from '../components/AboutForm';
 import { ContactForm } from '../components/ContactForm';
 import { EducationForm } from '../components/EducationForm';
 import { Experience } from '../components/Experience';
@@ -44,11 +45,12 @@ export default function CreateResume() {
 		{ title: 'Experience', active: false, isClickable: false, component: Experience },
 		{ title: 'Education', active: false, isClickable: false, component: EducationForm },
 		{ title: 'Skills', active: false, isClickable: false, component: SkillsForm },
-		{ title: 'About', active: false, isClickable: false, component: ContactForm },
+		{ title: 'About', active: false, isClickable: false, component: AboutForm },
 		{ title: 'Finish it', active: false, isClickable: false, component: ContactForm }
 	];
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
+		console.log(key, value);
 		setUserDataValue(key, value as string);
 	}, []);
 

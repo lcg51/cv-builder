@@ -12,44 +12,6 @@ const mockComponent2 = () => {
 	return <button>Mock Component 2</button>;
 };
 
-const mockUserData = {
-	firstName: 'John',
-	lastName: 'Doe',
-	email: 'john.doe@example.com',
-	phone: '123-456-7890',
-	city: 'New York',
-	postalCode: '10001',
-	role: 'Software Engineer',
-	education: [
-		{
-			university: 'University of Example',
-			degree: 'Bachelor of Science',
-			fieldOfStudy: 'Computer Science',
-			finishDate: new Date(),
-			city: 'New York',
-			description: 'Studied computer science.'
-		}
-	],
-	workExperience: [
-		{
-			jobTitle: 'Software Developer',
-			company: 'Example Corp',
-			startDate: new Date(),
-			endDate: new Date(),
-			location: 'New York',
-			description: 'Developed software applications.'
-		}
-	],
-	skills: [
-		{
-			category: 'Programming',
-			description: 'JavaScript, TypeScript, React'
-		}
-	],
-	linkedin: 'https://linkedin.com/in/johndoe',
-	github: 'https://github.com/johndoe'
-};
-
 describe('StepsBar', () => {
 	const user = userEvent.setup();
 	const items: StepsBarItemsProps[] = [
@@ -72,7 +34,6 @@ describe('StepsBar', () => {
 				activeStep={0}
 				onNextStepCallback={onNextStepCallback}
 				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={mockUserData}
 			/>
 		);
 		const steps = getAllByText(/Step/);
@@ -86,7 +47,6 @@ describe('StepsBar', () => {
 				activeStep={0}
 				onNextStepCallback={onNextStepCallback}
 				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={mockUserData}
 			/>
 		);
 		expect(getByRole('button', { name: 'Mock Component 1' })).toBeInTheDocument();
@@ -99,7 +59,6 @@ describe('StepsBar', () => {
 				activeStep={0}
 				onNextStepCallback={onNextStepCallback}
 				onFieldChangeCallback={onFieldChangeCallback}
-				initialValues={mockUserData}
 			/>
 		);
 

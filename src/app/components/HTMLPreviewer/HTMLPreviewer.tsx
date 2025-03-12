@@ -8,7 +8,8 @@ import { format } from 'date-fns';
 export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [htmlInput, setHtmlInput] = useState('');
 
-	const template = `
+	useEffect(() => {
+		const template = `
         <div class="cv p-14 items-center flex flex-col justify-center bg-secondary">
             <div class="cv-header w-full">
                 <div class="cv-header__wrapper">
@@ -47,12 +48,9 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
             </div>
             <div class="flex">
                 <div class="LeftColumn-sc-fvgclz-15 left-column">
-                    <div class="image-wrapper">
-                        {/* <img src={picture} alt="profile-picture" class="image" /> */}
-                    </div>
                     <div id="PROFESSIONAL_SUMMARY" class="janQsy jcDrNn">
                         <div class="jgHnCq bdkegh">
-                            <div class="section-title">
+                            <div class="section-title mb-4 mt-4">
                                 <span> ABOUT ME </span>
                             </div>
                             <div class="dvqVRL">
@@ -60,19 +58,9 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                                     <div>
                                         <div class="about-me__description">
                                             <div class="hMKVdI">
-                                                <div class="UnbreakableView-sc-g0hv7p-0">
-                                                    <div>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                        Sed quis quam in odio tincidunt fermentum. Nam auctor,
-                                                        nisl.
-                                                    </div>
-                                                </div>
-                                                <div class="UnbreakableView-sc-g0hv7p-0">
-                                                    <div>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                        Sed quis quam in odio tincidunt fermentum. Nam auctor,
-                                                        nisl.
-                                                    </div>
+                                                <div class="about-me__description--text">
+                                                    <p>Hi, I'm ${userData?.firstName} ${userData?.lastName}.</p>
+                                                    <p>${userData?.aboutMe}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -82,7 +70,7 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
                         </div>
                     </div>
                     <div id="EDUCATION-block" class="jcDrNn">
-                        <div class="section-title">
+                        <div class="section-title mb-4 mt-4">
                             <span> EDUCATION </span>
                         </div>
                         <div class="education">
@@ -111,56 +99,29 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 								.join('')}
                         </div>
                     </div>
-                    <div id="SOCIAL_LINKS-block" class="enCnDQ jcDrNn">
-                        <div class="jgHnCq fmxcqb">
-                            <div class="section-title">
-                                <span> LINKS </span>
-                            </div>
-                            <div class="links-section">
-                                <div class="links-section__item">
-                                    <div class="links-section__name">LinkedIn:</div>
-                                    <a href="${userData?.linkedin}" class="links-section__link">
-                                        MyLinkedIn
-                                    </a>
-                                </div>
-                                <div class="links-section__item">
-                                    <div class="links-section__name">Github:</div>
-                                    <a href="${userData?.github}" class="links-section__link">
-                                        My github
-                                    </a>
-                                </div>
-                            </div>
+                    <div id="SKILLS-block">
+                        <div class="section-title mb-4 mt-4">
+                            <span>SKILLS</span>
                         </div>
-                    </div>
-                    <div id="LANGUAGES-block" class="janQsy jcDrNn">
-                        <div>
-                            <div class="section-title">
-                                <span> LANGUAGES </span>
-                            </div>
-                            <div class="languages">
-                                <div class="language-item">
-                                    <div class="language-item__name">English</div>
-                                    <div>
+                        <div class="skills">
+                            ${userData.skills
+								.map(
+									skill => `
+                                    <div class="skill-item mb-2">
+                                        <span class="skill-item__name">${skill.title}:</span>
                                         <div class="bar-container">
-                                            <div class="bar-container__progress bar-container__progress-80"></div>
+                                            <div class="bar-container__progress" style="width: ${skill.level[0]}%;"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="language-item">
-                                    <div class="language-item__name">Spanish</div>
-                                    <div>
-                                        <div class="bar-container">
-                                            <div class="bar-container__progress bar-container__progress-100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            `
+								)
+								.join('')}
                         </div>
                     </div>
                 </div>
                 <div class="RightColumn table-cell">
                     <div id="EMPLOYMENT-block">
-                        <div class="section-title">
+                        <div class="section-title mb-4 mt-4">
                             <div>WORK EXPERIENCE</div>
                         </div>
                         <div class="∫dvqVRL">
@@ -195,31 +156,12 @@ export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
 								.join('')}
                         </div>
                     </div>
-                    <div id="SKILLS-block">
-                        <div class="section-title">
-                            <div>Skills</div>
-                        </div>
-                        <div class="skills-container">
-                            ${userData.skills
-								.map(
-									skill => `
-                            <div class="skills-container__paragraph">
-                                <span class="skills-container--bold">${skill.title}:</span>
-                                ${skill.level}
-                            </div>
-                            `
-								)
-								.join('')}
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     `;
-
-	useEffect(() => {
 		setHtmlInput(template);
-	}, [template]);
+	}, [userData]);
 
 	return (
 		<div className="html-previewer">

@@ -175,7 +175,6 @@
 	font-size: 18px;
 	color: rgb(51, 62, 80);
 	text-transform: uppercase;
-	margin: 30px 0;
 	padding: 15px 0;
 	border-bottom: 1px solid rgb(51, 62, 80);
 	border-top: 1px solid rgb(51, 62, 80);
@@ -257,14 +256,6 @@
 	right: unset;
 }
 
-.bar-container__progress-80 {
-	width: 80%;
-}
-
-.bar-container__progress-100 {
-	width: 100%;
-}
-
 .links-section__item {
 	margin-bottom: 15px;
 }
@@ -275,5 +266,9 @@
 }
 
 .links-section__link {
+	color: rgb(103, 104, 107);
+}
+
+span {
 	color: rgb(103, 104, 107);
 }

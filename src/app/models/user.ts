@@ -24,6 +24,7 @@ export type EducationType = {
 export type UserDataType = {
 	firstName: string;
 	lastName: string;
+	aboutMe: string;
 	role: string;
 	city: string;
 	postalCode: string;
@@ -46,6 +47,7 @@ export const defaultUserData: UserDataType = {
 	email: 'johndoe@gmail.com',
 	linkedin: 'https://www.linkedin.com/in/johndoe',
 	github: 'https://www.github.com/johndoe',
+	aboutMe: 'I am a software engineer with a passion for building web applications.',
 	education: [
 		{
 			degree: 'Bachelor of Science in Computer Science',
