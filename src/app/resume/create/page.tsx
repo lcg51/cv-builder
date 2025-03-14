@@ -3,10 +3,10 @@ import React, { useCallback } from 'react';
 import { AboutForm } from '../components/AboutForm';
 import { ContactForm } from '../components/ContactForm';
 import { EducationForm } from '../components/EducationForm';
-import { Experience } from '../components/Experience';
+import { ExperienceForm } from '../components/ExperienceForm';
 import { SkillsForm } from '../components/SkillsForm';
 import { StepsBar } from '@/app/components/StepsBar/StepsBar';
-import { HtmlPreviewer } from '@/app/components/HTMLPreviewer/HTMLPreviewer';
+import { TemplatePreviewer } from '@/app/components/TemplatePreviewer/TemplatePreviewer';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { defaultUserData, UserDataType } from '@/app/models/user';
@@ -42,7 +42,7 @@ export default function CreateResume() {
 	const setActiveStep = userDataStore((state: UserDataStoreType) => state.setActiveStep);
 	const initialSteps = [
 		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
-		{ title: 'Experience', active: false, isClickable: false, component: Experience },
+		{ title: 'Experience', active: false, isClickable: false, component: ExperienceForm },
 		{ title: 'Education', active: false, isClickable: false, component: EducationForm },
 		{ title: 'Skills', active: false, isClickable: false, component: SkillsForm },
 		{ title: 'About', active: false, isClickable: false, component: AboutForm },
@@ -72,7 +72,7 @@ export default function CreateResume() {
 					initialValues={userData}
 				/>
 			</div>
-			<HtmlPreviewer userData={userData} />
+			<TemplatePreviewer userData={userData} />
 		</div>
 	);
 }

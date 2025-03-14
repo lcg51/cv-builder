@@ -36,9 +36,9 @@ const formSchema = z.object({
 	)
 });
 
-export type ExperienceProps = StepsBarComponentProps;
+export type ExperienceFormProps = StepsBarComponentProps;
 
-export const Experience = ({ initialValues, onSuccess, onFieldChange }: ExperienceProps) => {
+export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: ExperienceFormProps) => {
 	const experienceForms = initialValues?.workExperience ?? ([] as unknown as WorkExperienceType[]);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),

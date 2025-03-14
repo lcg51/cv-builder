@@ -4,7 +4,7 @@ import { UserDataType } from '@/app/models/user';
 import './HTMLPreviewer.css';
 import { format } from 'date-fns';
 
-export const HtmlPreviewer = ({ userData }: { userData: UserDataType }) => {
+export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [htmlTemplate, setHtmlTemplate] = useState('');
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [styles, setStyles] = useState('');
