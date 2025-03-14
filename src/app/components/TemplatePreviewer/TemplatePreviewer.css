@@ -9,3 +9,7 @@
 	z-index: 3;
 	width: 46vw;
 }
+
+.cv-wrapper {
+	transform: scaleX(0.9) scaleY(0.8) translateY(-20%);
+}
