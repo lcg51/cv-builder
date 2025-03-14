@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
-import './HTMLPreviewer.css';
+import './TemplatePreviewer.css';
 import { format } from 'date-fns';
 
 export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
