@@ -4,17 +4,21 @@ import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
 import { format } from 'date-fns';
 
-export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
-	const [htmlTemplate, setHtmlTemplate] = useState('');
+type TemplateProps = {
+	userData: UserDataType;
+	templateHTML: string;
+	templateStyles: string;
+};
+
+export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: TemplateProps) => {
 	const [processedHtml, setProcessedHtml] = useState('');
-	const [styles, setStyles] = useState('');
 
 	const postData = async () => {
 		try {
-			const response = await fetch(`/api/hello`, {
+			const response = await fetch(`/api/pdf`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ html: processedHtml, styles })
+				body: JSON.stringify({ html: processedHtml, templateStyles })
 			});
 
 			if (!response.ok) {
@@ -32,29 +36,8 @@ export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
 	};
 
 	useEffect(() => {
-		const fetchTemplate = async () => {
-			try {
-				const htmlResponse = await fetch('../../../../templates/template1.html');
-				const stylesResponse = await fetch('../../../../templates/template1.css');
-				if (!htmlResponse.ok || !stylesResponse.ok) {
-					throw new Error(`HTTP error! status: ${htmlResponse.status}`);
-				}
-
-				const template = await htmlResponse.text();
-				const styles = await stylesResponse.text();
-				setHtmlTemplate(template);
-				setStyles(styles);
-			} catch (error) {
-				console.error('Error fetching template:', error);
-			}
-		};
-
-		fetchTemplate();
-	}, []);
-
-	useEffect(() => {
-		if (!htmlTemplate) return;
-		const updatedTemplate = htmlTemplate
+		if (!templateHTML) return;
+		const updatedTemplate = templateHTML
 			.replace(/{{firstName}}/g, userData?.firstName || '')
 			.replace(/{{lastName}}/g, userData?.lastName || '')
 			.replace(/{{role}}/g, userData?.role || '')
@@ -97,12 +80,12 @@ export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
 			);
 
 		setProcessedHtml(updatedTemplate);
-	}, [userData, htmlTemplate]);
+	}, [userData, templateHTML]);
 
 	return (
 		<section className="template-previewer">
 			<div id="cv-preview">
-				<style dangerouslySetInnerHTML={{ __html: styles }} />
+				<style dangerouslySetInnerHTML={{ __html: templateStyles }} />
 				<div className="cv-wrapper" dangerouslySetInnerHTML={{ __html: processedHtml }} />
 			</div>
 			<button className="btn btn-primary" onClick={postData}>

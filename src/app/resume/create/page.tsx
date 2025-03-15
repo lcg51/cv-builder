@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AboutForm } from '../components/AboutForm';
 import { ContactForm } from '../components/ContactForm';
 import { EducationForm } from '../components/EducationForm';
@@ -40,6 +40,8 @@ export default function CreateResume() {
 	const setUserDataValue = userDataStore((state: UserDataStoreType) => state.setUserDataValue);
 	const activeStep = userDataStore((state: UserDataStoreType) => state.activeStep);
 	const setActiveStep = userDataStore((state: UserDataStoreType) => state.setActiveStep);
+	const [templateHTML, setTemplateHTML] = useState<string>('');
+	const [styles, setStyles] = useState<string>('');
 	const initialSteps = [
 		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
 		{ title: 'Experience', active: false, isClickable: false, component: ExperienceForm },
@@ -49,8 +51,29 @@ export default function CreateResume() {
 		{ title: 'Finish it', active: false, isClickable: false, component: ContactForm }
 	];
 
+	useEffect(() => {
+		const fetchTemplate = async () => {
+			try {
+				const htmlResponse = await fetch('/templates/template1/template1.html');
+				const stylesResponse = await fetch('/templates/template1/template1.css');
+				if (!htmlResponse.ok || !stylesResponse.ok) {
+					throw new Error(`HTTP error! status: ${htmlResponse.status}`);
+				}
+
+				const template = await htmlResponse.text();
+				const styles = await stylesResponse.text();
+
+				setTemplateHTML(template || '');
+				setStyles(styles || '');
+			} catch (error) {
+				console.error('Error fetching template:', error);
+			}
+		};
+
+		fetchTemplate();
+	}, []);
+
 	const updateUserValue = useCallback((key: string, value: unknown) => {
-		console.log(key, value);
 		setUserDataValue(key, value as string);
 	}, []);
 
@@ -63,7 +86,7 @@ export default function CreateResume() {
 	);
 
 	return (
-		<div className="flex h-full">
+		<div className="flex h-[calc(100vh-60px)] p-4 lg:p-6">
 			<div className="w-1/2 h-full">
 				<StepsBar
 					items={initialSteps}
@@ -72,7 +95,7 @@ export default function CreateResume() {
 					initialValues={userData}
 				/>
 			</div>
-			<TemplatePreviewer userData={userData} />
+			<TemplatePreviewer userData={userData} templateHTML={templateHTML} templateStyles={styles} />
 		</div>
 	);
 }

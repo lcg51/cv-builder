@@ -13,7 +13,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 				<Suspense fallback={<div>Loading...</div>}>
 					<TopBar user={session?.user as unknown as UserProps} />
 				</Suspense>
-				<main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">{children}</main>
+				<main className="flex flex-1 flex-col">{children}</main>
 			</div>
 		</div>
 	);
