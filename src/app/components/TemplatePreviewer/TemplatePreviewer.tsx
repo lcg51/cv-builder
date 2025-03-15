@@ -9,6 +9,28 @@ export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [styles, setStyles] = useState('');
 
+	const postData = async () => {
+		try {
+			const response = await fetch(`/api/hello`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ html: processedHtml, styles })
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to generate PDF');
+			}
+			const blob = await response.blob();
+			const url = URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = 'resume.pdf';
+			link.click();
+		} catch (error) {
+			console.error('Error downloading PDF:', error);
+		}
+	};
+
 	useEffect(() => {
 		const fetchTemplate = async () => {
 			try {
@@ -78,11 +100,14 @@ export const TemplatePreviewer = ({ userData }: { userData: UserDataType }) => {
 	}, [userData, htmlTemplate]);
 
 	return (
-		<section className="html-previewer">
+		<section className="template-previewer">
 			<div id="cv-preview">
 				<style dangerouslySetInnerHTML={{ __html: styles }} />
 				<div className="cv-wrapper" dangerouslySetInnerHTML={{ __html: processedHtml }} />
 			</div>
+			<button className="btn btn-primary" onClick={postData}>
+				Download PDF
+			</button>
 		</section>
 	);
 };
