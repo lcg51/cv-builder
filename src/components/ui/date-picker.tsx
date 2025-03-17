@@ -11,10 +11,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 export interface DatePickerProps {
 	onChange?: (date: Date) => void;
+	value?: Date;
 }
 
-export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(({ onChange, ...props }, ref) => {
-	const [date, setDate] = React.useState<Date>();
+export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(({ onChange, value }, ref) => {
+	const [date, setDate] = React.useState<Date | undefined>(value);
+
+	React.useEffect(() => {
+		setDate(value);
+	}, [value]);
 
 	const onSelect = (date?: Date) => {
 		setDate(date);
@@ -24,7 +29,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(({
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<div className="flex">
+				<div className="flex" ref={ref}>
 					<Button
 						type="button"
 						variant={'outline'}
