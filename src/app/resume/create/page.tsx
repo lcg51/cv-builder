@@ -87,7 +87,7 @@ export default function CreateResume() {
 
 	return (
 		<div className="flex h-[calc(100vh-60px)] p-4 lg:p-6">
-			<div className="w-1/2 h-full">
+			<div className="w-1/2 h-full overflow-scroll">
 				<StepsBar
 					items={initialSteps}
 					onNextStepCallback={onSetNextStep}
