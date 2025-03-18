@@ -70,8 +70,11 @@ export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: Te
 					.map(exp =>
 						match
 							.replace(/{{company}}/g, exp.company)
-							.replace(/{{startDate}}/g, format(exp.startDate, 'PPP'))
-							.replace(/{{endDate}}/g, format(exp.endDate, 'PPP'))
+							.replace(
+								/{{startDate}}/g,
+								`${format(exp.startDate, 'MMM')} ${format(exp.startDate, 'yyyy')}`
+							)
+							.replace(/{{endDate}}/g, `${format(exp.endDate, 'MMM')} ${format(exp.endDate, 'yyyy')}`)
 							.replace(/{{location}}/g, exp.location)
 							.replace(/{{jobTitle}}/g, exp.jobTitle)
 							.replace(/{{description}}/g, exp.description)
