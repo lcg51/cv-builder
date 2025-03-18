@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import { format } from 'date-fns';
+import { useEffect, useState, useMemo, forwardRef } from 'react';
+import { format, formatDate } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -14,10 +14,10 @@ export interface DatePickerProps {
 	value?: Date;
 }
 
-export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(({ onChange, value }, ref) => {
-	const [date, setDate] = React.useState<Date | undefined>(value);
+export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(({ onChange, value }, ref) => {
+	const [date, setDate] = useState<Date | undefined>(value);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setDate(value);
 	}, [value]);
 
@@ -25,6 +25,11 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(({
 		setDate(date);
 		date && onChange?.(date);
 	};
+
+	const formattedDate = useMemo(
+		() => (date ? `${format(date, 'MMM')} ${format(date, 'yyyy')}` : 'Pick a date'),
+		[date]
+	);
 
 	return (
 		<Popover>
@@ -39,7 +44,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(({
 						)}
 					>
 						<CalendarIcon />
-						{date ? format(date, 'PPP') : <span>Pick a date</span>}
+						{formattedDate}
 					</Button>
 				</div>
 			</PopoverTrigger>
