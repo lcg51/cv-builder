@@ -18,7 +18,7 @@ export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: Te
 			const response = await fetch(`/api/pdf`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ html: processedHtml, templateStyles })
+				body: JSON.stringify({ html: processedHtml, styles: templateStyles })
 			});
 
 			if (!response.ok) {

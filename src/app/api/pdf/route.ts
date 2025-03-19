@@ -13,22 +13,44 @@ export async function POST(req: Request) {
 		const browser = await puppeteer.launch({ headless: true });
 		const page = await browser.newPage();
 		await page.setContent(
-			`
-      <html>
-        <head>
-          <script src="https://cdn.tailwindcss.com"></script>
-          <style>
-            ${styles}
-          </style>
-        </head>
-        <body>
-          ${html}
-        </body>
-      </html>`,
+			`<html>
+				<head>
+				<script src="https://cdn.tailwindcss.com"></script>
+				<style>
+					html, body {
+						margin: 0;
+						padding: 0;
+						width: 210mm;
+						height: 297mm;
+						overflow: hidden;
+					}
+					.cv {
+						display: flex;
+						width: 100%;
+                        height: 100%; /* Ensure it fills the A4 page */
+					}
+					${styles}
+				</style>
+				</head>
+				<body>
+					<div class="cv">
+						${html}
+					</div>
+				</body>
+			</html>`,
 			{ waitUntil: 'networkidle0' }
 		);
 
-		const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+		const contentHeightPx = await page.evaluate(() => document.body.scrollHeight);
+
+		console.log('Page height:', contentHeightPx);
+
+		const pdfBuffer = await page.pdf({
+			format: 'A4',
+			printBackground: true,
+			width: '210mm',
+			height: '297mm'
+		});
 
 		await browser.close();
 
