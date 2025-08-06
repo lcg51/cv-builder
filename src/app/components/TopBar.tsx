@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { CircleUser, Menu } from 'lucide-react';
+import { Home, ArrowLeft, LogIn } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -13,7 +14,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 
 import { signOut } from '../server-actions/session';
 import { UserProps } from '@/lib/models';
@@ -21,23 +22,33 @@ import { getFirstTwoCapitalLetters } from '@/lib/helpers';
 import { useDashboardNavItems } from '@/hooks/useNavItems';
 
 export type TopBarProps = {
-	user: UserProps;
+	user?: UserProps | null;
 };
 
 export default function TopBar({ user }: TopBarProps) {
 	const navItems = useDashboardNavItems();
+	const pathname = usePathname();
+
+	// Check if we're on a page that should show back navigation
+	const isOnCreatePage = pathname?.includes('/resume/create');
+	const isOnResumePage = pathname?.includes('/resume') && !pathname?.includes('/resume/create');
 
 	return (
 		<header className="flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px] lg:px-6">
 			<Sheet>
-				<SheetTrigger asChild>
-					<Button variant="outline" size="icon" className="shrink-0 md:hidden">
-						<Menu className="h-5 w-5" />
-						<span className="sr-only">Toggle navigation menu</span>
-					</Button>
-				</SheetTrigger>
 				<SheetContent side="left" className="flex flex-col">
 					<nav className="grid gap-2 text-lg font-medium">
+						{/* Quick Back Navigation for Create Page */}
+						{isOnCreatePage && (
+							<Link
+								href="/home"
+								className="flex items-center gap-4 rounded-xl px-3 py-2 bg-primary/10 border border-primary/20"
+							>
+								<ArrowLeft className="h-6 w-6" color="white" />
+								<span className="text-white">Back to Home</span>
+							</Link>
+						)}
+
 						{navItems.map(item => (
 							<Link
 								href={item.href}
@@ -48,33 +59,102 @@ export default function TopBar({ user }: TopBarProps) {
 								{item.label}
 							</Link>
 						))}
+
+						{/* Mobile Login/Logout */}
+						{user ? (
+							<button
+								onClick={() => signOut()}
+								className="flex items-center gap-4 rounded-xl px-3 py-2 text-destructive hover:text-destructive/80 bg-destructive/10 border border-destructive/20 mt-4"
+							>
+								<LogIn className="h-6 w-6 rotate-180" />
+								Logout
+							</button>
+						) : (
+							<Link
+								href="/login"
+								className="flex items-center gap-4 rounded-xl px-3 py-2 text-primary hover:text-primary/80 bg-primary/10 border border-primary/20 mt-4"
+							>
+								<LogIn className="h-6 w-6" />
+								Login
+							</Link>
+						)}
 					</nav>
 				</SheetContent>
 			</Sheet>
-			<div className="w-full flex-1"></div>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button variant="secondary" size="icon" className="rounded-full">
-						<Avatar>
-							<AvatarImage src={user?.image} />
-							<AvatarFallback>{getFirstTwoCapitalLetters(user?.email)}</AvatarFallback>
-						</Avatar>
-						<CircleUser className="h-5 w-5" />
-						<span className="sr-only">Toggle user menu</span>
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end">
-					<DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem
-						onClick={() => {
-							signOut();
-						}}
+
+			{/* Back Navigation / Home Button */}
+			{isOnCreatePage && (
+				<Link href="/home">
+					<Button
+						variant="ghost"
+						size="sm"
+						className="flex items-center gap-2 text-white hover:text-foreground"
 					>
-						Logout
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+						<ArrowLeft className="h-4 w-4" />
+						<span className="hidden sm:inline text-white hover:text-foreground">Back to Home</span>
+					</Button>
+				</Link>
+			)}
+
+			{isOnResumePage && (
+				<Link href="/home">
+					<Button
+						variant="ghost"
+						size="sm"
+						className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+					>
+						<Home className="h-4 w-4" />
+						<span className="hidden sm:inline">Home</span>
+					</Button>
+				</Link>
+			)}
+
+			{!isOnCreatePage && !isOnResumePage && (
+				<Link
+					href="/home"
+					className="flex items-center gap-2 text-lg font-semibold text-foreground hover:text-muted-foreground transition-colors"
+				>
+					<Home className="h-5 w-5" color="white" />
+					<span className="hidden sm:inline text-white">CV Builder</span>
+				</Link>
+			)}
+
+			<div className="w-full flex-1"></div>
+
+			{/* User Menu - Conditional Rendering */}
+			{user ? (
+				// Logged in user - show avatar dropdown
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="secondary" size="icon" className="rounded-full">
+							<Avatar>
+								<AvatarImage src={user?.image} />
+								<AvatarFallback>{getFirstTwoCapitalLetters(user?.email)}</AvatarFallback>
+							</Avatar>
+							<span className="sr-only">Toggle user menu</span>
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem
+							onClick={() => {
+								signOut();
+							}}
+						>
+							Logout
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			) : (
+				// Not logged in - show login button
+				<Link href="/login">
+					<Button variant="default" size="sm" className="flex items-center gap-2">
+						<LogIn className="h-4 w-4" />
+						<span className="hidden sm:inline text-white">Login</span>
+					</Button>
+				</Link>
+			)}
 		</header>
 	);
 }

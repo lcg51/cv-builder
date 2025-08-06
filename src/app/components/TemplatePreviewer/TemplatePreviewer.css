@@ -1,14 +1,5 @@
-.template-previewer {
-	position: absolute;
-	top: 0px;
-	left: 50vw;
-	overflow-y: scroll;
-	flex: 1 1 0%;
-	user-select: none;
-	z-index: 3;
-	height: 100%;
-}
-
 .cv-wrapper {
-	transform: scaleX(0.9) scaleY(0.8) translateY(-10%);
+	transform: scale(0.85);
+	transform-origin: top center;
+	width: 100%;
 }

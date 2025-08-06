@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
 import { format } from 'date-fns';
+import { LockIcon, DownloadIcon } from '@/components/icons/FormIcons';
 
 type TemplateProps = {
 	userData: UserDataType;
@@ -86,14 +87,31 @@ export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: Te
 	}, [userData, templateHTML]);
 
 	return (
-		<section className="template-previewer">
-			<div id="cv-preview">
-				<style dangerouslySetInnerHTML={{ __html: templateStyles }} />
-				<div className="cv-wrapper" dangerouslySetInnerHTML={{ __html: processedHtml }} />
+		<div className="flex flex-col h-full">
+			{/* Preview Content */}
+			<div className="flex-1 overflow-y-auto bg-slate-100 dark:bg-slate-900 p-4">
+				<div className="max-w-[8.5in] mx-auto bg-white shadow-lg" id="cv-preview">
+					<style dangerouslySetInnerHTML={{ __html: templateStyles }} />
+					<div className="cv-wrapper" dangerouslySetInnerHTML={{ __html: processedHtml }} />
+				</div>
 			</div>
-			<button className="btn btn-primary" onClick={postData}>
-				Download PDF
-			</button>
-		</section>
+
+			{/* Controls */}
+			<div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+				<div className="flex items-center justify-between gap-4">
+					<div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+						<LockIcon />
+						Preview updates automatically
+					</div>
+					<button
+						className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
+						onClick={postData}
+					>
+						<DownloadIcon />
+						Download PDF
+					</button>
+				</div>
+			</div>
+		</div>
 	);
 };

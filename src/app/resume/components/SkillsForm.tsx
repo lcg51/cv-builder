@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { SkillsIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
 
 const formSchema = z.object({
 	skillsForms: z.array(
@@ -55,24 +56,56 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 
 	return (
 		<div>
-			<div className="mb-4">
-				<h3 className="pb-2">Tell us about you skills</h3>
-				<p className="text-sm text-gray-500">Start with one you are most experienced at.</p>
+			<div className="mb-6">
+				<div className="flex items-center gap-3 mb-3">
+					<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
+						<SkillsIcon color="black" />
+					</div>
+					<div>
+						<h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-1">
+							Skills & Expertise
+						</h3>
+						<p className="text-slate-600 dark:text-slate-400">
+							Add your key skills and rate your proficiency level for each
+						</p>
+					</div>
+				</div>
 			</div>
 			<Form {...form}>
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 					{fields.map((field, index) => (
-						<div key={field.id} className="relative">
-							<div className="flex flex-col space-y-8">
-								<div className="flex space-x-4">
+						<div
+							key={field.id}
+							className="relative bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700"
+						>
+							<div className="flex items-center justify-between mb-4">
+								<h4 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+									Skill {index + 1}
+								</h4>
+								<button
+									type="button"
+									className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+									onClick={() => remove(index)}
+								>
+									<Trash className="w-4 h-4" />
+								</button>
+							</div>
+							<div className="flex flex-col space-y-6">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 									<FormField
 										control={control}
 										name={`skillsForms.${index}.title`}
 										render={({ field }) => (
-											<FormItem className="w-1/2">
-												<FormLabel>Skill</FormLabel>
+											<FormItem>
+												<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+													Skill Name
+												</FormLabel>
 												<FormControl>
-													<Input placeholder="Skill" {...field} />
+													<Input
+														placeholder="JavaScript"
+														className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+														{...field}
+													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -82,42 +115,58 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 										control={control}
 										name={`skillsForms.${index}.level`}
 										render={({ field }) => (
-											<FormItem className="w-1/2">
-												<FormLabel>Level</FormLabel>
+											<FormItem>
+												<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+													Proficiency Level ({field.value?.[0] || 50}%)
+												</FormLabel>
 												<FormControl>
-													<Slider
-														defaultValue={field.value}
-														onValueChange={e => field.onChange(e)}
-														max={100}
-														step={1}
-													/>
+													<div className="pt-2">
+														<Slider
+															value={field.value || [50]}
+															onValueChange={field.onChange}
+															max={100}
+															min={0}
+															step={5}
+															className="w-full"
+														/>
+													</div>
 												</FormControl>
+												<div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
+													<span>Beginner</span>
+													<span>Intermediate</span>
+													<span>Expert</span>
+												</div>
 												<FormMessage />
 											</FormItem>
 										)}
 									/>
 								</div>
 							</div>
-							<span className="absolute top-[-20px] right-0 cursor-pointer" onClick={() => remove(index)}>
-								<Trash color="red" />
-							</span>
 						</div>
 					))}
 
-					<Button
-						className="mt-4 mb-4"
-						onClick={() =>
-							append({
-								title: '',
-								level: [50]
-							})
-						}
-					>
-						Add Skill
-					</Button>
+					<div className="flex justify-center">
+						<button
+							type="button"
+							className="flex items-center gap-2 px-6 py-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 hover:border-primary hover:text-primary transition-colors duration-200"
+							onClick={() =>
+								append({
+									title: '',
+									level: [50]
+								})
+							}
+						>
+							<PlusIcon />
+							Add Another Skill
+						</button>
+					</div>
 
-					<div className="flex justify-end">
-						<Button type="submit">Next Step</Button>
+					<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
+						<div className="text-sm text-slate-500 dark:text-slate-400">Step 4 of 6</div>
+						<Button type="submit" className="bg-primary hover:bg-primary/90 text-white px-8 py-2 h-11">
+							Continue
+							<ArrowRightIcon className="w-4 h-4 ml-2" />
+						</Button>
 					</div>
 				</form>
 			</Form>
