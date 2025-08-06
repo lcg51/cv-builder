@@ -4,7 +4,7 @@ import TopBar from '../components/TopBar';
 import { auth } from '@/auth';
 import { Suspense } from 'react';
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export default async function HomeLayout({ children }: { children: React.ReactNode }) {
 	const session = await auth();
 
 	return (
