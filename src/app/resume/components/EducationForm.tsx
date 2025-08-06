@@ -12,6 +12,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { EducationType } from '@/app/models/user';
 import { Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { EducationIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
 
 const formSchema = z.object({
 	educationForms: z.array(
@@ -69,24 +70,54 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 
 	return (
 		<div>
-			<div className="mb-4">
-				<h3 className="pb-2">Enter your education information</h3>
-				<p className="text-sm text-gray-500">Enter your last education first</p>
+			<div className="mb-6">
+				<div className="flex items-center gap-3 mb-3">
+					<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
+						<EducationIcon color="black" />
+					</div>
+					<div>
+						<h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-1">Education</h3>
+						<p className="text-slate-600 dark:text-slate-400">
+							Add your educational background, starting with your most recent qualification
+						</p>
+					</div>
+				</div>
 			</div>
 			<Form {...form}>
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 					{fields.map((field, index) => (
-						<div key={field.id} className="relative">
-							<div className="flex flex-col space-y-8">
-								<div className="flex space-x-4">
+						<div
+							key={field.id}
+							className="relative bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700"
+						>
+							<div className="flex items-center justify-between mb-4">
+								<h4 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+									Education {index + 1}
+								</h4>
+								<button
+									type="button"
+									className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+									onClick={() => remove(index)}
+								>
+									<Trash className="w-4 h-4" />
+								</button>
+							</div>
+							<div className="flex flex-col space-y-6">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<FormField
 										control={control}
 										name={`educationForms.${index}.university`}
 										render={({ field }) => (
-											<FormItem className="w-1/2">
-												<FormLabel>School</FormLabel>
+											<FormItem>
+												<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+													School/University
+												</FormLabel>
 												<FormControl>
-													<Input placeholder="School" {...field} />
+													<Input
+														placeholder="Harvard University"
+														className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+														{...field}
+													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -96,23 +127,31 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 										control={control}
 										name={`educationForms.${index}.degree`}
 										render={({ field }) => (
-											<FormItem className="w-1/2">
-												<FormLabel>Degree</FormLabel>
+											<FormItem>
+												<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+													Degree
+												</FormLabel>
 												<FormControl>
-													<Input placeholder="Degree" {...field} />
+													<Input
+														placeholder="Bachelor of Science"
+														className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+														{...field}
+													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
 										)}
 									/>
 								</div>
-								<div className="flex space-x-4">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<FormField
 										control={control}
 										name={`educationForms.${index}.finishDate`}
 										render={({ field }) => (
-											<FormItem className="w-1/3">
-												<FormLabel>Graduation Date</FormLabel>
+											<FormItem>
+												<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+													Graduation Date
+												</FormLabel>
 												<FormControl>
 													<DatePicker {...field} />
 												</FormControl>
@@ -124,10 +163,16 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 										control={control}
 										name={`educationForms.${index}.city`}
 										render={({ field }) => (
-											<FormItem className="w-1/3">
-												<FormLabel>City</FormLabel>
+											<FormItem>
+												<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+													Location
+												</FormLabel>
 												<FormControl>
-													<Input placeholder="City" {...field} />
+													<Input
+														placeholder="Cambridge, MA"
+														className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+														{...field}
+													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -139,39 +184,50 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 									name={`educationForms.${index}.description`}
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Description</FormLabel>
+											<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+												Description (Optional)
+											</FormLabel>
 											<FormControl>
-												<Textarea {...field} />
+												<Textarea
+													placeholder="Describe relevant coursework, achievements, or activities..."
+													className="min-h-24 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+													{...field}
+												/>
 											</FormControl>
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
 							</div>
-							<span className="absolute top-[-20px] right-0 cursor-pointer" onClick={() => remove(index)}>
-								<Trash color="red" />
-							</span>
 						</div>
 					))}
 
-					<Button
-						className="mt-4 mb-4"
-						onClick={() =>
-							append({
-								degree: '',
-								university: '',
-								fieldOfStudy: '',
-								finishDate: new Date(),
-								city: '',
-								description: ''
-							})
-						}
-					>
-						Add Education
-					</Button>
+					<div className="flex justify-center">
+						<button
+							type="button"
+							className="flex items-center gap-2 px-6 py-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 hover:border-primary hover:text-primary transition-colors duration-200"
+							onClick={() =>
+								append({
+									degree: '',
+									university: '',
+									fieldOfStudy: '',
+									finishDate: new Date(),
+									city: '',
+									description: ''
+								})
+							}
+						>
+							<PlusIcon />
+							Add Another Education
+						</button>
+					</div>
 
-					<div className="flex justify-end">
-						<Button type="submit">Next Step</Button>
+					<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
+						<div className="text-sm text-slate-500 dark:text-slate-400">Step 3 of 6</div>
+						<Button type="submit" className="bg-primary hover:bg-primary/90 text-white px-8 py-2 h-11">
+							Continue
+							<ArrowRightIcon className="w-4 h-4 ml-2" />
+						</Button>
 					</div>
 				</form>
 			</Form>

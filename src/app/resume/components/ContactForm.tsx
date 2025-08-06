@@ -5,9 +5,10 @@ import { z } from 'zod';
 import React, { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
+import { ContactIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
 
 const formSchema = z.object({
 	firstName: z.string().min(2, {
@@ -63,21 +64,38 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 	}
 	return (
 		<Form {...form}>
-			<div className="mb-4">
-				<h3>Please enter your contact info</h3>
+			<div className="mb-6">
+				<div className="flex items-center gap-3 mb-3">
+					<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
+						<ContactIcon color="black" />
+					</div>
+					<div>
+						<h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-1">
+							Contact Information
+						</h3>
+						<p className="text-slate-600 dark:text-slate-400">
+							Tell us about yourself and how to reach you
+						</p>
+					</div>
+				</div>
 			</div>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-2">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					<FormField
 						control={form.control}
 						name="firstName"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>First name</FormLabel>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									First Name
+								</FormLabel>
 								<FormControl>
-									<Input placeholder="First name" {...field} />
+									<Input
+										placeholder="John"
+										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
 								</FormControl>
-								<FormDescription>This is your public first name.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -87,11 +105,16 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 						name="lastName"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Second name</FormLabel>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									Last Name
+								</FormLabel>
 								<FormControl>
-									<Input placeholder="Second Name" {...field} />
+									<Input
+										placeholder="Doe"
+										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
 								</FormControl>
-								<FormDescription>This is your public last name.</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
@@ -101,9 +124,16 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 						name="email"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Email</FormLabel>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									Email Address
+								</FormLabel>
 								<FormControl>
-									<Input placeholder="Email" {...field} />
+									<Input
+										type="email"
+										placeholder="john.doe@example.com"
+										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -114,9 +144,16 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 						name="phone"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Phone</FormLabel>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									Phone Number
+								</FormLabel>
 								<FormControl>
-									<Input placeholder="Phone" {...field} />
+									<Input
+										type="tel"
+										placeholder="+1 (555) 123-4567"
+										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -127,9 +164,15 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 						name="city"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>City</FormLabel>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									City
+								</FormLabel>
 								<FormControl>
-									<Input placeholder="city" {...field} />
+									<Input
+										placeholder="New York"
+										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -140,17 +183,27 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 						name="postalCode"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Postal code</FormLabel>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									Postal Code
+								</FormLabel>
 								<FormControl>
-									<Input placeholder="Postal code" {...field} />
+									<Input
+										placeholder="10001"
+										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 				</div>
-				<div className="flex justify-end">
-					<Button type="submit">Next Step</Button>
+				<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
+					<div className="text-sm text-slate-500 dark:text-slate-400">Step 1 of 6</div>
+					<Button type="submit" className="bg-primary hover:bg-primary/90 text-white px-8 py-2 h-11">
+						Continue
+						<ArrowRightIcon className="w-4 h-4 ml-2" />
+					</Button>
 				</div>
 			</form>
 		</Form>
