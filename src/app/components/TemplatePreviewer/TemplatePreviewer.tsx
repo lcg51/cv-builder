@@ -99,12 +99,12 @@ export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: Te
 			{/* Controls */}
 			<div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
 				<div className="flex items-center justify-between gap-4">
-					<div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+					<div className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
 						<LockIcon />
 						Preview updates automatically
 					</div>
 					<button
-						className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
+						className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
 						onClick={postData}
 					>
 						<DownloadIcon />

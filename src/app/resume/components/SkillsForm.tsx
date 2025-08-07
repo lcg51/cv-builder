@@ -163,9 +163,9 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 
 					<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
 						<div className="text-sm text-slate-500 dark:text-slate-400">Step 4 of 6</div>
-						<Button type="submit" className="bg-primary hover:bg-primary/90 text-white px-8 py-2 h-11">
+						<Button type="submit" className="bg-primary hover:bg-primary/90 text-slate-500 px-0 py-2 h-11">
 							Continue
-							<ArrowRightIcon className="w-4 h-4 ml-2" />
+							<ArrowRightIcon className="w-4 h-4" />
 						</Button>
 					</div>
 				</form>
