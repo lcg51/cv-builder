@@ -9,6 +9,8 @@ export type StepsBarComponentProps = {
 	onSuccess?: () => void;
 	onFieldChange?: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
+	onDownloadPDF?: () => void;
+	isDownloadEnabled?: boolean;
 };
 
 export type StepsBarItemsProps = {
@@ -24,9 +26,16 @@ export type StepsBarProps = {
 	onNextStepCallback?: (stepIndex: number) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
+	onDownloadPDF?: () => void;
 };
 
-export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, initialValues }: StepsBarProps) => {
+export const StepsBar = ({
+	items,
+	onNextStepCallback,
+	onFieldChangeCallback,
+	initialValues,
+	onDownloadPDF
+}: StepsBarProps) => {
 	const [selectedIndex, setSelectedIndex] = useState<number>(0);
 	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
 	const { width } = useWindowSize();
@@ -61,6 +70,7 @@ export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, ini
 	const stepsViewRender = useMemo(() => {
 		return stepItems.map(({ component }, index) => {
 			const ComponentView = component;
+			const isLastStep = index === stepItems.length - 1;
 
 			return (
 				selectedIndex === index && (
@@ -69,12 +79,14 @@ export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, ini
 							onSuccess={onSetNextStep}
 							onFieldChange={onFieldChangeCallback}
 							initialValues={initialValues}
+							onDownloadPDF={isLastStep ? onDownloadPDF : undefined}
+							isDownloadEnabled={isLastStep}
 						/>
 					</div>
 				)
 			);
 		});
-	}, [stepItems, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues]);
+	}, [stepItems, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues, onDownloadPDF]);
 
 	const stepsTabsRender = useMemo(() => {
 		if (isTabletResolution) {

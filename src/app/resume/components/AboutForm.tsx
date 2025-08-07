@@ -36,10 +36,7 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 	}, [form.watch, onFieldChange]);
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+	function onSubmit() {
 		onSuccess?.();
 	}
 	return (

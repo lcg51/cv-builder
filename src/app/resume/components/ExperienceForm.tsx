@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { WorkExperienceType } from '@/app/models/user';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
@@ -10,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { DatePicker } from '@/components/ui/date-picker';
+import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { ExperienceIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
 
@@ -40,7 +39,13 @@ const formSchema = z.object({
 export type ExperienceFormProps = StepsBarComponentProps;
 
 export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: ExperienceFormProps) => {
-	const experienceForms = initialValues?.workExperience ?? ([] as unknown as WorkExperienceType[]);
+	// Convert string dates to Date objects and provide defaults
+	const experienceForms = (initialValues?.workExperience ?? []).map(exp => ({
+		...exp,
+		startDate: exp.startDate ? new Date(exp.startDate) : new Date(),
+		endDate: exp.endDate ? new Date(exp.endDate) : new Date()
+	}));
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -150,7 +155,7 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 													Start Date
 												</FormLabel>
 												<FormControl>
-													<DatePicker {...field} />
+													<MonthYearPicker {...field} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -165,7 +170,7 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 													End Date
 												</FormLabel>
 												<FormControl>
-													<DatePicker {...field} />
+													<MonthYearPicker {...field} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>

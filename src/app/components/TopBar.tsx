@@ -16,9 +16,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 
-import { signOut } from '../server-actions/session';
+import { googleSignOut } from '../server-actions/session';
 import { UserProps } from '@/lib/models';
-import { getFirstTwoCapitalLetters } from '@/lib/helpers';
+import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
 import { useDashboardNavItems } from '@/hooks/useNavItems';
 
 export type TopBarProps = {
@@ -31,7 +31,6 @@ export default function TopBar({ user }: TopBarProps) {
 
 	// Check if we're on a page that should show back navigation
 	const isOnCreatePage = pathname?.includes('/resume/create');
-	const isOnResumePage = pathname?.includes('/resume') && !pathname?.includes('/resume/create');
 
 	return (
 		<header className="flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px] lg:px-6">
@@ -63,7 +62,7 @@ export default function TopBar({ user }: TopBarProps) {
 						{/* Mobile Login/Logout */}
 						{user ? (
 							<button
-								onClick={() => signOut()}
+								onClick={() => googleSignOut(pathname)}
 								className="flex items-center gap-4 rounded-xl px-3 py-2 text-destructive hover:text-destructive/80 bg-destructive/10 border border-destructive/20 mt-4"
 							>
 								<LogIn className="h-6 w-6 rotate-180" />
@@ -96,19 +95,7 @@ export default function TopBar({ user }: TopBarProps) {
 				</Link>
 			)}
 
-			{isOnResumePage && (
-				<Link href="/home">
-					<Button
-						variant="ghost"
-						size="sm"
-						className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-					>
-						<span className="hidden sm:inline">Home</span>
-					</Button>
-				</Link>
-			)}
-
-			{!isOnCreatePage && !isOnResumePage && (
+			{!isOnCreatePage && (
 				<Link
 					href="/home"
 					className="flex items-center gap-2 text-lg font-semibold text-foreground hover:text-muted-foreground transition-colors"
@@ -126,8 +113,15 @@ export default function TopBar({ user }: TopBarProps) {
 					<DropdownMenuTrigger asChild>
 						<Button variant="secondary" size="icon" className="rounded-full">
 							<Avatar>
-								<AvatarImage src={user?.image} />
-								<AvatarFallback>{getFirstTwoCapitalLetters(user?.email)}</AvatarFallback>
+								<AvatarImage
+									src={getGoogleProfileImage(user?.image)}
+									alt={user?.name || 'User avatar'}
+									onError={e => {
+										console.log('Avatar image failed to load:', user?.image);
+										e.currentTarget.style.display = 'none';
+									}}
+								/>
+								<AvatarFallback>{getFirstTwoCapitalLetters(user?.name)}</AvatarFallback>
 							</Avatar>
 							<span className="sr-only">Toggle user menu</span>
 						</Button>
@@ -137,7 +131,7 @@ export default function TopBar({ user }: TopBarProps) {
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
 							onClick={() => {
-								signOut();
+								googleSignOut(pathname);
 							}}
 						>
 							Logout
