@@ -1,10 +1,10 @@
 'use server';
-import { signIn, signOut as googleSignOut } from '@/auth';
+import { signIn, signOut } from '@/auth';
 
-export const signOut = async () => {
-	await googleSignOut({ redirectTo: '/login' });
+export const googleSignOut = async (path: string) => {
+	await signOut({ redirectTo: path });
 };
 
-export const googleSignIn = async () => {
-	await signIn('google', { redirectTo: '/admin' });
+export const googleSignIn = async (path: string) => {
+	await signIn('google', { redirectTo: path });
 };
