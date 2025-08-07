@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
-import { DatePicker } from '@/components/ui/date-picker';
-import { EducationType } from '@/app/models/user';
+import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { EducationIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
@@ -42,7 +41,12 @@ const formSchema = z.object({
 export type EducationFormPropsType = StepsBarComponentProps;
 
 export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: EducationFormPropsType) => {
-	const educationForms = initialValues?.education ?? ([] as unknown as EducationType[]);
+	// Convert string dates to Date objects and provide defaults
+	const educationForms = (initialValues?.education ?? []).map(edu => ({
+		...edu,
+		finishDate: edu.finishDate ? new Date(edu.finishDate) : new Date()
+	}));
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -63,8 +67,7 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 		return () => subscription.unsubscribe();
 	}, [watch, onFieldChange]);
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values);
+	function onSubmit() {
 		onSuccess?.();
 	}
 
@@ -153,7 +156,7 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 													Graduation Date
 												</FormLabel>
 												<FormControl>
-													<DatePicker {...field} />
+													<MonthYearPicker {...field} />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
