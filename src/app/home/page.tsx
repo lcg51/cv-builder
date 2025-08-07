@@ -19,14 +19,26 @@ export default function Home() {
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/30 dark:from-slate-900 dark:to-slate-800">
 			{/* Hero Section */}
-			<section className="relative overflow-hidden">
-				<div className="container mx-auto px-4 py-20 lg:py-32">
+			<section className="relative overflow-hidden min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] flex items-center">
+				{/* Background Image */}
+				<div className="absolute inset-0 z-0">
+					<Image
+						src="/assets/portfoliobg.wep.jpg"
+						alt=""
+						fill
+						className="object-cover opacity-10 dark:opacity-5"
+						priority
+					/>
+					<div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/80 dark:from-slate-900/80 dark:via-slate-900/60 dark:to-slate-900/80"></div>
+				</div>
+
+				<div className="container mx-auto px-4 pb-8 lg:pb-0 md:pb-12 relative z-10 w-full">
 					<div className="grid lg:grid-cols-2 gap-12 items-center">
-						<div className="space-y-8">
+						<div className="py-8 lg:py-0 space-y-8">
 							<div className="space-y-4">
 								<Badge
 									variant="secondary"
-									className="px-4 py-2 text-sm font-medium dark:bg-slate-700 dark:text-slate-200"
+									className="px-0 py-0 lg:py-3 text-sm font-medium dark:bg-slate-700 dark:text-slate-200"
 								>
 									<Sparkles className="w-4 h-4 mr-2" />
 									AI-Powered CV Builder
@@ -47,7 +59,11 @@ export default function Home() {
 									Start Building Free
 									<ArrowRight className="ml-2 w-5 h-5" />
 								</Button>
-								<Button variant="outline" size="lg" className="text-lg px-8 py-6">
+								<Button
+									variant="outline"
+									size="lg"
+									className="text-lg px-8 py-6 bg-white dark:bg-slate-800"
+								>
 									View Templates
 								</Button>
 							</div>
@@ -90,8 +106,8 @@ export default function Home() {
 			</section>
 
 			{/* Template Preview Section */}
-			<section className="py-20 bg-gradient-to-b from-muted/30 to-background dark:from-slate-800 dark:to-slate-900">
-				<div className="container mx-auto px-4">
+			<section className="relative py-20 bg-gradient-to-b from-muted/30 to-background dark:from-slate-800 dark:to-slate-900 overflow-hidden">
+				<div className="container mx-auto px-4 relative z-10">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-200">
 							Professional Templates
@@ -170,8 +186,14 @@ export default function Home() {
 			</section>
 
 			{/* Features Section */}
-			<section className="py-20 bg-muted/50 dark:bg-slate-800">
-				<div className="container mx-auto px-4">
+			<section className="relative py-20 bg-muted/50 dark:bg-slate-800 overflow-hidden">
+				{/* Background Image */}
+				<div className="absolute inset-0 z-0">
+					<Image src={loginBG} alt="" fill className="object-cover opacity-5 dark:opacity-10" />
+					<div className="absolute inset-0 bg-gradient-to-b from-muted/50 via-muted/30 to-muted/50 dark:from-slate-800/90 dark:via-slate-800/80 dark:to-slate-800/90"></div>
+				</div>
+
+				<div className="container mx-auto px-4 relative z-10">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-200">
 							Why Choose Our CV Builder?
@@ -185,14 +207,14 @@ export default function Home() {
 						{features.map((feature, index) => (
 							<Card
 								key={index}
-								className="p-6 h-full hover:shadow-lg dark:bg-slate-700 dark:hover:shadow-xl dark:hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1"
+								className="p-6 h-full hover:shadow-lg dark:bg-slate-700 dark:hover:shadow-xl dark:hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-sm bg-white/80 dark:bg-slate-700/90"
 							>
 								<div className="space-y-4">
 									<div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center transition-colors group-hover:bg-primary/20 dark:group-hover:bg-primary/30">
 										<feature.icon className="w-6 h-6 text-primary dark:text-primary" />
 									</div>
 									<div>
-										<h3 className="text-xl font-semibold mb-2 text-foreground dark:text-slate-200">
+										<h3 className="text-xl font-semibold mb-2 text-muted dark:text-slate-200">
 											{feature.title}
 										</h3>
 										<p className="text-muted-foreground dark:text-slate-400">
@@ -207,8 +229,13 @@ export default function Home() {
 			</section>
 
 			{/* How It Works Section */}
-			<section className="py-20 bg-background dark:bg-background">
-				<div className="container mx-auto px-4">
+			<section className="relative py-20 bg-background dark:bg-background overflow-hidden">
+				{/* Background Pattern */}
+				<div className="absolute inset-0 z-0">
+					<div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M20%2020c0%2011.046-8.954%2020-20%2020s-20-8.954-20-20%208.954-20%2020-20%2020%208.954%2020%2020zm0-20c-11.046%200-20%208.954-20%2020s8.954%2020%2020%2020%2020-8.954%2020-20-8.954-20-20-20z%22/%3E%3C/g%3E%3C/svg%3E')] opacity-60 dark:opacity-40"></div>
+				</div>
+
+				<div className="container mx-auto px-4 relative z-10">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-400">
 							How It Works
@@ -222,12 +249,12 @@ export default function Home() {
 						{steps.map((step, index) => (
 							<div key={index} className="text-center space-y-4">
 								<div className="relative">
-									<div className="w-16 h-16 bg-primary text-foreground dark:bg-primary dark:text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto">
+									<div className="w-16 h-16 bg-primary text-muted dark:bg-primary dark:text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto">
 										{step.number}
 									</div>
 								</div>
 								<div>
-									<h3 className="text-xl font-semibold mb-2 text-foreground dark:text-slate-200">
+									<h3 className="text-xl font-semibold mb-2 text-muted dark:text-slate-200">
 										{step.title}
 									</h3>
 									<p className="text-muted-foreground dark:text-slate-400">{step.description}</p>
@@ -274,7 +301,7 @@ export default function Home() {
 								alt="Professional CV Design"
 								width="600"
 								height="400"
-								className="rounded-2xl shadow-2xl dark:shadow-xl"
+								className="rounded-2xl shadow-2xl dark:shadow-xl w-full"
 							/>
 							<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent dark:from-black/40 dark:to-transparent rounded-2xl"></div>
 						</div>
@@ -283,9 +310,13 @@ export default function Home() {
 			</section>
 
 			{/* CTA Section */}
-			<section className="py-20 bg-background dark:bg-background">
-				<div className="container mx-auto px-4">
-					<Card className="p-12 text-center bg-gradient-to-r from-primary/10 to-secondary/10 dark:bg-slate-700 dark:from-primary/20 dark:to-secondary/20 border-0">
+			<section className="relative py-20 bg-background dark:bg-background overflow-hidden">
+				{/* Background Pattern */}
+				<div className="absolute inset-0 z-0">
+					<div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M20%2020c0%2011.046-8.954%2020-20%2020s-20-8.954-20-20%208.954-20%2020-20%2020%208.954%2020%2020zm0-20c-11.046%200-20%208.954-20%2020s8.954%2020%2020%2020%2020-8.954%2020-20-8.954-20-20-20z%22/%3E%3C/g%3E%3C/svg%3E')] opacity-60 dark:opacity-40"></div>
+				</div>
+				<div className="container mx-auto px-4 relative z-10">
+					<Card className="p-12 text-center bg-gradient-to-r from-primary/10 to-secondary/10 dark:bg-slate-700 dark:from-primary/20 dark:to-secondary/20 backdrop-blur-sm">
 						<div className="space-y-6 max-w-2xl mx-auto">
 							<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-200">
 								Ready to Land Your Dream Job?
