@@ -82,7 +82,7 @@ export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, ini
 			return (
 				<div className="flex items-center justify-between w-full">
 					<button
-						className={`p-2 rounded-full ${selectedIndex > 0 ? 'text-primary hover:bg-slate-100 dark:hover:bg-slate-700' : 'text-slate-300 cursor-not-allowed'}`}
+						className={`absolute left-0 bottom-0 p-2 rounded-full ${selectedIndex > 0 ? 'text-primary hover:bg-slate-100 dark:hover:bg-slate-700' : 'text-slate-300 cursor-not-allowed'}`}
 						onClick={() =>
 							selectedIndex > 0 &&
 							onClickStepItem({ item: stepItems[selectedIndex - 1], index: selectedIndex - 1 })
@@ -102,7 +102,7 @@ export const StepsBar = ({ items, onNextStepCallback, onFieldChangeCallback, ini
 					</div>
 
 					<button
-						className={`p-2 rounded-full ${selectedIndex < stepItems.length - 1 ? 'text-primary hover:bg-slate-100 dark:hover:bg-slate-700' : 'text-slate-300 cursor-not-allowed'}`}
+						className={`absolute right-0 bottom-0 p-2 rounded-full ${selectedIndex < stepItems.length - 1 ? 'text-primary hover:bg-slate-100 dark:hover:bg-slate-700' : 'text-slate-300 cursor-not-allowed'}`}
 						onClick={() =>
 							selectedIndex < stepItems.length - 1 &&
 							stepItems[selectedIndex + 1]?.active &&

@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { Home, ArrowLeft, LogIn } from 'lucide-react';
+import { ArrowLeft, LogIn } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -103,7 +103,6 @@ export default function TopBar({ user }: TopBarProps) {
 						size="sm"
 						className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
 					>
-						<Home className="h-4 w-4" />
 						<span className="hidden sm:inline">Home</span>
 					</Button>
 				</Link>
@@ -114,8 +113,7 @@ export default function TopBar({ user }: TopBarProps) {
 					href="/home"
 					className="flex items-center gap-2 text-lg font-semibold text-foreground hover:text-muted-foreground transition-colors"
 				>
-					<Home className="h-5 w-5" color="white" />
-					<span className="hidden sm:inline text-white">CV Builder</span>
+					<span className="sm:inline text-white">CV Builder</span>
 				</Link>
 			)}
 
@@ -150,8 +148,8 @@ export default function TopBar({ user }: TopBarProps) {
 				// Not logged in - show login button
 				<Link href="/login">
 					<Button variant="default" size="sm" className="flex items-center gap-2">
+						<span className="sm:inline text-white">Login</span>
 						<LogIn className="h-4 w-4" />
-						<span className="hidden sm:inline text-white">Login</span>
 					</Button>
 				</Link>
 			)}
