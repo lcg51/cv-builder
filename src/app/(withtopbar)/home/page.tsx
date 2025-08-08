@@ -3,7 +3,7 @@ import { Button } from '@/components/ui';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-import { loginBG } from '../../assets';
+import { jobapplicantBG, laptopBG, loginBG } from '../../../assets';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { FileText, CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
@@ -22,13 +22,7 @@ export default function Home() {
 			<section className="relative overflow-hidden min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] flex items-center">
 				{/* Background Image */}
 				<div className="absolute inset-0 z-0">
-					<Image
-						src="/assets/portfoliobg.wep.jpg"
-						alt=""
-						fill
-						className="object-cover opacity-10 dark:opacity-5"
-						priority
-					/>
+					<Image src={laptopBG} alt="" fill className="object-cover opacity-10 dark:opacity-5" priority />
 					<div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/80 dark:from-slate-900/80 dark:via-slate-900/60 dark:to-slate-900/80"></div>
 				</div>
 
@@ -189,7 +183,7 @@ export default function Home() {
 			<section className="relative py-20 bg-muted/50 dark:bg-slate-800 overflow-hidden">
 				{/* Background Image */}
 				<div className="absolute inset-0 z-0">
-					<Image src={loginBG} alt="" fill className="object-cover opacity-5 dark:opacity-10" />
+					<Image src={jobapplicantBG} alt="" fill className="object-cover opacity-5 dark:opacity-10" />
 					<div className="absolute inset-0 bg-gradient-to-b from-muted/50 via-muted/30 to-muted/50 dark:from-slate-800/90 dark:via-slate-800/80 dark:to-slate-800/90"></div>
 				</div>
 
