@@ -19,21 +19,29 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { googleSignOut } from '../server-actions/session';
 import { UserProps } from '@/lib/models';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
-import { useDashboardNavItems } from '@/hooks/useNavItems';
+import { useMemo } from 'react';
 
 export type TopBarProps = {
 	user?: UserProps | null;
 };
 
 export default function TopBar({ user }: TopBarProps) {
-	const navItems = useDashboardNavItems();
 	const pathname = usePathname();
 
-	// Check if we're on a page that should show back navigation
 	const isOnCreatePage = pathname?.includes('/resume/create');
 
+	const LoginButton = useMemo(() => {
+		return (
+			<Link href="/login" className="flex items-center">
+				<Button variant="secondary" size="sm" className="flex items-center gap-2">
+					<span className="sm:inline">Sign In</span>
+				</Button>
+			</Link>
+		);
+	}, []);
+
 	return (
-		<header className="flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px] lg:px-6">
+		<header className="inline-flex sticky top-0 z-40 h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px] lg:px-6">
 			<Sheet>
 				<SheetContent side="left" className="flex flex-col">
 					<nav className="grid gap-2 text-lg font-medium">
@@ -48,17 +56,6 @@ export default function TopBar({ user }: TopBarProps) {
 							</Link>
 						)}
 
-						{navItems.map(item => (
-							<Link
-								href={item.href}
-								key={item.href}
-								className="flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-							>
-								{item.icon && item.icon}
-								{item.label}
-							</Link>
-						))}
-
 						{/* Mobile Login/Logout */}
 						{user ? (
 							<button
@@ -69,13 +66,7 @@ export default function TopBar({ user }: TopBarProps) {
 								Logout
 							</button>
 						) : (
-							<Link
-								href="/login"
-								className="flex items-center gap-4 rounded-xl px-3 py-2 text-primary hover:text-primary/80 bg-primary/10 border border-primary/20 mt-4"
-							>
-								<LogIn className="h-6 w-6" />
-								Login
-							</Link>
+							LoginButton
 						)}
 					</nav>
 				</SheetContent>
@@ -139,13 +130,7 @@ export default function TopBar({ user }: TopBarProps) {
 					</DropdownMenuContent>
 				</DropdownMenu>
 			) : (
-				// Not logged in - show login button
-				<Link href="/login">
-					<Button variant="default" size="sm" className="flex items-center gap-2">
-						<span className="sm:inline text-white">Login</span>
-						<LogIn className="h-4 w-4" />
-					</Button>
-				</Link>
+				LoginButton
 			)}
 		</header>
 	);

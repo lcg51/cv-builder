@@ -11,9 +11,7 @@
 	--background: #ffffff;
 	--foreground: #322938;
 	--primary: #89a194;
-	--primary-opaque: rgba(137, 161, 148, 0.5);
 	--secondary: #cfc89a;
-	--orange: #cc883a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,7 +19,6 @@
 		--foreground: #ededed;
 		--primary: #89a194;
 		--secondary: #cfc89a;
-		--orange: #cc883a;
 	}
 }
 
