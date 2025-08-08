@@ -8,41 +8,19 @@ import { SkillsForm } from '../components/SkillsForm';
 import { FinishForm } from '../components/FinishForm';
 import { StepsBar } from '@/app/components/StepsBar/StepsBar';
 import { TemplatePreviewer } from '@/app/components/TemplatePreviewer/TemplatePreviewer';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { defaultUserData, UserDataType } from '@/app/models/user';
+import { UserDataType } from '@/app/models/user';
 import { EyeIcon } from '@/components/icons/FormIcons';
 import { processTemplate } from '@/lib/templateProcessor';
-
-type UserDataStoreType = {
-	userData: UserDataType;
-	resetUserData: () => void;
-	setUserDataValue: (key: string, value: string) => void;
-	activeStep: number;
-	setActiveStep: (step: number) => void;
-};
-
-const userDataStore = create<UserDataStoreType>()(
-	persist(
-		set => ({
-			userData: defaultUserData,
-			activeStep: 0,
-			resetUserData: () => set({ userData: defaultUserData }),
-			setUserDataValue: (key: string, value: string) =>
-				set((state: UserDataStoreType) => ({ userData: { ...state.userData, [key]: value } })),
-			setActiveStep: (step: number) => set({ activeStep: step })
-		}),
-		{
-			name: 'user-data-store' // unique name
-		}
-	)
-);
+import { PersistenceDebug } from '@/app/components/PersistenceDebug';
+import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
+import { deserializeDates, needsDateConversion } from '@/lib/helpers';
 
 export default function CreateResume() {
-	const userData = userDataStore((state: UserDataStoreType) => state.userData);
-	const setUserDataValue = userDataStore((state: UserDataStoreType) => state.setUserDataValue);
-	const activeStep = userDataStore((state: UserDataStoreType) => state.activeStep);
-	const setActiveStep = userDataStore((state: UserDataStoreType) => state.setActiveStep);
+	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
+	const setResumeUserDataValue = resumeDataStore((state: ResumeDataStoreType) => state.setResumeUserDataValue);
+	const updateResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.updateResumeUserData);
+	const activeStep = resumeDataStore((state: ResumeDataStoreType) => state.activeStep);
+	const setActiveStep = resumeDataStore((state: ResumeDataStoreType) => state.setActiveStep);
 	const [templateHTML, setTemplateHTML] = useState<string>('');
 	const [styles, setStyles] = useState<string>('');
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
@@ -54,6 +32,22 @@ export default function CreateResume() {
 		{ title: 'About', active: false, isClickable: false, component: AboutForm },
 		{ title: 'Finish', active: false, isClickable: false, component: FinishForm }
 	];
+
+	// Handle Date object conversion when store is rehydrated
+	useEffect(() => {
+		if (needsDateConversion(userResumeData)) {
+			const convertedData = deserializeDates(userResumeData) as UserDataType;
+			updateResumeUserData(convertedData);
+		}
+	}, [userResumeData, updateResumeUserData]);
+
+	// Debug logging for persistence
+	useEffect(() => {
+		if (process.env.NODE_ENV === 'development') {
+			console.log('Active step loaded from store:', activeStep);
+			console.log('User data loaded from store:', userResumeData);
+		}
+	}, [activeStep, userResumeData]);
 
 	useEffect(() => {
 		const fetchTemplate = async () => {
@@ -78,21 +72,23 @@ export default function CreateResume() {
 	}, []);
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
-		setUserDataValue(key, value as string);
+		setResumeUserDataValue(key, value as string);
 	}, []);
 
 	const onSetNextStep = useCallback(
 		(activeStepIndex: number) => {
-			if (activeStepIndex === initialSteps.length - 1) return;
-			setActiveStep(activeStepIndex);
+			// Allow going to any step up to the last one
+			if (activeStepIndex >= 0 && activeStepIndex < initialSteps.length) {
+				setActiveStep(activeStepIndex);
+			}
 		},
-		[activeStep, initialSteps]
+		[initialSteps]
 	);
 
 	const downloadPDF = useCallback(async () => {
 		try {
 			// Process the template with user data using the shared utility
-			const processedHtml = processTemplate(templateHTML, userData);
+			const processedHtml = processTemplate(templateHTML, userResumeData);
 
 			const response = await fetch(`/api/pdf`, {
 				method: 'POST',
@@ -112,7 +108,7 @@ export default function CreateResume() {
 		} catch (error) {
 			console.error('Error downloading PDF:', error);
 		}
-	}, [templateHTML, styles, userData]);
+	}, [templateHTML, styles, userResumeData]);
 
 	const toggleMobilePreview = useCallback(() => {
 		setShowMobilePreview(prev => !prev);
@@ -122,14 +118,14 @@ export default function CreateResume() {
 		<div className="min-h-[calc(100vh-60px)] bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
 			<div className="container mx-auto p-4 lg:p-6">
 				{/* Header */}
-				<div className="mb-8 text-center">
+				{/* <div className="mb-8 text-center">
 					<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-2">
 						Create Your Resume
 					</h1>
 					<p className="text-slate-600 dark:text-slate-400 text-lg">
 						Follow the steps below to build your professional resume
 					</p>
-				</div>
+				</div> */}
 
 				{/* Main Content */}
 				<div className="flex flex-col xl:flex-row gap-6 min-h-[calc(100vh-200px)]">
@@ -141,9 +137,10 @@ export default function CreateResume() {
 							<div className="p-4 lg:p-6">
 								<StepsBar
 									items={initialSteps}
+									activeStep={activeStep}
 									onNextStepCallback={onSetNextStep}
 									onFieldChangeCallback={updateUserValue}
-									initialValues={userData}
+									initialValues={userResumeData}
 									onDownloadPDF={downloadPDF}
 								/>
 							</div>
@@ -179,7 +176,7 @@ export default function CreateResume() {
 							</div>
 							<div className="flex-1 overflow-hidden">
 								<TemplatePreviewer
-									userData={userData}
+									userData={userResumeData}
 									templateHTML={templateHTML}
 									templateStyles={styles}
 								/>
@@ -198,6 +195,9 @@ export default function CreateResume() {
 					</div>
 				</div>
 			</div>
+
+			{/* Debug component - remove in production */}
+			{process.env.NODE_ENV === 'development' && <PersistenceDebug />}
 		</div>
 	);
 }
