@@ -1,7 +1,7 @@
 'use client';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 import './StepsBar.css';
-import { useWindowSize } from '../../util/hooks/useWindowSize';
+import { useWindowSize } from '../../../hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from '@/components/icons/FormIcons';
 
@@ -31,15 +31,28 @@ export type StepsBarProps = {
 
 export const StepsBar = ({
 	items,
+	activeStep = 0,
 	onNextStepCallback,
 	onFieldChangeCallback,
 	initialValues,
 	onDownloadPDF
 }: StepsBarProps) => {
-	const [selectedIndex, setSelectedIndex] = useState<number>(0);
+	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
 	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
 	const { width } = useWindowSize();
 	const isTabletResolution = width < 1024;
+
+	// Sync selectedIndex with activeStep prop when it changes (e.g., when data is loaded from Zustand)
+	useEffect(() => {
+		setSelectedIndex(activeStep);
+		// Update step items to reflect the active step
+		const newItems = items.map((item, index) => ({
+			...item,
+			active: index <= activeStep,
+			isClickable: index <= activeStep
+		}));
+		setStepItems(newItems);
+	}, [activeStep, items]);
 
 	const onSetNextStep = useCallback(() => {
 		if (selectedIndex === stepItems.length - 1) return;
@@ -63,8 +76,10 @@ export const StepsBar = ({
 			}));
 			setStepItems(newItems);
 			setSelectedIndex(index);
+			// Notify parent component about step change
+			onNextStepCallback?.(index);
 		},
-		[setSelectedIndex]
+		[stepItems, onNextStepCallback]
 	);
 
 	const stepsViewRender = useMemo(() => {

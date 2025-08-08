@@ -27,3 +27,39 @@ export const getGoogleProfileImage = (imageUrl?: string | null): string | undefi
 
 	return imageUrl;
 };
+
+// Check if dates need to be converted from strings to Date objects
+export const needsDateConversion = (data: unknown): boolean => {
+	if (Array.isArray(data)) {
+		return data.some(needsDateConversion);
+	}
+	if (data && typeof data === 'object') {
+		for (const [key, value] of Object.entries(data)) {
+			if ((key === 'startDate' || key === 'endDate' || key === 'finishDate') && typeof value === 'string') {
+				return true;
+			}
+			if (needsDateConversion(value)) {
+				return true;
+			}
+		}
+	}
+	return false;
+};
+
+export const deserializeDates = (data: unknown): unknown => {
+	if (Array.isArray(data)) {
+		return data.map(deserializeDates);
+	}
+	if (data && typeof data === 'object') {
+		const result: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(data)) {
+			if (key === 'startDate' || key === 'endDate' || key === 'finishDate') {
+				result[key] = value ? new Date(value as string) : new Date();
+			} else {
+				result[key] = deserializeDates(value);
+			}
+		}
+		return result;
+	}
+	return data;
+};
