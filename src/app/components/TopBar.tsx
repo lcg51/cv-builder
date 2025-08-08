@@ -32,7 +32,7 @@ export default function TopBar({ user }: TopBarProps) {
 
 	const LoginButton = useMemo(() => {
 		return (
-			<Link href="/login" className="flex items-center">
+			<Link href="/login">
 				<Button variant="secondary" size="sm" className="flex items-center gap-2">
 					<span className="sm:inline">Sign In</span>
 				</Button>
@@ -99,7 +99,6 @@ export default function TopBar({ user }: TopBarProps) {
 
 			{/* User Menu - Conditional Rendering */}
 			{user ? (
-				// Logged in user - show avatar dropdown
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="secondary" size="icon" className="rounded-full">
