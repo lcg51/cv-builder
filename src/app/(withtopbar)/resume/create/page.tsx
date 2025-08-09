@@ -15,6 +15,10 @@ import { PersistenceDebug } from '@/app/components/PersistenceDebug';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
 
+const TOPBAR_HEIGHT = 60;
+const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
+const TOTAL_OFFSET = TOPBAR_HEIGHT + 2 * CONTAINER_PADDING;
+
 export default function CreateResume() {
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const setResumeUserDataValue = resumeDataStore((state: ResumeDataStoreType) => state.setResumeUserDataValue);
@@ -115,8 +119,11 @@ export default function CreateResume() {
 	}, []);
 
 	return (
-		<div className="min-h-[calc(100vh-60px)] bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-			<div className="container mx-auto p-4 lg:p-6">
+		<div
+			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800`}
+			style={{ height: `calc(100vh - ${TOPBAR_HEIGHT}px)` }}
+		>
+			<div className="container mx-auto p-4 lg:p-6 pb-10">
 				{/* Header */}
 				{/* <div className="mb-8 text-center">
 					<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-2">
@@ -128,31 +135,32 @@ export default function CreateResume() {
 				</div> */}
 
 				{/* Main Content */}
-				<div className="flex flex-col xl:flex-row gap-6 min-h-[calc(100vh-200px)]">
+				<div
+					className="flex flex-col xl:flex-row gap-6 h-auto"
+					style={{ height: `calc(100vh - ${TOTAL_OFFSET}px)` }}
+				>
 					{/* Form Section - Hidden on mobile when preview is active */}
 					<div
-						className={`w-full xl:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden ${showMobilePreview ? 'xl:block hidden' : 'block'}`}
+						className={`${showMobilePreview ? 'xl:block hidden' : 'block'} w-full h-full xl:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
 					>
-						<div className="h-full overflow-y-auto">
-							<div className="p-4 lg:p-6">
-								<StepsBar
-									items={initialSteps}
-									activeStep={activeStep}
-									onNextStepCallback={onSetNextStep}
-									onFieldChangeCallback={updateUserValue}
-									initialValues={userResumeData}
-									onDownloadPDF={downloadPDF}
-								/>
-							</div>
+						<div className="p-4 lg:p-6 h-full xl:h-full flex flex-col">
+							<StepsBar
+								items={initialSteps}
+								activeStep={activeStep}
+								onNextStepCallback={onSetNextStep}
+								onFieldChangeCallback={updateUserValue}
+								initialValues={userResumeData}
+								onDownloadPDF={downloadPDF}
+							/>
 						</div>
 					</div>
 
 					{/* Preview Section - Desktop always visible, mobile conditionally visible */}
 					<div
-						className={`${showMobilePreview ? 'block' : 'hidden'} xl:flex w-full xl:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden`}
+						className={`h-full ${showMobilePreview ? 'block' : 'hidden'} xl:flex w-full xl:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
 					>
-						<div className="h-full flex flex-col w-full">
-							<div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
+						<div className="flex flex-col w-full h-full xl:h-full">
+							<div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex-shrink-0">
 								<div className="flex items-center justify-between">
 									<h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
 										<EyeIcon />
@@ -174,7 +182,7 @@ export default function CreateResume() {
 									</button>
 								</div>
 							</div>
-							<div className="flex-1 overflow-hidden">
+							<div className="flex-1 min-h-0">
 								<TemplatePreviewer
 									userData={userResumeData}
 									templateHTML={templateHTML}
@@ -189,6 +197,7 @@ export default function CreateResume() {
 						<button
 							onClick={toggleMobilePreview}
 							className="bg-primary hover:bg-primary/90 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+							aria-label="Toggle preview"
 						>
 							<EyeIcon className="w-6 h-6 text-black" />
 						</button>

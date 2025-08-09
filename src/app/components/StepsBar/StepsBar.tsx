@@ -184,7 +184,7 @@ export const StepsBar = ({
 	}, [stepItems, selectedIndex, isTabletResolution, onClickStepItem]);
 
 	return (
-		<div className="flex flex-col w-full">
+		<div className="flex flex-col w-full h-full xl:flex-1">
 			{/* Progress Bar */}
 			<div className="mb-8">
 				<div className="flex justify-between items-center mb-2">
@@ -215,7 +215,9 @@ export const StepsBar = ({
 			</div>
 
 			{/* Form Content */}
-			<div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-6">{stepsViewRender}</div>
+			<div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-6 xl:flex-1 overflow-y-auto min-h-0">
+				{stepsViewRender}
+			</div>
 		</div>
 	);
 };

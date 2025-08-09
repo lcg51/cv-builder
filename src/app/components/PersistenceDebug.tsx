@@ -23,7 +23,7 @@ export const PersistenceDebug: React.FC = () => {
 		return (
 			<button
 				onClick={() => setIsVisible(true)}
-				className="fixed bottom-4 left-4 bg-gray-800 text-white p-2 rounded-full text-xs z-50"
+				className="fixed bottom-6 left-5 bg-gray-800 text-white p-2 rounded-full text-xs z-50"
 				title="Debug Persistence"
 			>
 				🔧
