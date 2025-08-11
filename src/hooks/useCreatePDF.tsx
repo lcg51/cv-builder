@@ -10,10 +10,10 @@ export function useCreatePDF({ userResumeData }: CreatePdfProps) {
 	const [templateHTML, setTemplateHTML] = useState<string>('');
 	const [styles, setStyles] = useState<string>('');
 
-	const fetchTemplatePDF = async () => {
+	const fetchTemplatePDF = async (templateId: string) => {
 		try {
-			const htmlResponse = await fetch('/templates/template1/template1.html');
-			const stylesResponse = await fetch('/templates/template1/template1.css');
+			const htmlResponse = await fetch(`/templates/${templateId}/${templateId}.html`);
+			const stylesResponse = await fetch(`/templates/${templateId}/${templateId}.css`);
 			if (!htmlResponse.ok || !stylesResponse.ok) {
 				throw new Error(`HTTP error! status: ${htmlResponse.status}`);
 			}

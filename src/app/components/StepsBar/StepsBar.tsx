@@ -170,13 +170,17 @@ export const StepsBar = ({
 							isCompleted
 								? 'bg-green-500 border-green-500 text-white'
 								: isCurrent
-									? 'bg-primary border-primary text-white shadow-lg'
+									? 'bg-primary border-primary text-primary shadow-lg border-0'
 									: item.active
 										? 'bg-white border-primary text-primary hover:bg-primary hover:text-white'
 										: 'bg-slate-200 border-slate-300 text-slate-400'
 						}`}
 					>
-						{isCompleted ? <CheckIcon /> : <span className="text-sm font-bold">{index + 1}</span>}
+						{isCompleted ? (
+							<CheckIcon />
+						) : (
+							<span className="text-sm text-foreground font-bold">{index + 1}</span>
+						)}
 					</div>
 				</div>
 			);

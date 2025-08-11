@@ -8,12 +8,33 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { AboutIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
 
 const formSchema = z.object({
 	aboutMe: z.string().min(2, {
 		message: 'Username must be at least 2 characters.'
-	})
+	}),
+	github: z
+		.string()
+		.url({
+			message: 'Please enter a valid URL.'
+		})
+		.refine(url => url === '' || url.includes('github.com'), {
+			message: 'Please enter a valid GitHub URL (must contain github.com)'
+		})
+		.optional()
+		.or(z.literal('')),
+	linkedin: z
+		.string()
+		.url({
+			message: 'Please enter a valid URL.'
+		})
+		.refine(url => url === '' || url.includes('linkedin.com'), {
+			message: 'Please enter a valid LinkedIn URL (must contain linkedin.com)'
+		})
+		.optional()
+		.or(z.literal(''))
 });
 
 export type ContactFormPropsType = StepsBarComponentProps;
@@ -57,7 +78,7 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 				</div>
 			</div>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-				<div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
+				<div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700 space-y-6">
 					<FormField
 						control={form.control}
 						name="aboutMe"
@@ -76,6 +97,53 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 								<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
 									Tip: Keep it concise and highlight your most relevant skills and achievements (2-3
 									sentences recommended)
+								</div>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="github"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									GitHub Profile
+								</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="https://github.com/yourusername"
+										className="border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
+								</FormControl>
+								<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+									Tip: Include your full GitHub profile URL to showcase your projects and
+									contributions
+								</div>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="linkedin"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+									LinkedIn Profile
+								</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="https://linkedin.com/in/yourusername"
+										className="border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+										{...field}
+									/>
+								</FormControl>
+								<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+									Tip: Include your full LinkedIn profile URL to connect with potential employers
 								</div>
 								<FormMessage />
 							</FormItem>

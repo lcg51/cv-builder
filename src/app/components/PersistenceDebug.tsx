@@ -2,12 +2,26 @@
 import React from 'react';
 import { resumeDataStore } from '../store/resume';
 
-export const PersistenceDebug: React.FC = () => {
+interface PersistenceDebugProps {
+	onTemplateChange?: (templateId: string) => void;
+	currentTemplate?: string;
+}
+
+export const PersistenceDebug: React.FC<PersistenceDebugProps> = ({
+	onTemplateChange,
+	currentTemplate = 'template1'
+}) => {
 	const [isVisible, setIsVisible] = React.useState(false);
 	const userData = resumeDataStore(state => state.userResumeData);
 	const activeStep = resumeDataStore(state => state.activeStep);
 	const clearStorage = resumeDataStore(state => state.clearStorage);
 	const resetResumeUserData = resumeDataStore(state => state.resetResumeUserData);
+
+	const availableTemplates = [
+		{ id: 'template1', name: 'Classic Header' },
+		{ id: 'template2', name: 'Modern Sidebar' },
+		{ id: 'template3', name: 'Card Layout' }
+	];
 
 	const handleClearStorage = () => {
 		clearStorage();
@@ -17,6 +31,12 @@ export const PersistenceDebug: React.FC = () => {
 	const handleResetData = () => {
 		resetResumeUserData();
 		alert('Data reset to defaults!');
+	};
+
+	const handleTemplateChange = (templateId: string) => {
+		if (onTemplateChange) {
+			onTemplateChange(templateId);
+		}
 	};
 
 	if (!isVisible) {
@@ -41,6 +61,29 @@ export const PersistenceDebug: React.FC = () => {
 				>
 					✕
 				</button>
+			</div>
+
+			{/* Template Switcher */}
+			<div className="mb-3 p-2 bg-gray-50 dark:bg-gray-700 rounded">
+				<div className="text-xs font-medium mb-2 text-gray-600 dark:text-gray-300">
+					Template: {currentTemplate}
+				</div>
+				<div className="flex gap-1">
+					{availableTemplates.map(template => (
+						<button
+							key={template.id}
+							onClick={() => handleTemplateChange(template.id)}
+							className={`px-2 py-1 text-xs rounded transition-colors ${
+								currentTemplate === template.id
+									? 'bg-blue-500 text-white'
+									: 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500'
+							}`}
+							title={template.name}
+						>
+							{template.id}
+						</button>
+					))}
+				</div>
 			</div>
 
 			<div className="space-y-2 text-xs">

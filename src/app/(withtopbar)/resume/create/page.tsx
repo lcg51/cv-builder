@@ -30,6 +30,7 @@ export default function CreateResume() {
 	const setActiveStep = resumeDataStore((state: ResumeDataStoreType) => state.setActiveStep);
 	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
+	const [currentTemplate, setCurrentTemplate] = useState<string>('template1');
 
 	// Check if user has made any changes
 	const hasUnsavedChanges = Object.values(userResumeData).some(
@@ -82,7 +83,11 @@ export default function CreateResume() {
 	}, [activeStep, userResumeData]);
 
 	useEffect(() => {
-		fetchTemplatePDF();
+		fetchTemplatePDF(currentTemplate);
+	}, [currentTemplate, fetchTemplatePDF]);
+
+	const handleTemplateChange = useCallback((templateId: string) => {
+		setCurrentTemplate(templateId);
 	}, []);
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
@@ -203,7 +208,9 @@ export default function CreateResume() {
 			</div>
 
 			{/* Debug component - remove in production */}
-			{process.env.NODE_ENV === 'development' && <PersistenceDebug />}
+			{process.env.NODE_ENV === 'development' && (
+				<PersistenceDebug onTemplateChange={handleTemplateChange} currentTemplate={currentTemplate} />
+			)}
 		</div>
 	);
 }

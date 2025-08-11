@@ -13,6 +13,8 @@ export const processTemplate = (templateHTML: string, userData: UserDataType): s
 		.replace(/{{phone}}/g, userData?.phone || '')
 		.replace(/{{email}}/g, userData?.email || '')
 		.replace(/{{aboutMe}}/g, userData?.aboutMe || '')
+		.replace(/{{linkedin}}/g, userData?.linkedin || '')
+		.replace(/{{github}}/g, userData?.github || '')
 		.replace(/{{#each education}}([\s\S]*?){{\/each}}/g, (_, match) =>
 			userData.education
 				.map(edu =>
