@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { ArrowLeft, LogIn } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
@@ -20,6 +19,7 @@ import { googleSignOut } from '../server-actions/session';
 import { UserProps } from '@/lib/models';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
 import { useMemo } from 'react';
+import { resumeDataStore } from '@/app/store/resume';
 
 export type TopBarProps = {
 	user?: UserProps | null;
@@ -29,6 +29,26 @@ export default function TopBar({ user }: TopBarProps) {
 	const pathname = usePathname();
 
 	const isOnCreatePage = pathname?.includes('/resume/create');
+
+	const userResumeData = resumeDataStore(state => state.userResumeData);
+	const shouldShowExitDialog =
+		isOnCreatePage &&
+		Object.values(userResumeData).some(value => value !== '' && value !== null && value !== undefined);
+
+	// Handle navigation with guard for create page
+	const handleNavigation = (targetUrl: string) => {
+		if (shouldShowExitDialog) {
+			// Dispatch a custom event that the create page can listen to
+			window.dispatchEvent(
+				new CustomEvent('navigation-attempt', {
+					detail: { targetUrl }
+				})
+			);
+			return;
+		}
+		// For other pages, allow normal navigation
+		window.location.href = targetUrl;
+	};
 
 	const LoginButton = useMemo(() => {
 		return (
@@ -47,13 +67,13 @@ export default function TopBar({ user }: TopBarProps) {
 					<nav className="grid gap-2 text-lg font-medium">
 						{/* Quick Back Navigation for Create Page */}
 						{isOnCreatePage && (
-							<Link
-								href="/home"
-								className="flex items-center gap-4 rounded-xl px-3 py-2 bg-primary/10 border border-primary/20"
+							<button
+								onClick={() => handleNavigation('/home')}
+								className="items-center gap-4 rounded-xl px-3 py-2 bg-primary/10 border border-primary/20"
 							>
 								<ArrowLeft className="h-6 w-6" color="white" />
 								<span className="text-white">Back to Home</span>
-							</Link>
+							</button>
 						)}
 
 						{/* Mobile Login/Logout */}
@@ -74,16 +94,15 @@ export default function TopBar({ user }: TopBarProps) {
 
 			{/* Back Navigation / Home Button */}
 			{isOnCreatePage && (
-				<Link href="/home">
-					<Button
-						variant="ghost"
-						size="sm"
-						className="flex items-center gap-2 text-white hover:text-foreground"
-					>
-						<ArrowLeft className="h-4 w-4" />
-						<span className="hidden sm:inline text-white hover:text-foreground">Back to Home</span>
-					</Button>
-				</Link>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="inline-flex items-center gap-2 text-white hover:text-foreground"
+					onClick={() => handleNavigation('/home')}
+				>
+					<ArrowLeft className="h-4 w-4" />
+					<span className="hidden sm:inline text-white hover:text-foreground">Back to Home</span>
+				</Button>
 			)}
 
 			{!isOnCreatePage && (

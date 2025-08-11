@@ -10,10 +10,13 @@ import { StepsBar } from '@/app/components/StepsBar/StepsBar';
 import { TemplatePreviewer } from '@/app/components/TemplatePreviewer/TemplatePreviewer';
 import { UserDataType } from '@/app/models/user';
 import { EyeIcon } from '@/components/icons/FormIcons';
-import { processTemplate } from '@/lib/templateProcessor';
 import { PersistenceDebug } from '@/app/components/PersistenceDebug';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
+
+import { useNavigationGuard } from '@/hooks/useNavigationGuard';
+import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
+import { useCreatePDF } from '@/hooks/useCreatePDF';
 
 const TOPBAR_HEIGHT = 60;
 const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
@@ -25,9 +28,34 @@ export default function CreateResume() {
 	const updateResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.updateResumeUserData);
 	const activeStep = resumeDataStore((state: ResumeDataStoreType) => state.activeStep);
 	const setActiveStep = resumeDataStore((state: ResumeDataStoreType) => state.setActiveStep);
-	const [templateHTML, setTemplateHTML] = useState<string>('');
-	const [styles, setStyles] = useState<string>('');
+	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
+
+	// Check if user has made any changes
+	const hasUnsavedChanges = Object.values(userResumeData).some(
+		value => value !== '' && value !== null && value !== undefined
+	);
+
+	// Use navigation guard hook
+	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
+		hasUnsavedChanges,
+		onConfirmExit: resetResumeUserData
+	});
+
+	const { templateHTML, styles, fetchTemplatePDF, downloadPDF } = useCreatePDF({ userResumeData });
+
+	// Listen for navigation attempts from TopBar
+	useEffect(() => {
+		const handleNavigationAttempt = () => {
+			if (hasUnsavedChanges) {
+				attemptNavigation('/home');
+			}
+		};
+
+		window.addEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
+		return () => window.removeEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
+	}, [hasUnsavedChanges, attemptNavigation]);
+
 	const initialSteps = [
 		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
 		{ title: 'Experience', active: false, isClickable: false, component: ExperienceForm },
@@ -54,25 +82,7 @@ export default function CreateResume() {
 	}, [activeStep, userResumeData]);
 
 	useEffect(() => {
-		const fetchTemplate = async () => {
-			try {
-				const htmlResponse = await fetch('/templates/template1/template1.html');
-				const stylesResponse = await fetch('/templates/template1/template1.css');
-				if (!htmlResponse.ok || !stylesResponse.ok) {
-					throw new Error(`HTTP error! status: ${htmlResponse.status}`);
-				}
-
-				const template = await htmlResponse.text();
-				const styles = await stylesResponse.text();
-
-				setTemplateHTML(template || '');
-				setStyles(styles || '');
-			} catch (error) {
-				console.error('Error fetching template:', error);
-			}
-		};
-
-		fetchTemplate();
+		fetchTemplatePDF();
 	}, []);
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
@@ -89,31 +99,6 @@ export default function CreateResume() {
 		[initialSteps]
 	);
 
-	const downloadPDF = useCallback(async () => {
-		try {
-			// Process the template with user data using the shared utility
-			const processedHtml = processTemplate(templateHTML, userResumeData);
-
-			const response = await fetch(`/api/pdf`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ html: processedHtml, styles: styles })
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to generate PDF');
-			}
-			const blob = await response.blob();
-			const url = URL.createObjectURL(blob);
-			const link = document.createElement('a');
-			link.href = url;
-			link.download = 'resume.pdf';
-			link.click();
-		} catch (error) {
-			console.error('Error downloading PDF:', error);
-		}
-	}, [templateHTML, styles, userResumeData]);
-
 	const toggleMobilePreview = useCallback(() => {
 		setShowMobilePreview(prev => !prev);
 	}, []);
@@ -123,6 +108,18 @@ export default function CreateResume() {
 			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800`}
 			style={{ height: `calc(100vh - ${TOPBAR_HEIGHT}px)` }}
 		>
+			{/* Exit Disclaimer Dialog */}
+			<ModalDisclaimer
+				open={showExitDialog}
+				onOpenChange={() => {
+					if (!showExitDialog) {
+						attemptNavigation('/home');
+					}
+				}}
+				onConfirm={confirmExit}
+				onCancel={cancelExit}
+			/>
+
 			<div className="container mx-auto p-4 lg:p-6 pb-10">
 				{/* Header */}
 				{/* <div className="mb-8 text-center">
