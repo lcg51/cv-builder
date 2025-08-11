@@ -133,11 +133,6 @@
 	color: rgb(175, 150, 97);
 }
 
-.flex {
-	display: flex;
-	position: relative;
-	width: 100%;
-}
 .left-column {
 	width: 40%;
 	padding: 35px;
