@@ -1,7 +1,10 @@
 <div class="cv items-center flex flex-col justify-center bg-secondary">
 	<div class="cv-header w-full">
 		<div class="cv-header__wrapper">
-			<div class="cv-header__text">{{firstName}} | {{lastName}}</div>
+			<div class="cv-header__text profile-initials">
+				<span class="first-initial">{{firstName}}</span>
+				<span class="last-initial">{{lastName}}</span>
+			</div>
 			<div>
 				<div class="name-title">{{firstName}} {{lastName}}</div>
 			</div>
@@ -110,6 +113,16 @@
 						</div>
 					</div>
 					{{/each}}
+				</div>
+				<div class="links-section">
+					<div class="links-section__item education__linkedin">
+						<span class="links-section__name">LinkedIn:</span>
+						<a href="{{linkedin}}" class="links-section__link" target="_blank">{{linkedin}}</a>
+					</div>
+					<div class="links-section__item education__github">
+						<span class="links-section__name">GitHub:</span>
+						<a href="{{github}}" class="links-section__link" target="_blank">{{github}}</a>
+					</div>
 				</div>
 			</div>
 			<div id="SKILLS-block">
