@@ -1,7 +1,28 @@
-import puppeteer from 'puppeteer';
+import { LaunchOptions } from 'puppeteer-core';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+type Puppeteer = typeof import('puppeteer-core') | typeof import('puppeteer');
 
 // app/api/hello/route.ts
 export async function POST(req: Request) {
+	let puppeteer: Puppeteer;
+	let launchOptions: LaunchOptions = {
+		headless: true
+	};
+
+	if (!isDevelopment) {
+		const chromium = (await import('@sparticuz/chromium')).default;
+		puppeteer = await import('puppeteer-core');
+		launchOptions = {
+			...launchOptions,
+			args: chromium.args,
+			executablePath: await chromium.executablePath()
+		};
+	} else {
+		puppeteer = await import('puppeteer');
+	}
+
 	try {
 		const { html, styles } = await req.json();
 		if (!html)
@@ -10,7 +31,9 @@ export async function POST(req: Request) {
 				headers: { 'Content-Type': 'application/json' }
 			});
 
-		const browser = await puppeteer.launch({ headless: true });
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const browser = await puppeteer.launch(launchOptions as any);
+
 		const page = await browser.newPage();
 		await page.setContent(
 			`<html>
@@ -40,10 +63,6 @@ export async function POST(req: Request) {
 			</html>`,
 			{ waitUntil: 'networkidle0' }
 		);
-
-		const contentHeightPx = await page.evaluate(() => document.body.scrollHeight);
-
-		console.log('Page height:', contentHeightPx);
 
 		const pdfBuffer = await page.pdf({
 			format: 'A4',

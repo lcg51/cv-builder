@@ -1,10 +1,10 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import LoginForm from '../../components/LoginForm';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Message } from '../../components/FormMessage';
-import { notebookBG } from '../../../assets';
+import { notebookBG, notebookBGJPG } from '../../../assets';
+import { OptimizedImage } from '@/components/ui';
 
 export default async function Login({ searchParams }: { searchParams: Message }) {
 	return (
@@ -56,11 +56,12 @@ export default async function Login({ searchParams }: { searchParams: Message })
 
 				{/* Background Image Section */}
 				<div className="hidden lg:block relative overflow-hidden">
-					<Image
-						src={notebookBG}
+					<OptimizedImage
+						webpSrc={notebookBG}
+						jpgSrc={notebookBGJPG}
 						alt="Professional workspace background"
-						width="1920"
-						height="1080"
+						width={1920}
+						height={1080}
 						className="h-full w-full object-cover"
 						priority
 					/>

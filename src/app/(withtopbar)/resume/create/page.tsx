@@ -20,8 +20,6 @@ export default function CreateResume() {
 	const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
 	const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
-	console.log('selectedTemplate', selectedTemplate);
-
 	// Check if user has made any changes
 	const hasUnsavedChanges = Object.values(userResumeData).some(
 		value => value !== '' && value !== null && value !== undefined
