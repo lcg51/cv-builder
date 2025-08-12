@@ -6,7 +6,7 @@ import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, logi
 import { OptimizedImage } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { FileText, CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
 import { features, stats, steps, templates } from './sections';
 
 export default function Home() {
@@ -30,10 +30,9 @@ export default function Home() {
 						className="object-cover opacity-10 dark:opacity-5"
 						priority
 					/>
-					<div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/80 dark:from-slate-900/80 dark:via-slate-900/60 dark:to-slate-900/80"></div>
 				</div>
 
-				<div className="container mx-auto px-4 pb-8 lg:pb-0 md:pb-12 relative z-10 w-full">
+				<div className="container mx-auto px-8 pb-8 lg:pb-0 md:pb-12 relative z-10 w-full lg:max-w-7xl">
 					<div className="grid lg:grid-cols-2 gap-12 items-center">
 						<div className="py-8 lg:py-0 space-y-8">
 							<div className="space-y-4">
@@ -83,24 +82,30 @@ export default function Home() {
 							</div>
 						</div>
 
-						<div className="relative lg:ml-8">
-							<div className="relative z-10 bg-white dark:bg-card dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md mx-auto">
-								<div className="aspect-[3/4] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
-									<div className="text-center space-y-4">
-										<FileText className="w-16 h-16 text-primary mx-auto" />
-										<div className="space-y-2">
-											<div className="h-3 bg-primary/20 rounded w-32 mx-auto"></div>
-											<div className="h-2 bg-primary/10 rounded w-24 mx-auto"></div>
-											<div className="h-2 bg-primary/10 rounded w-28 mx-auto"></div>
-										</div>
-									</div>
+						<div className="relative">
+							<div className="relative z-10 md:max-w-md md:mx-auto lg:mx-0 lg:max-w-2xl bg-white dark:bg-card dark:bg-slate-800 rounded-2xl shadow-2xl p-8">
+								<div className="mt-4 space-y-2">
+									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
 								</div>
 								<div className="mt-4 space-y-2">
 									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
 									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
 								</div>
+								<div className="mt-4 space-y-2">
+									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
+								</div>
+								<div className="mt-4 space-y-2">
+									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
+									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
+								</div>
+								<div className="aspect-[7/5] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center"></div>
 							</div>
-							<div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur-3xl transform scale-110"></div>
 						</div>
 					</div>
 				</div>
@@ -157,13 +162,6 @@ export default function Home() {
 											</div>
 										</div>
 									</div>
-
-									{/* Hover overlay */}
-									{/* <div className="absolute inset-0 bg-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-										<Button variant="secondary" size="sm">
-											Use This Template
-										</Button>
-									</div> */}
 								</div>
 								<div className="p-6">
 									<h3 className="text-xl font-semibold mb-2 text-foreground dark:text-slate-200">

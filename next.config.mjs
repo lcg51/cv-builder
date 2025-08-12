@@ -10,6 +10,7 @@ const nextConfig = {
 			}
 		]
 	},
+	serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
 	redirects: async () => {
 		return [
 			{
