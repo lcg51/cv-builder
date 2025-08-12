@@ -2,8 +2,8 @@
 import { Button } from '@/components/ui';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
-import { jobapplicantBG, laptopBG, loginBG } from '../../../assets';
+import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, loginBGJPG } from '../../../assets';
+import { OptimizedImage } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { FileText, CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
@@ -22,7 +22,14 @@ export default function Home() {
 			<section className="relative overflow-hidden min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] flex items-center">
 				{/* Background Image */}
 				<div className="absolute inset-0 z-0">
-					<Image src={laptopBG} alt="" fill className="object-cover opacity-10 dark:opacity-5" priority />
+					<OptimizedImage
+						webpSrc={laptopBG}
+						jpgSrc={laptopBGJPG}
+						alt=""
+						fill
+						className="object-cover opacity-10 dark:opacity-5"
+						priority
+					/>
 					<div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/80 dark:from-slate-900/80 dark:via-slate-900/60 dark:to-slate-900/80"></div>
 				</div>
 
@@ -183,7 +190,13 @@ export default function Home() {
 			<section className="relative py-20 bg-muted/50 dark:bg-slate-800 overflow-hidden">
 				{/* Background Image */}
 				<div className="absolute inset-0 z-0">
-					<Image src={jobapplicantBG} alt="" fill className="object-cover opacity-5 dark:opacity-10" />
+					<OptimizedImage
+						webpSrc={jobapplicantBG}
+						jpgSrc={jobapplicantBGJPG}
+						alt=""
+						fill
+						className="object-cover opacity-5 dark:opacity-10"
+					/>
 					<div className="absolute inset-0 bg-gradient-to-b from-muted/50 via-muted/30 to-muted/50 dark:from-slate-800/90 dark:via-slate-800/80 dark:to-slate-800/90"></div>
 				</div>
 
@@ -290,11 +303,12 @@ export default function Home() {
 						</div>
 
 						<div className="relative">
-							<Image
-								src={loginBG}
+							<OptimizedImage
+								webpSrc={loginBG}
+								jpgSrc={loginBGJPG}
 								alt="Professional CV Design"
-								width="600"
-								height="400"
+								width={600}
+								height={400}
 								className="rounded-2xl shadow-2xl dark:shadow-xl w-full"
 							/>
 							<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent dark:from-black/40 dark:to-transparent rounded-2xl"></div>
