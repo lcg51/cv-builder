@@ -6,7 +6,8 @@ import { Message } from '../../components/FormMessage';
 import { notebookBG, notebookBGJPG } from '../../../assets';
 import { OptimizedImage } from '@/components/ui';
 
-export default async function Login({ searchParams }: { searchParams: Message }) {
+export default async function Login(props: { searchParams: Promise<Message> }) {
+	const searchParams = await props.searchParams;
 	return (
 		<div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
 			<div className="w-full min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] lg:grid lg:grid-cols-2">
