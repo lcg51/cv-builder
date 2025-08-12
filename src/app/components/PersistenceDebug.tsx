@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { resumeDataStore } from '../store/resume';
 
 interface PersistenceDebugProps {
@@ -12,8 +12,9 @@ export const PersistenceDebug: React.FC<PersistenceDebugProps> = ({
 	currentTemplate = 'template1'
 }) => {
 	const [isVisible, setIsVisible] = React.useState(false);
-	const userData = resumeDataStore(state => state.userResumeData);
+	const resumeData = resumeDataStore(state => state.userResumeData);
 	const activeStep = resumeDataStore(state => state.activeStep);
+	const selectedTemplate = resumeDataStore(state => state.selectedTemplate);
 	const clearStorage = resumeDataStore(state => state.clearStorage);
 	const resetResumeUserData = resumeDataStore(state => state.resetResumeUserData);
 
@@ -38,6 +39,12 @@ export const PersistenceDebug: React.FC<PersistenceDebugProps> = ({
 			onTemplateChange(templateId);
 		}
 	};
+
+	// Debug logging for persistence
+	useEffect(() => {
+		console.log('Active step loaded from store:', activeStep);
+		console.log('User data loaded from store:', resumeData);
+	}, [activeStep, resumeData]);
 
 	if (!isVisible) {
 		return (
@@ -91,16 +98,19 @@ export const PersistenceDebug: React.FC<PersistenceDebugProps> = ({
 					<strong>Active Step:</strong> {activeStep} (Step {activeStep + 1})
 				</div>
 				<div>
-					<strong>Data Keys:</strong> {Object.keys(userData).length}
+					<strong>Selected Template:</strong> {selectedTemplate || 'None'}
 				</div>
 				<div>
-					<strong>Education Items:</strong> {userData.education?.length || 0}
+					<strong>Data Keys:</strong> {Object.keys(resumeData).length}
 				</div>
 				<div>
-					<strong>Experience Items:</strong> {userData.workExperience?.length || 0}
+					<strong>Education Items:</strong> {resumeData.education?.length || 0}
 				</div>
 				<div>
-					<strong>Skills Items:</strong> {userData.skills?.length || 0}
+					<strong>Experience Items:</strong> {resumeData.workExperience?.length || 0}
+				</div>
+				<div>
+					<strong>Skills Items:</strong> {resumeData.skills?.length || 0}
 				</div>
 			</div>
 

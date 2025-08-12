@@ -1,16 +1,19 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { processTemplate } from '@/lib/templateProcessor';
 import { UserDataType } from '@/app/models/user';
+import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 
 type CreatePdfProps = {
 	userResumeData: UserDataType;
+	templateId: string;
 };
 
-export function useCreatePDF({ userResumeData }: CreatePdfProps) {
+export function useCreatePDF({ userResumeData, templateId }: CreatePdfProps) {
 	const [templateHTML, setTemplateHTML] = useState<string>('');
 	const [styles, setStyles] = useState<string>('');
+	const setTemplateId = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
 
-	const fetchTemplatePDF = async (templateId: string) => {
+	const fetchTemplatePDF = async () => {
 		try {
 			const htmlResponse = await fetch(`/templates/${templateId}/${templateId}.html`);
 			const stylesResponse = await fetch(`/templates/${templateId}/${templateId}.css`);
@@ -27,6 +30,10 @@ export function useCreatePDF({ userResumeData }: CreatePdfProps) {
 			console.error('Error fetching template:', error);
 		}
 	};
+
+	useEffect(() => {
+		fetchTemplatePDF();
+	}, [templateId, fetchTemplatePDF]);
 
 	const downloadPDF = useCallback(async () => {
 		try {
@@ -53,5 +60,9 @@ export function useCreatePDF({ userResumeData }: CreatePdfProps) {
 		}
 	}, [templateHTML, styles, userResumeData]);
 
-	return { templateHTML, styles, fetchTemplatePDF, downloadPDF };
+	const setCurrentTemplate = useCallback((templateId: string) => {
+		setTemplateId(templateId);
+	}, []);
+
+	return { templateHTML, styles, fetchTemplatePDF, downloadPDF, setCurrentTemplate };
 }

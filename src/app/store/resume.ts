@@ -10,6 +10,8 @@ type ResumeDataStoreType = {
 	updateResumeUserData: (data: Partial<UserDataType>) => void;
 	activeStep: number;
 	setActiveStep: (step: number) => void;
+	selectedTemplate: string;
+	setSelectedTemplate: (template: string) => void;
 	clearStorage: () => void;
 };
 
@@ -20,7 +22,8 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 		set => ({
 			userResumeData: defaultUserData,
 			activeStep: 0,
-			resetResumeUserData: () => set({ userResumeData: defaultUserData, activeStep: 0 }),
+			selectedTemplate: '',
+			resetResumeUserData: () => set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' }),
 			setResumeUserDataValue: (key: string, value: string) =>
 				set((state: ResumeDataStoreType) => ({
 					userResumeData: { ...state.userResumeData, [key]: value }
@@ -30,9 +33,10 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 					userResumeData: { ...state.userResumeData, ...data }
 				})),
 			setActiveStep: (step: number) => set({ activeStep: step }),
+			setSelectedTemplate: (selectedTemplateId: string) => set({ selectedTemplate: selectedTemplateId }),
 			clearStorage: () => {
 				localStorage.removeItem(STORAGE_KEY);
-				set({ userResumeData: defaultUserData, activeStep: 0 });
+				set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' });
 			}
 		}),
 		{
@@ -40,7 +44,8 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			storage: createJSONStorage(() => localStorage),
 			partialize: state => ({
 				userResumeData: state.userResumeData,
-				activeStep: state.activeStep
+				activeStep: state.activeStep,
+				selectedTemplate: state.selectedTemplate
 			}),
 			// Version control for migrations
 			version: 1,
