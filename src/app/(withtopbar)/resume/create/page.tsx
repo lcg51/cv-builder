@@ -27,9 +27,14 @@ export default function CreateResume() {
 		value => value !== '' && value !== null && value !== undefined
 	);
 
+	const resetResumeProccess = useCallback(() => {
+		resetResumeUserData();
+		setNavigationState(NavigationStateEnum.TEMPLATE_SELECTION);
+	}, [resetResumeUserData, setNavigationState]);
+
 	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
 		hasUnsavedChanges,
-		onConfirmExit: resetResumeUserData
+		onConfirmExit: resetResumeProccess
 	});
 
 	const { templateHTML, styles, fetchTemplatePDF, setCurrentTemplate, downloadPDF, isDownloading } = useCreatePDF({

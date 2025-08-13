@@ -222,7 +222,7 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 						</>
 					) : (
 						<>
-							<DownloadIcon className="w-6 h-6 transition-transform group-hover:translate-y-1" />
+							<DownloadIcon className="w-6 h-6 transition-transform" />
 							<span>Download PDF Resume</span>
 						</>
 					)}

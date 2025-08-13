@@ -1,0 +1,40 @@
+/* Logo styling for CV Builder */
+.logo-container {
+	display: flex;
+	align-items: center;
+	transition: opacity 0.2s ease-in-out;
+}
+
+.logo-container:hover {
+	opacity: 0.8;
+}
+
+/* TopBar header styling with enhanced shadow */
+.topbar-header {
+	box-shadow:
+		0 2px 8px rgba(0, 0, 0, 0.08),
+		0 1px 3px rgba(0, 0, 0, 0.12);
+	backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+	.logo-svg {
+		filter: brightness(1.1);
+	}
+
+	.topbar-header {
+		box-shadow:
+			0 2px 8px rgba(0, 0, 0, 0.2),
+			0 1px 3px rgba(0, 0, 0, 0.3);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+	.logo-svg {
+		height: 24px;
+	}
+}
