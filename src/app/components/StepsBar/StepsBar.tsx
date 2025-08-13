@@ -9,8 +9,6 @@ export type StepsBarComponentProps = {
 	onSuccess?: () => void;
 	onFieldChange?: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
-	onDownloadPDF?: () => void;
-	isDownloadEnabled?: boolean;
 };
 
 export type StepsBarItemsProps = {
@@ -26,7 +24,6 @@ export type StepsBarProps = {
 	onNextStepCallback?: (stepIndex: number) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
-	onDownloadPDF?: () => void;
 };
 
 export const StepsBar = ({
@@ -34,13 +31,13 @@ export const StepsBar = ({
 	activeStep = 0,
 	onNextStepCallback,
 	onFieldChangeCallback,
-	initialValues,
-	onDownloadPDF
+	initialValues
 }: StepsBarProps) => {
 	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
 	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
 	const { width } = useWindowSize();
 	const isTabletResolution = width < 1024;
+	const isLastStep = selectedIndex === stepItems.length - 1;
 
 	// Sync selectedIndex with activeStep prop when it changes (e.g., when data is loaded from Zustand)
 	useEffect(() => {
@@ -55,7 +52,10 @@ export const StepsBar = ({
 	}, [activeStep, items]);
 
 	const onSetNextStep = useCallback(() => {
-		if (selectedIndex === stepItems.length - 1) return;
+		if (isLastStep) {
+			onNextStepCallback?.(selectedIndex + 1);
+			return;
+		}
 		const newItems = stepItems.map((item, index) => ({
 			...item,
 			active: index <= selectedIndex + 1,
@@ -85,7 +85,6 @@ export const StepsBar = ({
 	const stepsViewRender = useMemo(() => {
 		return stepItems.map(({ component }, index) => {
 			const ComponentView = component;
-			const isLastStep = index === stepItems.length - 1;
 
 			return (
 				selectedIndex === index && (
@@ -94,14 +93,12 @@ export const StepsBar = ({
 							onSuccess={onSetNextStep}
 							onFieldChange={onFieldChangeCallback}
 							initialValues={initialValues}
-							onDownloadPDF={isLastStep ? onDownloadPDF : undefined}
-							isDownloadEnabled={isLastStep}
 						/>
 					</div>
 				)
 			);
 		});
-	}, [stepItems, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues, onDownloadPDF]);
+	}, [stepItems, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues]);
 
 	const stepsTabsRender = useMemo(() => {
 		if (isTabletResolution) {

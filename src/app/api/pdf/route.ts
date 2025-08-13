@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import { LaunchOptions } from 'puppeteer-core';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -11,22 +12,22 @@ export async function POST(req: Request) {
 		headless: true
 	};
 
-	if (!isDevelopment) {
-		const chromium = (await import('@sparticuz/chromium')).default;
-		puppeteer = await import('puppeteer-core');
-		launchOptions = {
-			...launchOptions,
-			args: chromium.args,
-			executablePath: await chromium.executablePath()
-		};
-	} else {
-		puppeteer = await import('puppeteer');
-	}
-
 	try {
+		if (!isDevelopment) {
+			const chromium = (await import('@sparticuz/chromium')).default;
+			puppeteer = await import('puppeteer-core');
+			launchOptions = {
+				...launchOptions,
+				args: chromium.args,
+				executablePath: await chromium.executablePath()
+			};
+		} else {
+			puppeteer = await import('puppeteer');
+		}
+
 		const { html, styles } = await req.json();
 		if (!html)
-			return new Response(JSON.stringify({ error: 'HTML content is required' }), {
+			return new NextResponse(JSON.stringify({ error: 'HTML content is required' }), {
 				status: 400,
 				headers: { 'Content-Type': 'application/json' }
 			});
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
 
 		await browser.close();
 
-		return new Response(pdfBuffer, {
+		return new NextResponse(pdfBuffer, {
 			status: 200,
 			headers: {
 				'Content-Type': 'application/pdf',
@@ -82,7 +83,7 @@ export async function POST(req: Request) {
 		});
 	} catch (error) {
 		console.error('PDF generation error:', error);
-		return new Response(JSON.stringify({ error: 'Failed to generate PDF' }), {
+		return new NextResponse(JSON.stringify({ error: (error as Error).message || 'Failed to generate PDF' }), {
 			status: 500,
 			headers: { 'Content-Type': 'application/json' }
 		});

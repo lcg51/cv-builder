@@ -9,7 +9,6 @@ import { ContactForm } from './ContactForm';
 import { AboutForm } from './AboutForm';
 import { FinishForm } from './FinishForm';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { PersistenceDebug } from '@/app/components/PersistenceDebug';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
 import { UserDataType } from '@/app/models/user';
@@ -17,18 +16,28 @@ import { UserDataType } from '@/app/models/user';
 type TemplateUpdateProps = {
 	totalOffset: number;
 	templateId: string;
+	templateHTML: string;
+	fetchTemplatePDF: () => void;
+	setCurrentTemplate: (templateId: string) => void;
+	styles: string;
+	onTemplateDownload: () => void;
 };
 
-export const TemplateUpdate = ({ totalOffset, templateId }: TemplateUpdateProps) => {
+export const TemplateUpdate = ({
+	totalOffset,
+	templateId,
+	templateHTML,
+	styles,
+	fetchTemplatePDF,
+	setCurrentTemplate,
+	onTemplateDownload
+}: TemplateUpdateProps) => {
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const updateResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.updateResumeUserData);
 	const setActiveStep = resumeDataStore((state: ResumeDataStoreType) => state.setActiveStep);
 	const setResumeUserDataValue = resumeDataStore((state: ResumeDataStoreType) => state.setResumeUserDataValue);
 	const activeStep = resumeDataStore((state: ResumeDataStoreType) => state.activeStep);
-
-	const { templateHTML, styles, downloadPDF, setCurrentTemplate } = useCreatePDF({ userResumeData, templateId });
-
 	const initialSteps = [
 		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
 		{ title: 'Experience', active: false, isClickable: false, component: ExperienceForm },
@@ -37,6 +46,10 @@ export const TemplateUpdate = ({ totalOffset, templateId }: TemplateUpdateProps)
 		{ title: 'About', active: false, isClickable: false, component: AboutForm },
 		{ title: 'Finish', active: false, isClickable: false, component: FinishForm }
 	];
+
+	useEffect(() => {
+		fetchTemplatePDF();
+	}, [fetchTemplatePDF]);
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
 		setResumeUserDataValue(key, value as string);
@@ -52,7 +65,10 @@ export const TemplateUpdate = ({ totalOffset, templateId }: TemplateUpdateProps)
 
 	const onSetNextStep = useCallback(
 		(activeStepIndex: number) => {
-			// Allow going to any step up to the last one
+			if (activeStepIndex === initialSteps.length) {
+				onTemplateDownload();
+			}
+
 			if (activeStepIndex >= 0 && activeStepIndex < initialSteps.length) {
 				setActiveStep(activeStepIndex);
 			}
@@ -82,7 +98,6 @@ export const TemplateUpdate = ({ totalOffset, templateId }: TemplateUpdateProps)
 							onNextStepCallback={onSetNextStep}
 							onFieldChangeCallback={updateUserValue}
 							initialValues={userResumeData}
-							onDownloadPDF={downloadPDF}
 						/>
 					</div>
 				</div>

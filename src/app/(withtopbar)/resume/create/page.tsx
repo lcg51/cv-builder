@@ -1,12 +1,14 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TemplateSelection } from '../components/TemplateSelection';
-import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
+import { NavigationStateEnum, resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
 import { TemplateUpdate } from '../components/TemplateUpdate';
 import { TemplateSkeleton } from '../components/TemplateSkeleton';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
+import { TemplateDownload } from '../components/TemplateDownload';
+import { useCreatePDF } from '@/hooks/useCreatePDF';
 
 const TOPBAR_HEIGHT = 60;
 const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
@@ -17,21 +19,25 @@ export default function CreateResume() {
 	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
 	const selectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.selectedTemplate);
 	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
+	const navigationState = resumeDataStore((state: ResumeDataStoreType) => state.navigationState);
+	const setNavigationState = resumeDataStore((state: ResumeDataStoreType) => state.setNavigationState);
 	const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
-	const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
 
-	// Check if user has made any changes
 	const hasUnsavedChanges = Object.values(userResumeData).some(
 		value => value !== '' && value !== null && value !== undefined
 	);
 
-	// Use navigation guard hook
 	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
 		hasUnsavedChanges,
 		onConfirmExit: resetResumeUserData
 	});
 
-	// Listen for navigation attempts from TopBar
+	const { templateHTML, styles, fetchTemplatePDF, setCurrentTemplate, downloadPDF, isDownloading } = useCreatePDF({
+		userResumeData,
+		setSelectedTemplate,
+		selectedTemplate
+	});
+
 	useEffect(() => {
 		const handleNavigationAttempt = () => {
 			if (hasUnsavedChanges) {
@@ -43,27 +49,31 @@ export default function CreateResume() {
 		return () => window.removeEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
 	}, [hasUnsavedChanges, attemptNavigation]);
 
-	// Simulate page initialization
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setIsPageLoading(false);
-		}, 300);
+		}, 200);
 
 		return () => clearTimeout(timer);
 	}, []);
 
+	useEffect(() => {
+		if (selectedTemplate) {
+			fetchTemplatePDF();
+		}
+	}, [fetchTemplatePDF, selectedTemplate]);
+
 	const handleTemplateSelect = useCallback(
 		async (templateId: string) => {
-			setIsTransitioning(true);
-			// Simulate a small delay for smooth transition
-			await new Promise(resolve => setTimeout(resolve, 300));
 			setSelectedTemplate(templateId);
-			setIsTransitioning(false);
+			setNavigationState(NavigationStateEnum.TEMPLATE_UPDATE);
 		},
 		[setSelectedTemplate]
 	);
 
-	const Skeleton = !selectedTemplate ? TemplateSkeleton : TemplateUpdateSkeleton;
+	const onTemplateDownload = useCallback(() => {
+		setNavigationState(NavigationStateEnum.TEMPLATE_DOWNLOAD);
+	}, []);
 
 	return (
 		<div
@@ -82,13 +92,29 @@ export default function CreateResume() {
 				onCancel={cancelExit}
 			/>
 
-			{/* Show skeleton during transitions */}
-			{isTransitioning || isPageLoading ? (
-				<Skeleton />
-			) : !selectedTemplate ? (
-				<TemplateSelection onTemplateSelect={handleTemplateSelect} />
-			) : (
-				<TemplateUpdate totalOffset={TOTAL_OFFSET} templateId={selectedTemplate} />
+			{navigationState === NavigationStateEnum.TEMPLATE_SELECTION &&
+				(isPageLoading ? <TemplateSkeleton /> : <TemplateSelection onTemplateSelect={handleTemplateSelect} />)}
+			{navigationState === NavigationStateEnum.TEMPLATE_UPDATE &&
+				(isPageLoading ? (
+					<TemplateUpdateSkeleton />
+				) : (
+					<TemplateUpdate
+						totalOffset={TOTAL_OFFSET}
+						templateHTML={templateHTML}
+						styles={styles}
+						fetchTemplatePDF={fetchTemplatePDF}
+						setCurrentTemplate={setCurrentTemplate}
+						templateId={selectedTemplate}
+						onTemplateDownload={onTemplateDownload}
+					/>
+				))}
+			{navigationState === NavigationStateEnum.TEMPLATE_DOWNLOAD && (
+				<TemplateDownload
+					templateId={selectedTemplate}
+					initialValues={userResumeData}
+					onDownloadPDF={downloadPDF}
+					isDownloading={isDownloading}
+				/>
 			)}
 		</div>
 	);
