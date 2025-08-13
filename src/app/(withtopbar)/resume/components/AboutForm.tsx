@@ -6,10 +6,10 @@ import React, { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { AboutIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	aboutMe: z.string().min(2, {

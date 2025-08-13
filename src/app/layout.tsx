@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from './providers/ThemeProvider';
 import './globals.css';
 import React from 'react';
+import TopBar from './components/TopBar';
+import { auth } from '@/auth';
+import { UserProps } from '@/lib/models';
 
 export const metadata: Metadata = {
 	title: 'CV Builder',
@@ -18,6 +21,8 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const session = await auth();
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
@@ -42,6 +47,7 @@ export default async function RootLayout({
 			</head>
 			<body className="antialiased">
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+					<TopBar user={(session?.user as unknown as UserProps) || null} />
 					{children}
 				</ThemeProvider>
 			</body>

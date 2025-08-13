@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
 		const isAcessingProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
 
 		if (session && isAccessingAuthRoute) {
-			return NextResponse.redirect(new URL('/home', request.url));
+			return NextResponse.redirect(new URL('/', request.url));
 		}
 
 		if (!session && isAcessingProtectedRoute) {

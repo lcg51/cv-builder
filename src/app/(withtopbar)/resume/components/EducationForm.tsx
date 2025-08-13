@@ -7,11 +7,11 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { EducationIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	educationForms: z.array(

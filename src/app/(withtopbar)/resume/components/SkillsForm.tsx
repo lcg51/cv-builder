@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import { SkillType } from '@/app/models/user';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
-import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { SkillsIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	skillsForms: z.array(

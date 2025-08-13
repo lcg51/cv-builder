@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
-import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { ExperienceIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	experienceForms: z.array(
