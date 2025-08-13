@@ -23,26 +23,23 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 			if (hasUnsavedChanges) {
 				setPendingNavigation(targetUrl);
 				setShowExitDialog(true);
-				return false; // Navigation blocked
+				return false;
 			}
-			return true; // Navigation allowed
+			return true;
 		},
 		[hasUnsavedChanges]
 	);
 
 	useEffect(() => {
-		const handleNavigationAttempt = (event: CustomEvent<NavigationEventDetail>) => {
-			const { targetUrl, isBrowserNavigation, navigationType } = event.detail;
+		return () => {
+			onConfirmExit();
+		};
+	}, []);
 
+	useEffect(() => {
+		const handleNavigationAttempt = (event: CustomEvent<NavigationEventDetail>) => {
+			const { targetUrl } = event.detail;
 			if (hasUnsavedChanges) {
-				// For browser navigation, we might want to handle it differently
-				if (isBrowserNavigation) {
-					console.log('Browser navigation detected:', {
-						targetUrl,
-						navigationType,
-						hasUnsavedChanges
-					});
-				}
 				attemptNavigation(targetUrl);
 			}
 		};

@@ -2,6 +2,7 @@ import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
+import unusedImports from 'eslint-plugin-unused-imports';
 
 export default [
 	{ files: ['src/**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
@@ -10,5 +11,16 @@ export default [
 	pluginJs.configs.recommended,
 	...tseslint.configs.recommended,
 	pluginReact.configs.flat.recommended,
-	{ rules: { 'react/react-in-jsx-scope': 'off' } }
+	{
+		plugins: {
+			'unused-imports': unusedImports
+		}
+	},
+	{
+		rules: {
+			'react/react-in-jsx-scope': 'off',
+			'no-unused-vars': 'error',
+			'unused-imports/no-unused-imports': 'error'
+		}
+	}
 ];

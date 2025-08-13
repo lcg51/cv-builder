@@ -1,10 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import './TopBar.css';
-import { useBackNavigation } from '@/hooks/useBackNavigation';
 
 import {
 	DropdownMenu,
@@ -19,6 +18,7 @@ import { googleSignOut } from '../server-actions/session';
 import { UserProps } from '@/lib/models';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
 import { useMemo } from 'react';
+import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 
 export type TopBarProps = {
 	user?: UserProps | null;
@@ -26,16 +26,18 @@ export type TopBarProps = {
 
 export default function TopBar({ user }: TopBarProps) {
 	const pathname = usePathname();
+	const { push } = useRouter();
+	const isResumeCreatePage = pathname.includes('/resume/create');
 
-	// Enable back navigation event handling
-	useBackNavigation();
+	const { triggerNavigationEvent } = useBrowserBackNavigation();
 
 	const handleNavigation = (targetUrl: string) => {
-		window.dispatchEvent(
-			new CustomEvent('navigation-attempt', {
-				detail: { targetUrl }
-			})
-		);
+		if (!isResumeCreatePage) {
+			push(targetUrl);
+			return;
+		}
+
+		triggerNavigationEvent(targetUrl);
 	};
 
 	const LoginButton = useMemo(() => {
