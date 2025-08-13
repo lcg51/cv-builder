@@ -169,7 +169,7 @@ export const StepsBar = ({
 								: isCurrent
 									? 'bg-primary border-primary text-primary shadow-lg border-0'
 									: item.active
-										? 'bg-white border-primary text-primary hover:bg-primary hover:text-white'
+										? 'bg-white border-primary text-primary dark:text-white hover:bg-primary hover:text-white'
 										: 'bg-slate-200 border-slate-300 text-slate-400'
 						}`}
 					>

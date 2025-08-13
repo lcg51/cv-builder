@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
+import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon, CheckCircleIcon, LockIcon } from '@/components/icons/FormIcons';
 import { CheckIcon } from 'lucide-react';

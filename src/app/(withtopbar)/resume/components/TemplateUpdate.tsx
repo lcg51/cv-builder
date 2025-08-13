@@ -1,4 +1,4 @@
-import { StepsBar } from '@/app/components/StepsBar/StepsBar';
+import { StepsBar } from '@/components/ui/StepsBar/StepsBar';
 import { TemplatePreviewer } from '@/app/components/TemplatePreviewer/TemplatePreviewer';
 import { EyeIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';

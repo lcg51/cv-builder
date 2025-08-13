@@ -82,8 +82,7 @@ export default function CreateResume() {
 
 	return (
 		<div
-			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800`}
-			style={{ height: `calc(100vh - ${TOPBAR_HEIGHT}px)` }}
+			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
 		>
 			{/* Exit Disclaimer Dialog */}
 			<ModalDisclaimer

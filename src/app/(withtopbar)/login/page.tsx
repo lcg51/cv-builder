@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import LoginForm from '../../components/LoginForm';
+import LoginForm from './components/LoginForm';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Message } from '../../components/FormMessage';
 import { notebookBG, notebookBGJPG } from '../../../assets';

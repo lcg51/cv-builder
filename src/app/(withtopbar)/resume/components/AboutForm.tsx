@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
+import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { AboutIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
@@ -152,7 +152,7 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 				</div>
 				<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
 					<div className="text-sm text-slate-500 dark:text-slate-400">Step 5 of 6</div>
-					<Button type="submit" className="bg-primary hover:bg-primary/90 text-slate-500 px-0 py-2 h-11">
+					<Button variant="default" type="submit" className="px-2 py-2 h-11">
 						Continue
 						<ArrowRightIcon className="w-4 h-4" />
 					</Button>
