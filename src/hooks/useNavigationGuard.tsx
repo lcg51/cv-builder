@@ -11,7 +11,6 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 	const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
 	const router = useRouter();
 
-	// Handle beforeunload event for browser navigation
 	useEffect(() => {
 		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
 			if (hasUnsavedChanges) {
@@ -23,7 +22,6 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
 	}, [hasUnsavedChanges]);
 
-	// Function to attempt navigation
 	const attemptNavigation = useCallback(
 		(targetUrl: string) => {
 			if (hasUnsavedChanges) {
@@ -36,7 +34,6 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 		[hasUnsavedChanges]
 	);
 
-	// Function to confirm exit and navigate
 	const confirmExit = useCallback(() => {
 		onConfirmExit();
 		setShowExitDialog(false);
@@ -48,7 +45,6 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 		}
 	}, [onConfirmExit, pendingNavigation, router]);
 
-	// Function to cancel exit
 	const cancelExit = useCallback(() => {
 		setShowExitDialog(false);
 		setPendingNavigation(null);

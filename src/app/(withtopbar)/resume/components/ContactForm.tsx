@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
+import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { ContactIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
 
 const formSchema = z.object({
@@ -197,7 +197,7 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 				</div>
 				<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
 					<div className="text-sm text-slate-500 dark:text-slate-400">Step 1 of 6</div>
-					<Button type="submit" className="bg-primary hover:bg-primary/90 text-slate-500 px-0 py-2 h-11">
+					<Button variant="default" type="submit" className="px-2 py-2 h-11">
 						Continue
 						<ArrowRightIcon className="w-4 h-4" />
 					</Button>

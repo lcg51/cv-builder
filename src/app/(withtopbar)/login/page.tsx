@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import LoginForm from '../../components/LoginForm';
+import LoginForm from './components/LoginForm';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Message } from '../../components/FormMessage';
 import { notebookBG, notebookBGJPG } from '../../../assets';
@@ -10,13 +10,13 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 	const searchParams = await props.searchParams;
 	return (
 		<div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-			<div className="w-full min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] lg:grid lg:grid-cols-2">
+			<div className="w-full flex justify-center min-h-[calc(100vh-3.5rem)] xl:min-h-[calc(100vh-3.75rem)] xl:grid xl:grid-cols-2">
 				{/* Login Form Section */}
-				<div className="flex items-center justify-center p-4 lg:p-8">
+				<div className="flex items-center justify-center p-8">
 					<div className="w-full max-w-md">
 						{/* Header */}
 						<div className="text-center mb-8">
-							<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-2">
+							<h1 className="text-3xl lg:text-4xl font-bold text-muted dark:text-slate-200 mb-2">
 								Welcome Back
 							</h1>
 							<p className="text-slate-600 dark:text-slate-400 text-lg">
@@ -27,7 +27,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 						{/* Login Card */}
 						<Card className="w-full shadow-xl border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
 							<CardHeader className="text-center pb-6">
-								<CardTitle className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+								<CardTitle className="text-2xl font-bold text-muted dark:text-slate-200">
 									Sign In
 								</CardTitle>
 								<CardDescription className="text-slate-600 dark:text-slate-400">
@@ -56,7 +56,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 				</div>
 
 				{/* Background Image Section */}
-				<div className="hidden lg:block relative overflow-hidden">
+				<div className="hidden xl:block relative overflow-hidden">
 					<OptimizedImage
 						webpSrc={notebookBG}
 						jpgSrc={notebookBGJPG}

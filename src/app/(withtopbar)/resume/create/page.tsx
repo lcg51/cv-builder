@@ -27,9 +27,14 @@ export default function CreateResume() {
 		value => value !== '' && value !== null && value !== undefined
 	);
 
+	const resetResumeProccess = useCallback(() => {
+		resetResumeUserData();
+		setNavigationState(NavigationStateEnum.TEMPLATE_SELECTION);
+	}, [resetResumeUserData, setNavigationState]);
+
 	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
 		hasUnsavedChanges,
-		onConfirmExit: resetResumeUserData
+		onConfirmExit: resetResumeProccess
 	});
 
 	const { templateHTML, styles, fetchTemplatePDF, setCurrentTemplate, downloadPDF, isDownloading } = useCreatePDF({
@@ -77,8 +82,7 @@ export default function CreateResume() {
 
 	return (
 		<div
-			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800`}
-			style={{ height: `calc(100vh - ${TOPBAR_HEIGHT}px)` }}
+			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
 		>
 			{/* Exit Disclaimer Dialog */}
 			<ModalDisclaimer

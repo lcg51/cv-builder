@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { StepsBarComponentProps } from '@/app/components/StepsBar/StepsBar';
+import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon, CheckCircleIcon, LockIcon } from '@/components/icons/FormIcons';
 import { CheckIcon } from 'lucide-react';
@@ -222,7 +222,7 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 						</>
 					) : (
 						<>
-							<DownloadIcon className="w-6 h-6 transition-transform group-hover:translate-y-1" />
+							<DownloadIcon className="w-6 h-6 transition-transform" />
 							<span>Download PDF Resume</span>
 						</>
 					)}

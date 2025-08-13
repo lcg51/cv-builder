@@ -4,6 +4,7 @@ import { ArrowLeft, LogIn } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import './TopBar.css';
 
 import {
 	DropdownMenu,
@@ -53,7 +54,7 @@ export default function TopBar({ user }: TopBarProps) {
 	const LoginButton = useMemo(() => {
 		return (
 			<Link href="/login">
-				<Button variant="secondary" size="sm" className="flex items-center gap-2">
+				<Button variant="default" size="sm" className="flex items-center gap-2">
 					<span className="sm:inline">Sign In</span>
 				</Button>
 			</Link>
@@ -61,9 +62,15 @@ export default function TopBar({ user }: TopBarProps) {
 	}, []);
 
 	return (
-		<header className="inline-flex sticky top-0 z-40 h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px] lg:px-6">
+		<header className="flex justify-between sticky top-0 z-40 h-14 items-center gap-4 bg-white dark:bg-slate-900 px-4 lg:h-[60px] lg:px-6 topbar-header">
 			<Sheet>
 				<SheetContent side="left" className="flex flex-col">
+					{/* Logo in mobile navigation */}
+					<div className="mb-6 p-4 border-b">
+						<Link href="/home" className="logo-container">
+							<img src="/assets/logo.svg" alt="CV Builder Logo" className="logo-svg" />
+						</Link>
+					</div>
 					<nav className="grid gap-2 text-lg font-medium">
 						{/* Quick Back Navigation for Create Page */}
 						{isOnCreatePage && (
@@ -97,24 +104,21 @@ export default function TopBar({ user }: TopBarProps) {
 				<Button
 					variant="ghost"
 					size="sm"
-					className="inline-flex items-center gap-2 text-white hover:text-foreground"
+					className="inline-flex items-center gap-2"
 					onClick={() => handleNavigation('/home')}
 				>
-					<ArrowLeft className="h-4 w-4" />
-					<span className="hidden sm:inline text-white hover:text-foreground">Back to Home</span>
+					<ArrowLeft className="h-4 w-4" color="var(--primary)" />
+					<span className="hidden sm:inline text-muted hover:text-foreground">Back to Home</span>
 				</Button>
 			)}
 
-			{!isOnCreatePage && (
-				<Link
-					href="/home"
-					className="flex items-center gap-2 text-lg font-semibold text-foreground hover:text-muted-foreground transition-colors"
-				>
-					<span className="sm:inline text-white">CV Builder</span>
-				</Link>
-			)}
-
-			<div className="w-full flex-1"></div>
+			{/* Logo - Always visible */}
+			<Link
+				href="/home"
+				className="logo-container text-lg font-semibold text-foreground hover:text-muted-foreground transition-colors"
+			>
+				<img src="/assets/logo.svg" alt="CV Builder Logo" className="logo-svg" />
+			</Link>
 
 			{/* User Menu - Conditional Rendering */}
 			{user ? (

@@ -9,17 +9,7 @@
 
 :root {
 	--background: #ffffff;
-	--foreground: #322938;
 	--primary: #89a194;
-	--secondary: #cfc89a;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--foreground: #ededed;
-		--primary: #89a194;
-		--secondary: #cfc89a;
-	}
 }
 
 body {
@@ -78,8 +68,6 @@ h3 {
 		--popover-foreground: 0 0% 98%;
 		--primary: 0 0% 98%;
 		--primary-foreground: 0 0% 9%;
-		--secondary: 0 0% 14.9%;
-		--secondary-foreground: 0 0% 98%;
 		--muted: 148 11% 58%;
 		--muted-foreground: 0 0% 63.9%;
 		--accent: 0 0% 14.9%;

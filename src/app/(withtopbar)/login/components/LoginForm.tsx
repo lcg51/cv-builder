@@ -2,8 +2,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 
-import { googleSignIn } from '../server-actions/session';
-import { FormMessage, Message } from './FormMessage';
+import { googleSignIn } from '../../../server-actions/session';
+import { FormMessage, Message } from '../../../components/FormMessage';
 
 export default function LoginForm({ searchParams }: { searchParams: Message }) {
 	return (
@@ -11,9 +11,9 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 			{/* Google Sign In Button */}
 			<form action={() => googleSignIn('/home')} className="space-y-4">
 				<Button
-					variant="outline"
+					variant="default"
 					formAction={() => googleSignIn('/home')}
-					className="w-full h-12 text-base font-medium border-2 border-slate-300 dark:border-slate-600 hover:border-primary dark:hover:border-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all duration-200"
+					className="w-full h-12 text-base font-medium"
 				>
 					<svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
 						<path
