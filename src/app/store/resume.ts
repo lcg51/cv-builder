@@ -3,8 +3,17 @@ import { defaultUserData, UserDataType } from '../models/user';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+export const NavigationStateEnum = {
+	TEMPLATE_SELECTION: 'templateSelection',
+	TEMPLATE_UPDATE: 'templateUpdate',
+	TEMPLATE_DOWNLOAD: 'templateDownload'
+} as const;
+
+export type NavigationStateType = (typeof NavigationStateEnum)[keyof typeof NavigationStateEnum];
+
 type ResumeDataStoreType = {
 	userResumeData: UserDataType;
+	navigationState: NavigationStateType;
 	resetResumeUserData: () => void;
 	setResumeUserDataValue: (key: string, value: string) => void;
 	updateResumeUserData: (data: Partial<UserDataType>) => void;
@@ -12,6 +21,7 @@ type ResumeDataStoreType = {
 	setActiveStep: (step: number) => void;
 	selectedTemplate: string;
 	setSelectedTemplate: (template: string) => void;
+	setNavigationState: (state: NavigationStateType) => void;
 	clearStorage: () => void;
 };
 
@@ -23,6 +33,7 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			userResumeData: defaultUserData,
 			activeStep: 0,
 			selectedTemplate: '',
+			navigationState: NavigationStateEnum.TEMPLATE_SELECTION,
 			resetResumeUserData: () => set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' }),
 			setResumeUserDataValue: (key: string, value: string) =>
 				set((state: ResumeDataStoreType) => ({
@@ -33,19 +44,21 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 					userResumeData: { ...state.userResumeData, ...data }
 				})),
 			setActiveStep: (step: number) => set({ activeStep: step }),
+			setNavigationState: (state: NavigationStateType) => set({ navigationState: state }),
 			setSelectedTemplate: (selectedTemplateId: string) => set({ selectedTemplate: selectedTemplateId }),
 			clearStorage: () => {
-				localStorage.removeItem(STORAGE_KEY);
+				sessionStorage.removeItem(STORAGE_KEY);
 				set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' });
 			}
 		}),
 		{
 			name: STORAGE_KEY,
-			storage: createJSONStorage(() => localStorage),
+			storage: createJSONStorage(() => sessionStorage),
 			partialize: state => ({
 				userResumeData: state.userResumeData,
 				activeStep: state.activeStep,
-				selectedTemplate: state.selectedTemplate
+				selectedTemplate: state.selectedTemplate,
+				navigationState: state.navigationState
 			}),
 			// Version control for migrations
 			version: 1,

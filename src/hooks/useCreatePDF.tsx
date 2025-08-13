@@ -1,22 +1,30 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { processTemplate } from '@/lib/templateProcessor';
 import { UserDataType } from '@/app/models/user';
-import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 
 type CreatePdfProps = {
 	userResumeData: UserDataType;
-	templateId: string;
+	setSelectedTemplate: (templateId: string) => void;
+	selectedTemplate: string;
 };
 
-export function useCreatePDF({ userResumeData, templateId }: CreatePdfProps) {
+export function useCreatePDF({ userResumeData, selectedTemplate, setSelectedTemplate }: CreatePdfProps) {
 	const [templateHTML, setTemplateHTML] = useState<string>('');
 	const [styles, setStyles] = useState<string>('');
-	const setTemplateId = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isDownloading, setIsDownloading] = useState(false);
 
-	const fetchTemplatePDF = async () => {
+	const fetchTemplatePDF = useCallback(async () => {
+		// Prevent duplicate requests if templates are already loaded
+		if (templateHTML && styles) {
+			return;
+		}
+
+		setIsLoading(true);
+
 		try {
-			const htmlResponse = await fetch(`/templates/${templateId}/${templateId}.html`);
-			const stylesResponse = await fetch(`/templates/${templateId}/${templateId}.css`);
+			const htmlResponse = await fetch(`/templates/${selectedTemplate}/${selectedTemplate}.html`);
+			const stylesResponse = await fetch(`/templates/${selectedTemplate}/${selectedTemplate}.css`);
 			if (!htmlResponse.ok || !stylesResponse.ok) {
 				throw new Error(`HTTP error! status: ${htmlResponse.status}`);
 			}
@@ -28,14 +36,19 @@ export function useCreatePDF({ userResumeData, templateId }: CreatePdfProps) {
 			setStyles(styles || '');
 		} catch (error) {
 			console.error('Error fetching template:', error);
+		} finally {
+			setIsLoading(false);
 		}
-	};
+	}, [selectedTemplate, templateHTML, styles]);
 
-	useEffect(() => {
-		fetchTemplatePDF();
-	}, [templateId, fetchTemplatePDF]);
+	const refreshTemplates = useCallback(async () => {
+		setTemplateHTML('');
+		setStyles('');
+		await fetchTemplatePDF();
+	}, [selectedTemplate, fetchTemplatePDF]);
 
 	const downloadPDF = useCallback(async () => {
+		setIsDownloading(true);
 		try {
 			// Process the template with user data using the shared utility
 			const processedHtml = processTemplate(templateHTML, userResumeData);
@@ -57,12 +70,23 @@ export function useCreatePDF({ userResumeData, templateId }: CreatePdfProps) {
 			link.click();
 		} catch (error) {
 			console.error('Error downloading PDF:', error);
+		} finally {
+			setIsDownloading(false);
 		}
 	}, [templateHTML, styles, userResumeData]);
 
 	const setCurrentTemplate = useCallback((templateId: string) => {
-		setTemplateId(templateId);
+		setSelectedTemplate(templateId);
 	}, []);
 
-	return { templateHTML, styles, fetchTemplatePDF, downloadPDF, setCurrentTemplate };
+	return {
+		templateHTML,
+		styles,
+		isLoading,
+		isDownloading,
+		fetchTemplatePDF,
+		refreshTemplates,
+		downloadPDF,
+		setCurrentTemplate
+	};
 }

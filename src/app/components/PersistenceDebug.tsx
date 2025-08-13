@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { resumeDataStore } from '../store/resume';
 
 interface PersistenceDebugProps {
@@ -39,12 +39,6 @@ export const PersistenceDebug: React.FC<PersistenceDebugProps> = ({
 			onTemplateChange(templateId);
 		}
 	};
-
-	// Debug logging for persistence
-	useEffect(() => {
-		console.log('Active step loaded from store:', activeStep);
-		console.log('User data loaded from store:', resumeData);
-	}, [activeStep, resumeData]);
 
 	if (!isVisible) {
 		return (
