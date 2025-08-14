@@ -1,91 +1,55 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckIcon, EyeIcon, RefreshCwIcon } from 'lucide-react';
+import { CheckIcon, EyeIcon, RefreshCwIcon, SearchIcon, FilterIcon } from 'lucide-react';
 import { TemplateSkeleton } from './TemplateSkeleton';
-
-interface Template {
-	id: string;
-	name: string;
-	description: string;
-	preview: string;
-}
+import { useTemplates } from '@/hooks/useTemplates';
+import type { Template } from '@/templates';
 
 interface TemplateSelectionProps {
 	onTemplateSelect: (templateId: string) => void;
 }
 
-// Simulated API call for templates
-const fetchTemplates = async (): Promise<Template[]> => {
-	// Simulate network delay
-	await new Promise(resolve => setTimeout(resolve, 800));
-
-	return [
-		{
-			id: 'template1',
-			name: 'Classic Header',
-			description:
-				'Clean and professional design with a traditional header layout, perfect for corporate environments and traditional industries.',
-			preview: 'template1'
-		},
-		{
-			id: 'template2',
-			name: 'Modern Sidebar',
-			description:
-				'Contemporary design with a sidebar layout, ideal for creative professionals and modern workplaces.',
-			preview: 'template2'
-		},
-		{
-			id: 'template3',
-			name: 'Card Layout',
-			description:
-				'Innovative card-based design that stands out, perfect for tech professionals and creative portfolios.',
-			preview: 'template3'
-		}
-	];
-};
-
 export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplateSelect }) => {
 	const [selectedTemplate, setSelectedTemplate] = useState<string>('');
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [templates, setTemplates] = useState<Template[]>([]);
-	const [error, setError] = useState<string | null>(null);
+	const [searchQuery, setSearchQuery] = useState<string>('');
+	const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-	// Fetch templates on component mount
-	useEffect(() => {
-		const loadTemplates = async () => {
-			try {
-				setIsLoading(true);
-				setError(null);
-				const fetchedTemplates = await fetchTemplates();
-				setTemplates(fetchedTemplates);
-			} catch (err) {
-				setError('Failed to load templates. Please try again.');
-				console.error('Error loading templates:', err);
-			} finally {
-				setIsLoading(false);
-			}
-		};
+	const {
+		templates,
+		loading: isLoading,
+		error,
+		searchTemplatesByQuery,
+		loadTemplatesByCategory,
+		resetToAllTemplates,
+		clearError
+	} = useTemplates();
 
-		loadTemplates();
-	}, []);
+	// Handle search
+	const handleSearch = (query: string) => {
+		setSearchQuery(query);
+		if (query.trim()) {
+			searchTemplatesByQuery(query);
+		} else {
+			resetToAllTemplates();
+		}
+	};
+
+	// Handle category filter
+	const handleCategoryFilter = (category: string) => {
+		setSelectedCategory(category);
+		if (category === 'all') {
+			resetToAllTemplates();
+		} else {
+			loadTemplatesByCategory(category as Template['category']);
+		}
+	};
 
 	// Retry loading templates
 	const handleRetry = () => {
-		setIsLoading(true);
-		setError(null);
-		fetchTemplates()
-			.then(fetchedTemplates => {
-				setTemplates(fetchedTemplates);
-			})
-			.catch(err => {
-				setError('Failed to load templates. Please try again.');
-				console.error('Error loading templates:', err);
-			})
-			.finally(() => {
-				setIsLoading(false);
-			});
+		clearError();
+		resetToAllTemplates();
 	};
 
 	// Show skeleton while loading
@@ -127,6 +91,62 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 					</p>
 				</div>
 
+				{/* Search and Filter */}
+				<div className="mb-8 space-y-4">
+					{/* Search Bar */}
+					<div className="relative max-w-md mx-auto">
+						<SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+						<input
+							type="text"
+							placeholder="Search templates..."
+							value={searchQuery}
+							onChange={e => handleSearch(e.target.value)}
+							className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+						/>
+					</div>
+
+					{/* Category Filter */}
+					<div className="flex flex-wrap justify-center gap-2">
+						<Button
+							variant={selectedCategory === 'all' ? 'default' : 'outline'}
+							size="sm"
+							onClick={() => handleCategoryFilter('all')}
+							className="flex items-center gap-2"
+						>
+							<FilterIcon className="w-4 h-4" />
+							All
+						</Button>
+						<Button
+							variant={selectedCategory === 'professional' ? 'default' : 'outline'}
+							size="sm"
+							onClick={() => handleCategoryFilter('professional')}
+						>
+							Professional
+						</Button>
+						<Button
+							variant={selectedCategory === 'modern' ? 'default' : 'outline'}
+							size="sm"
+							onClick={() => handleCategoryFilter('modern')}
+						>
+							Modern
+						</Button>
+						<Button
+							variant={selectedCategory === 'creative' ? 'default' : 'outline'}
+							size="sm"
+							onClick={() => handleCategoryFilter('creative')}
+						>
+							Creative
+						</Button>
+						<Button
+							variant={selectedCategory === 'minimal' ? 'default' : 'outline'}
+							size="sm"
+							onClick={() => handleCategoryFilter('minimal')}
+						>
+							Minimal
+						</Button>
+					</div>
+				</div>
+
 				{/* Template Grid */}
 				<div className="grid md:grid-cols-3 gap-6 mb-8">
 					{templates.map(template => (
@@ -156,12 +176,28 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 
 							{/* Template Info */}
 							<div className="p-6">
-								<h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-2">
-									{template.name}
-								</h3>
-								<p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+								<div className="flex items-center justify-between mb-2">
+									<h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200">
+										{template.name}
+									</h3>
+									<span className="px-2 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full capitalize">
+										{template.category}
+									</span>
+								</div>
+								<p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-3">
 									{template.description}
 								</p>
+								{/* Tags */}
+								<div className="flex flex-wrap gap-1">
+									{template.tags.slice(0, 3).map((tag, index) => (
+										<span
+											key={index}
+											className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
+										>
+											{tag}
+										</span>
+									))}
+								</div>
 							</div>
 
 							{/* Selection Overlay */}

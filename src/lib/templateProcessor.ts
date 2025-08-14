@@ -46,3 +46,32 @@ export const processTemplate = (templateHTML: string, userData: UserDataType): s
 				.join('')
 		);
 };
+
+/**
+ * Process a complete template (HTML + CSS) with user data
+ */
+export const processCompleteTemplate = async (
+	templateId: string,
+	userData: UserDataType
+): Promise<{ html: string; css: string }> => {
+	try {
+		// Import the template loading function
+		const { loadTemplate } = await import('@/templates');
+
+		// Load template content
+		const templateContent = await loadTemplate(templateId as any);
+
+		// Process HTML with user data
+		const processedHTML = processTemplate(templateContent.html, userData);
+
+		return {
+			html: processedHTML,
+			css: templateContent.css
+		};
+	} catch (error) {
+		console.error(`Error processing template ${templateId}:`, error);
+		throw new Error(
+			`Failed to process template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
+	}
+};
