@@ -1,57 +1,76 @@
-import { useCallback, useState } from 'react';
-import { processTemplate } from '@/lib/templateProcessor';
+import { useCallback, useState, useEffect } from 'react';
+import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
 import { UserDataType } from '@/app/models/user';
 
 type CreatePdfProps = {
 	userResumeData: UserDataType;
 	setSelectedTemplate: (templateId: string) => void;
 	selectedTemplate: string;
+	useHandlebars?: boolean;
 };
 
-export const useCreatePDF = ({ userResumeData, selectedTemplate, setSelectedTemplate }: CreatePdfProps) => {
-	const [templateHTML, setTemplateHTML] = useState<string>('');
+export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
+	const [compiledTemplate, setCompiledTemplate] = useState<((userData: UserDataType) => string) | null>(null);
 	const [styles, setStyles] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);
 
-	const fetchTemplatePDF = useCallback(async () => {
-		// Prevent duplicate requests if templates are already loaded
-		if (templateHTML && styles) {
-			return;
-		}
-
+	const compileTemplateFromContent = useCallback(async () => {
 		setIsLoading(true);
-
 		try {
-			const htmlResponse = await fetch(`/templates/${selectedTemplate}/${selectedTemplate}.html`);
-			const stylesResponse = await fetch(`/templates/${selectedTemplate}/${selectedTemplate}.css`);
-			if (!htmlResponse.ok || !stylesResponse.ok) {
-				throw new Error(`HTTP error! status: ${htmlResponse.status}`);
-			}
-
-			const template = await htmlResponse.text();
-			const styles = await stylesResponse.text();
-
-			setTemplateHTML(template || '');
-			setStyles(styles || '');
+			const template = await compileHandlebarsTemplateFromContent(selectedTemplate);
+			setCompiledTemplate(() => template);
 		} catch (error) {
-			console.error('Error fetching template:', error);
+			console.error('Error compiling template:', error);
 		} finally {
 			setIsLoading(false);
 		}
-	}, [selectedTemplate, templateHTML, styles]);
+	}, [selectedTemplate]);
+
+	const compileTemplate = useCallback(async () => {
+		setIsLoading(true);
+		try {
+			console.log('🔄 Compiling Handlebars template...');
+
+			const result = await compileHandlebarsTemplate(selectedTemplate);
+			console.log('✅ Template compiled from templateId');
+			setCompiledTemplate(() => result.template);
+			setStyles(result.css);
+		} catch (error) {
+			console.error('Error compiling template:', error);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [selectedTemplate]);
+
+	// Compile Handlebars template once when template changes
+	useEffect(() => {
+		if (!selectedTemplate) return;
+		if (!useHandlebars) compileTemplateFromContent();
+
+		compileTemplate();
+	}, [selectedTemplate, useHandlebars, compileTemplate, compileTemplateFromContent]);
 
 	const refreshTemplates = useCallback(async () => {
-		setTemplateHTML('');
 		setStyles('');
-		await fetchTemplatePDF();
-	}, [selectedTemplate, fetchTemplatePDF]);
+		setCompiledTemplate(null);
+	}, [selectedTemplate]);
 
 	const downloadPDF = useCallback(async () => {
 		setIsDownloading(true);
 		try {
-			// Process the template with user data using the shared utility
-			const processedHtml = processTemplate(templateHTML, userResumeData);
+			let processedHtml: string;
+
+			if (!compiledTemplate) {
+				throw new Error('No template available for processing');
+			}
+
+			if (useHandlebars) {
+				processedHtml = compiledTemplate(userResumeData);
+			} else {
+				// const { processTemplate } = await import('@/lib/templateProcessor');
+				processedHtml = compiledTemplate(userResumeData);
+			}
 
 			const response = await fetch(`/api/pdf`, {
 				method: 'POST',
@@ -73,20 +92,14 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, setSelectedTemp
 		} finally {
 			setIsDownloading(false);
 		}
-	}, [templateHTML, styles, userResumeData]);
-
-	const setCurrentTemplate = useCallback((templateId: string) => {
-		setSelectedTemplate(templateId);
-	}, []);
+	}, [styles, userResumeData, useHandlebars, compiledTemplate]);
 
 	return {
-		templateHTML,
 		styles,
 		isLoading,
 		isDownloading,
-		fetchTemplatePDF,
 		refreshTemplates,
 		downloadPDF,
-		setCurrentTemplate
+		compiledTemplate
 	};
 };

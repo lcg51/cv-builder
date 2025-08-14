@@ -9,29 +9,17 @@ import { ContactForm } from './ContactForm';
 import { AboutForm } from './AboutForm';
 import { FinishForm } from './FinishForm';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { PersistenceDebug } from '@/app/components/PersistenceDebug';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
 import { UserDataType } from '@/app/models/user';
 
 type TemplateUpdateProps = {
 	totalOffset: number;
-	templateId: string;
-	templateHTML: string;
-	fetchTemplatePDF: () => void;
-	setCurrentTemplate: (templateId: string) => void;
+	compiledTemplate: ((userData: UserDataType) => string) | null;
 	styles: string;
 	onTemplateDownload: () => void;
 };
 
-export const TemplateUpdate = ({
-	totalOffset,
-	templateId,
-	templateHTML,
-	styles,
-	fetchTemplatePDF,
-	setCurrentTemplate,
-	onTemplateDownload
-}: TemplateUpdateProps) => {
+export const TemplateUpdate = ({ totalOffset, compiledTemplate, styles, onTemplateDownload }: TemplateUpdateProps) => {
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const updateResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.updateResumeUserData);
@@ -46,10 +34,6 @@ export const TemplateUpdate = ({
 		{ title: 'About', active: false, isClickable: false, component: AboutForm },
 		{ title: 'Finish', active: false, isClickable: false, component: FinishForm }
 	];
-
-	useEffect(() => {
-		fetchTemplatePDF();
-	}, [fetchTemplatePDF]);
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
 		setResumeUserDataValue(key, value as string);
@@ -132,8 +116,8 @@ export const TemplateUpdate = ({
 						<div className="flex-1 min-h-0">
 							<TemplatePreviewer
 								userData={userResumeData}
-								templateHTML={templateHTML}
 								templateStyles={styles}
+								compiledTemplate={compiledTemplate}
 							/>
 						</div>
 					</div>
@@ -151,9 +135,9 @@ export const TemplateUpdate = ({
 				</div>
 			</div>
 
-			{process.env.NODE_ENV === 'development' && (
+			{/* {process.env.NODE_ENV === 'development' && (
 				<PersistenceDebug onTemplateChange={setCurrentTemplate} currentTemplate={templateId} />
-			)}
+			)} */}
 		</div>
 	);
 };

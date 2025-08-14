@@ -1,27 +1,37 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
-import { TemplateSelection } from '../components/TemplateSelection';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { NavigationStateEnum, resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
 import { TemplateUpdate } from '../components/TemplateUpdate';
-import { TemplateSkeleton } from '../components/TemplateSkeleton';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { TemplateDownload } from '../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
+import { useSearchParams } from 'next/navigation';
 
 const TOPBAR_HEIGHT = 60;
 const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
 const TOTAL_OFFSET = TOPBAR_HEIGHT + 2 * CONTAINER_PADDING;
 
 export default function CreateResume() {
+	const searchParams = useSearchParams();
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
 	const selectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.selectedTemplate);
 	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
 	const navigationState = resumeDataStore((state: ResumeDataStoreType) => state.navigationState);
 	const setNavigationState = resumeDataStore((state: ResumeDataStoreType) => state.setNavigationState);
-	const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
+
+	// Fallback: If store doesn't have template, try to get it from URL params
+	useEffect(() => {
+		if (!selectedTemplate) {
+			const templateFromUrl = searchParams.get('template');
+			if (templateFromUrl) {
+				console.log('CreateResume - Setting template from URL param:', templateFromUrl);
+				setSelectedTemplate(templateFromUrl);
+			}
+		}
+	}, [selectedTemplate, searchParams, setSelectedTemplate]);
 
 	const hasUnsavedChanges = Object.values(userResumeData).some(
 		value => value !== '' && value !== null && value !== undefined
@@ -29,7 +39,7 @@ export default function CreateResume() {
 
 	const resetResumeProccess = useCallback(() => {
 		resetResumeUserData();
-		setNavigationState(NavigationStateEnum.TEMPLATE_SELECTION);
+		setNavigationState(NavigationStateEnum.TEMPLATE_UPDATE);
 	}, [resetResumeUserData, setNavigationState]);
 
 	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
@@ -37,37 +47,52 @@ export default function CreateResume() {
 		onConfirmExit: resetResumeProccess
 	});
 
-	const { templateHTML, styles, fetchTemplatePDF, setCurrentTemplate, downloadPDF, isDownloading } = useCreatePDF({
+	const { styles, compiledTemplate, downloadPDF, isDownloading, isLoading } = useCreatePDF({
 		userResumeData,
 		setSelectedTemplate,
-		selectedTemplate
+		selectedTemplate,
+		useHandlebars: true
 	});
-
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setIsPageLoading(false);
-		}, 200);
-
-		return () => clearTimeout(timer);
-	}, []);
-
-	useEffect(() => {
-		if (selectedTemplate) {
-			fetchTemplatePDF();
-		}
-	}, [fetchTemplatePDF, selectedTemplate]);
-
-	const handleTemplateSelect = useCallback(
-		async (templateId: string) => {
-			setSelectedTemplate(templateId);
-			setNavigationState(NavigationStateEnum.TEMPLATE_UPDATE);
-		},
-		[setSelectedTemplate]
-	);
 
 	const onTemplateDownload = useCallback(() => {
 		setNavigationState(NavigationStateEnum.TEMPLATE_DOWNLOAD);
 	}, []);
+
+	const NavigationStateComponent = useMemo(() => {
+		if (isLoading) {
+			return <TemplateUpdateSkeleton />;
+		}
+		if (navigationState === NavigationStateEnum.TEMPLATE_UPDATE) {
+			return (
+				<TemplateUpdate
+					totalOffset={TOTAL_OFFSET}
+					styles={styles}
+					compiledTemplate={compiledTemplate}
+					onTemplateDownload={onTemplateDownload}
+				/>
+			);
+		}
+		if (navigationState === NavigationStateEnum.TEMPLATE_DOWNLOAD) {
+			return (
+				<TemplateDownload
+					templateId={selectedTemplate}
+					initialValues={userResumeData}
+					onDownloadPDF={downloadPDF}
+					isDownloading={isDownloading}
+				/>
+			);
+		}
+		return null;
+	}, [
+		navigationState,
+		isLoading,
+		styles,
+		selectedTemplate,
+		onTemplateDownload,
+		userResumeData,
+		downloadPDF,
+		isDownloading
+	]);
 
 	return (
 		<div
@@ -84,31 +109,7 @@ export default function CreateResume() {
 				onConfirm={confirmExit}
 				onCancel={cancelExit}
 			/>
-
-			{navigationState === NavigationStateEnum.TEMPLATE_SELECTION &&
-				(isPageLoading ? <TemplateSkeleton /> : <TemplateSelection onTemplateSelect={handleTemplateSelect} />)}
-			{navigationState === NavigationStateEnum.TEMPLATE_UPDATE &&
-				(isPageLoading ? (
-					<TemplateUpdateSkeleton />
-				) : (
-					<TemplateUpdate
-						totalOffset={TOTAL_OFFSET}
-						templateHTML={templateHTML}
-						styles={styles}
-						fetchTemplatePDF={fetchTemplatePDF}
-						setCurrentTemplate={setCurrentTemplate}
-						templateId={selectedTemplate}
-						onTemplateDownload={onTemplateDownload}
-					/>
-				))}
-			{navigationState === NavigationStateEnum.TEMPLATE_DOWNLOAD && (
-				<TemplateDownload
-					templateId={selectedTemplate}
-					initialValues={userResumeData}
-					onDownloadPDF={downloadPDF}
-					isDownloading={isDownloading}
-				/>
-			)}
+			{NavigationStateComponent}
 		</div>
 	);
 }

@@ -46,3 +46,45 @@ export const processTemplate = (templateHTML: string, userData: UserDataType): s
 				.join('')
 		);
 };
+
+/**
+ * Compile a Handlebars template once and return a function that can be reused
+ * This avoids recompiling the template on every data change
+ */
+export const compileHandlebarsTemplate = async (
+	templateId: string
+): Promise<{ template: (userData: UserDataType) => string; css: string }> => {
+	try {
+		// Import the Handlebars processor
+		const { compileCompleteHandlebarsTemplate } = await import('@/lib/handlebarsProcessor');
+
+		// Compile the Handlebars template once
+		return await compileCompleteHandlebarsTemplate(templateId);
+	} catch (error) {
+		console.error(`Error compiling Handlebars template ${templateId}:`, error);
+		throw new Error(
+			`Failed to compile Handlebars template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
+	}
+};
+
+/**
+ * Compile a Handlebars template from HTML content string
+ * This is useful when you have the template content directly
+ */
+export const compileHandlebarsTemplateFromContent = async (
+	templateContent: string
+): Promise<(userData: UserDataType) => string> => {
+	try {
+		// Import the Handlebars processor
+		const { compileHandlebarsTemplateFromContent: compileFromContent } = await import('@/lib/handlebarsProcessor');
+
+		// Compile the Handlebars template from content
+		return compileFromContent(templateContent);
+	} catch (error) {
+		console.error('Error compiling Handlebars template from content:', error);
+		throw new Error(
+			`Failed to compile Handlebars template from content: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
+	}
+};

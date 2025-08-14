@@ -3,23 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
 import { LockIcon } from '@/components/icons/FormIcons';
-import { processTemplate } from '@/lib/templateProcessor';
 
 type TemplateProps = {
 	userData: UserDataType;
-	templateHTML: string;
 	templateStyles: string;
+	compiledTemplate: ((userData: UserDataType) => string) | null;
 };
 
-export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: TemplateProps) => {
+export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate }: TemplateProps) => {
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [scopedStyles, setScopedStyles] = useState('');
 
+	// Process template with user data using compiled template function
 	useEffect(() => {
-		if (!templateHTML) return;
-		const updatedTemplate = processTemplate(templateHTML, userData);
-		setProcessedHtml(updatedTemplate);
-	}, [userData, templateHTML]);
+		if (compiledTemplate) {
+			setProcessedHtml(compiledTemplate(userData));
+		}
+	}, [userData, compiledTemplate]);
 
 	useEffect(() => {
 		if (!templateStyles) return;

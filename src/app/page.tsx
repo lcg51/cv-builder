@@ -12,8 +12,8 @@ import { features, stats, steps, templates } from './models/sections';
 export default function Home() {
 	const { push } = useRouter();
 
-	const onClick = useCallback(() => {
-		push('/resume/create');
+	const redirectToTemplates = useCallback(() => {
+		push('/resume/templates');
 	}, []);
 
 	return (
@@ -52,7 +52,7 @@ export default function Home() {
 							</div>
 
 							<div className="flex flex-col sm:flex-row gap-4">
-								<Button size="lg" onClick={onClick} className="text-lg px-8 py-6">
+								<Button size="lg" onClick={redirectToTemplates} className="text-lg px-8 py-6">
 									Start Building Free
 									<ArrowRight className="ml-2 w-5 h-5" />
 								</Button>
@@ -60,6 +60,7 @@ export default function Home() {
 									variant="outline"
 									size="lg"
 									className="text-lg px-8 py-6 bg-white dark:bg-slate-800"
+									onClick={redirectToTemplates}
 								>
 									View Templates
 								</Button>
@@ -173,7 +174,7 @@ export default function Home() {
 					</div>
 
 					<div className="text-center mt-12">
-						<Button variant="outline" size="lg">
+						<Button variant="outline" size="lg" onClick={redirectToTemplates}>
 							View All Templates
 							<ArrowRight className="ml-2 w-5 h-5" />
 						</Button>
@@ -329,7 +330,7 @@ export default function Home() {
 								easy-to-use builder.
 							</p>
 							<div className="flex flex-col sm:flex-row gap-4 justify-center">
-								<Button size="lg" onClick={onClick} className="text-lg px-8 py-6">
+								<Button size="lg" onClick={redirectToTemplates} className="text-lg px-8 py-6">
 									Create Your CV Now
 									<ArrowRight className="ml-2 w-5 h-5" />
 								</Button>
