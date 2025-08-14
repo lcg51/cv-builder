@@ -89,45 +89,56 @@ export const processCompleteHandlebarsTemplate = async (
 };
 
 /**
- * Extract CSS from a Handlebars template that has embedded styles
+ * Compile a Handlebars template from HTML content string
+ * This is useful when you have the template content directly
  */
-export const extractCSSFromHandlebars = (templateContent: string): { html: string; css: string } => {
-	const cssMatch = templateContent.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
-
-	if (cssMatch) {
-		const css = cssMatch[1];
-		const html = templateContent.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-		return { html, css };
+export const compileHandlebarsTemplateFromContent = (templateContent: string): ((userData: UserDataType) => string) => {
+	if (!templateContent) {
+		throw new Error('Template content is required');
 	}
 
-	// If no embedded CSS, return the template as HTML
-	return { html: templateContent, css: '' };
+	try {
+		// Compile the Handlebars template once
+		const template = Handlebars.compile(templateContent);
+
+		// Return a function that can be reused with different user data
+		return (userData: UserDataType): string => {
+			if (!userData) return '';
+			return template(userData);
+		};
+	} catch (error) {
+		console.error('Error compiling Handlebars template from content:', error);
+		throw new Error(
+			`Failed to compile template from content: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
+	}
 };
 
 /**
- * Validate Handlebars template syntax
+ * Compile a complete Handlebars template (with embedded CSS) once
+ * Returns an object with the compiled template function and CSS
  */
-export const validateHandlebarsTemplate = (templateContent: string): { isValid: boolean; errors: string[] } => {
-	const errors: string[] = [];
-
+export const compileCompleteHandlebarsTemplate = async (
+	templateId: string
+): Promise<{ template: (userData: UserDataType) => string; css: string }> => {
 	try {
-		// Try to compile the template
-		Handlebars.precompile(templateContent);
+		// Import the template loading function
+		const { loadTemplate } = await import('@/templates');
+
+		// Load template content
+		const templateContent = await loadTemplate(templateId as string);
+
+		// Compile Handlebars template once
+		const template = compileHandlebarsTemplateFromContent(templateContent.html);
+
+		return {
+			template,
+			css: templateContent.css
+		};
 	} catch (error) {
-		errors.push(`Template compilation error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		console.error(`Error compiling Handlebars template ${templateId}:`, error);
+		throw new Error(
+			`Failed to compile template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
 	}
-
-	// Check for common issues
-	if (templateContent.includes('{{#each') && !templateContent.includes('{{/each}}')) {
-		errors.push('Unclosed {{#each}} block');
-	}
-
-	if (templateContent.includes('{{#if') && !templateContent.includes('{{/if}}')) {
-		errors.push('Unclosed {{#if}} block');
-	}
-
-	return {
-		isValid: errors.length === 0,
-		errors
-	};
 };

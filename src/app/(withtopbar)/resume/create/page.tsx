@@ -40,7 +40,8 @@ export default function CreateResume() {
 	const { templateHTML, styles, fetchTemplatePDF, setCurrentTemplate, downloadPDF, isDownloading } = useCreatePDF({
 		userResumeData,
 		setSelectedTemplate,
-		selectedTemplate
+		selectedTemplate,
+		useHandlebars: true
 	});
 
 	useEffect(() => {

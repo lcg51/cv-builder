@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
 import { LockIcon } from '@/components/icons/FormIcons';
-import { processTemplate, processHandlebarsTemplate } from '@/lib/templateProcessor';
+import {
+	processTemplate,
+	compileHandlebarsTemplate,
+	compileHandlebarsTemplateFromContent
+} from '@/lib/templateProcessor';
 
 type TemplateProps = {
 	userData: UserDataType;
@@ -22,29 +26,47 @@ export const TemplatePreviewer = ({
 }: TemplateProps) => {
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [scopedStyles, setScopedStyles] = useState('');
+	const [compiledTemplate, setCompiledTemplate] = useState<((userData: UserDataType) => string) | null>(null);
 
+	// Compile Handlebars template once when templateId or templateHTML changes
 	useEffect(() => {
-		if (!templateHTML && !templateId) return;
+		if (!useHandlebars) return;
 
-		const processTemplateData = async () => {
+		const compileTemplate = async () => {
 			try {
-				if (useHandlebars && templateId) {
-					// Use Handlebars processing
-					const result = await processHandlebarsTemplate(templateId, userData);
-					setProcessedHtml(result.html);
+				console.log('🔄 Compiling Handlebars template...');
+				if (templateId) {
+					// Compile from template ID
+					const result = await compileHandlebarsTemplate(templateId);
+					setCompiledTemplate(() => result.template);
 					setScopedStyles(result.css);
+					console.log('✅ Template compiled from templateId');
 				} else if (templateHTML) {
-					// Use legacy template processing
-					const updatedTemplate = processTemplate(templateHTML, userData);
-					setProcessedHtml(updatedTemplate);
+					// Compile from template HTML content
+					const template = await compileHandlebarsTemplateFromContent(templateHTML);
+					setCompiledTemplate(() => template);
+					setScopedStyles(templateStyles);
+					console.log('✅ Template compiled from templateHTML');
 				}
 			} catch (error) {
-				console.error('Error processing template:', error);
+				console.error('Error compiling template:', error);
 			}
 		};
 
-		processTemplateData();
-	}, [userData, templateHTML, templateId, useHandlebars]);
+		compileTemplate();
+	}, [templateId, templateHTML, templateStyles, useHandlebars]);
+
+	// Process template with user data using compiled template function
+	useEffect(() => {
+		if (useHandlebars && compiledTemplate) {
+			console.log('⚡ Processing template with user data (using compiled template)');
+			const result = compiledTemplate(userData);
+			setProcessedHtml(result);
+		} else if (!useHandlebars && templateHTML) {
+			const updatedTemplate = processTemplate(templateHTML, userData);
+			setProcessedHtml(updatedTemplate);
+		}
+	}, [userData, compiledTemplate, templateHTML, useHandlebars]);
 
 	useEffect(() => {
 		if (!templateStyles) return;

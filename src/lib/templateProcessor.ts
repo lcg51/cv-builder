@@ -48,51 +48,43 @@ export const processTemplate = (templateHTML: string, userData: UserDataType): s
 };
 
 /**
- * Process a complete template (HTML + CSS) with user data
+ * Compile a Handlebars template once and return a function that can be reused
+ * This avoids recompiling the template on every data change
  */
-export const processCompleteTemplate = async (
-	templateId: string,
-	userData: UserDataType
-): Promise<{ html: string; css: string }> => {
+export const compileHandlebarsTemplate = async (
+	templateId: string
+): Promise<{ template: (userData: UserDataType) => string; css: string }> => {
 	try {
-		// Import the template loading function
-		const { loadTemplate } = await import('@/templates');
+		// Import the Handlebars processor
+		const { compileCompleteHandlebarsTemplate } = await import('@/lib/handlebarsProcessor');
 
-		// Load template content
-		const templateContent = await loadTemplate(templateId as any);
-
-		// Process HTML with user data
-		const processedHTML = processTemplate(templateContent.html, userData);
-
-		return {
-			html: processedHTML,
-			css: templateContent.css
-		};
+		// Compile the Handlebars template once
+		return await compileCompleteHandlebarsTemplate(templateId);
 	} catch (error) {
-		console.error(`Error processing template ${templateId}:`, error);
+		console.error(`Error compiling Handlebars template ${templateId}:`, error);
 		throw new Error(
-			`Failed to process template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+			`Failed to compile Handlebars template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
 		);
 	}
 };
 
 /**
- * Process a Handlebars template with user data
+ * Compile a Handlebars template from HTML content string
+ * This is useful when you have the template content directly
  */
-export const processHandlebarsTemplate = async (
-	templateId: string,
-	userData: UserDataType
-): Promise<{ html: string; css: string }> => {
+export const compileHandlebarsTemplateFromContent = async (
+	templateContent: string
+): Promise<(userData: UserDataType) => string> => {
 	try {
 		// Import the Handlebars processor
-		const { processCompleteHandlebarsTemplate } = await import('@/lib/handlebarsProcessor');
+		const { compileHandlebarsTemplateFromContent: compileFromContent } = await import('@/lib/handlebarsProcessor');
 
-		// Process the Handlebars template
-		return await processCompleteHandlebarsTemplate(templateId, userData);
+		// Compile the Handlebars template from content
+		return compileFromContent(templateContent);
 	} catch (error) {
-		console.error(`Error processing Handlebars template ${templateId}:`, error);
+		console.error('Error compiling Handlebars template from content:', error);
 		throw new Error(
-			`Failed to process Handlebars template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+			`Failed to compile Handlebars template from content: ${error instanceof Error ? error.message : 'Unknown error'}`
 		);
 	}
 };
