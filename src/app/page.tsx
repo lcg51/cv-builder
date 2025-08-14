@@ -251,7 +251,7 @@ export default function Home() {
 						{steps.map((step, index) => (
 							<div key={index} className="text-center space-y-4">
 								<div className="relative">
-									<div className="w-16 h-16 bg-primary text-muted dark:bg-primary dark:text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto">
+									<div className="w-16 h-16 bg-primary text-muted dark:bg-primary dark:text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto">
 										{step.number}
 									</div>
 								</div>

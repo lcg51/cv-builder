@@ -19,8 +19,7 @@ export default [
 	{
 		rules: {
 			'react/react-in-jsx-scope': 'off',
-			'no-unused-vars': 'error',
-			'unused-imports/no-unused-imports': 'error'
+			'@typescript-eslint/no-unused-vars': 'error'
 		}
 	}
 ];
