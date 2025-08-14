@@ -6,10 +6,47 @@ interface UseNavigationGuardProps {
 	onConfirmExit: () => void;
 }
 
+interface NavigationEventDetail {
+	targetUrl: string;
+	isBrowserNavigation?: boolean;
+	previousPath?: string;
+	navigationType?: 'forward' | 'back';
+}
+
 export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavigationGuardProps) {
 	const [showExitDialog, setShowExitDialog] = useState(false);
 	const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
 	const router = useRouter();
+
+	const attemptNavigation = useCallback(
+		(targetUrl: string) => {
+			if (hasUnsavedChanges) {
+				setPendingNavigation(targetUrl);
+				setShowExitDialog(true);
+				return false;
+			}
+			return true;
+		},
+		[hasUnsavedChanges]
+	);
+
+	useEffect(() => {
+		return () => {
+			onConfirmExit();
+		};
+	}, []);
+
+	useEffect(() => {
+		const handleNavigationAttempt = (event: CustomEvent<NavigationEventDetail>) => {
+			const { targetUrl } = event.detail;
+			if (hasUnsavedChanges) {
+				attemptNavigation(targetUrl);
+			}
+		};
+
+		window.addEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
+		return () => window.removeEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
+	}, [hasUnsavedChanges, attemptNavigation]);
 
 	useEffect(() => {
 		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -22,18 +59,6 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
 	}, [hasUnsavedChanges]);
 
-	const attemptNavigation = useCallback(
-		(targetUrl: string) => {
-			if (hasUnsavedChanges) {
-				setPendingNavigation(targetUrl);
-				setShowExitDialog(true);
-				return false; // Navigation blocked
-			}
-			return true; // Navigation allowed
-		},
-		[hasUnsavedChanges]
-	);
-
 	const confirmExit = useCallback(() => {
 		onConfirmExit();
 		setShowExitDialog(false);
@@ -41,7 +66,7 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 		if (pendingNavigation) {
 			router.push(pendingNavigation);
 		} else {
-			router.push('/home');
+			router.push('/');
 		}
 	}, [onConfirmExit, pendingNavigation, router]);
 

@@ -44,17 +44,6 @@ export default function CreateResume() {
 	});
 
 	useEffect(() => {
-		const handleNavigationAttempt = () => {
-			if (hasUnsavedChanges) {
-				attemptNavigation('/home');
-			}
-		};
-
-		window.addEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
-		return () => window.removeEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
-	}, [hasUnsavedChanges, attemptNavigation]);
-
-	useEffect(() => {
 		const timer = setTimeout(() => {
 			setIsPageLoading(false);
 		}, 200);
@@ -89,7 +78,7 @@ export default function CreateResume() {
 				open={showExitDialog}
 				onOpenChange={() => {
 					if (!showExitDialog) {
-						attemptNavigation('/home');
+						attemptNavigation('/');
 					}
 				}}
 				onConfirm={confirmExit}

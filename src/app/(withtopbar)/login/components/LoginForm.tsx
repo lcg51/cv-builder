@@ -9,10 +9,10 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 	return (
 		<div className="space-y-6">
 			{/* Google Sign In Button */}
-			<form action={() => googleSignIn('/home')} className="space-y-4">
+			<form action={() => googleSignIn('/')} className="space-y-4">
 				<Button
 					variant="default"
-					formAction={() => googleSignIn('/home')}
+					formAction={() => googleSignIn('/')}
 					className="w-full h-12 text-base font-medium"
 				>
 					<svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">

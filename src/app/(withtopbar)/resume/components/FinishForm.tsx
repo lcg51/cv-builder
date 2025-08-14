@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { Button } from '@/components/ui/button';
 import { ArrowRightIcon, CheckCircleIcon } from '@/components/icons/FormIcons';
+import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 
 export type FinishFormProps = StepsBarComponentProps & {
 	onSuccess?: () => void;

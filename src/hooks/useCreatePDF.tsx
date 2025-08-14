@@ -8,7 +8,7 @@ type CreatePdfProps = {
 	selectedTemplate: string;
 };
 
-export function useCreatePDF({ userResumeData, selectedTemplate, setSelectedTemplate }: CreatePdfProps) {
+export const useCreatePDF = ({ userResumeData, selectedTemplate, setSelectedTemplate }: CreatePdfProps) => {
 	const [templateHTML, setTemplateHTML] = useState<string>('');
 	const [styles, setStyles] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +66,7 @@ export function useCreatePDF({ userResumeData, selectedTemplate, setSelectedTemp
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
-			link.download = 'resume.pdf';
+			link.download = `${userResumeData.firstName} ${userResumeData.lastName} - ${new Date().toLocaleDateString()}.pdf`;
 			link.click();
 		} catch (error) {
 			console.error('Error downloading PDF:', error);
@@ -89,4 +89,4 @@ export function useCreatePDF({ userResumeData, selectedTemplate, setSelectedTemp
 		downloadPDF,
 		setCurrentTemplate
 	};
-}
+};

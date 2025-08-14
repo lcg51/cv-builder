@@ -2,12 +2,12 @@
 import { Button } from '@/components/ui';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, loginBGJPG } from '../../../assets';
+import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, loginBGJPG } from '../assets';
 import { OptimizedImage } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
-import { features, stats, steps, templates } from './sections';
+import { features, stats, steps, templates } from './models/sections';
 
 export default function Home() {
 	const { push } = useRouter();
@@ -36,10 +36,7 @@ export default function Home() {
 					<div className="grid lg:grid-cols-2 gap-12 items-center">
 						<div className="py-8 lg:py-0 space-y-8">
 							<div className="space-y-4">
-								<Badge
-									variant="secondary"
-									className="px-0 py-0 lg:py-3 text-sm font-medium dark:bg-slate-700 dark:text-slate-200"
-								>
+								<Badge variant="secondary" className="px-0 py-0 lg:py-3 text-sm font-medium bg-primary">
 									<Sparkles className="w-4 h-4 mr-2" />
 									AI-Powered CV Builder
 								</Badge>
@@ -134,10 +131,10 @@ export default function Home() {
 										<div className="space-y-3">
 											{/* Header simulation */}
 											<div className="flex items-center space-x-3">
-												<div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full"></div>
+												<div className="w-12 h-12 bg-foreground/40 rounded-full"></div>
 												<div className="space-y-1">
-													<div className="h-3 bg-foreground/80 dark:bg-foreground/80 rounded w-24"></div>
-													<div className="h-2 bg-foreground/50 dark:bg-foreground/50 rounded w-20"></div>
+													<div className="h-3 bg-foreground/50 dark:bg-foreground/80 rounded w-24"></div>
+													<div className="h-2 bg-foreground/40 dark:bg-foreground/50 rounded w-20"></div>
 												</div>
 											</div>
 
@@ -254,7 +251,7 @@ export default function Home() {
 						{steps.map((step, index) => (
 							<div key={index} className="text-center space-y-4">
 								<div className="relative">
-									<div className="w-16 h-16 bg-primary text-muted dark:bg-primary dark:text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto">
+									<div className="w-16 h-16 bg-primary text-muted dark:bg-primary dark:text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto">
 										{step.number}
 									</div>
 								</div>

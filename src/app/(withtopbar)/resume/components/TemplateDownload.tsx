@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon, CheckCircleIcon, LockIcon } from '@/components/icons/FormIcons';
 import { CheckIcon } from 'lucide-react';
+import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
 
 export type TemplateDownloadProps = StepsBarComponentProps & {
 	onDownloadPDF?: () => void;
@@ -52,7 +52,7 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 			<div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6">
 				<div className="flex items-center justify-between mb-4">
 					<h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">Resume Completion</h3>
-					<span className="text-2xl font-bold text-muted dark:text-blue-400">{completionPercentage}%</span>
+					<span className="text-2xl font-bold text-muted">{completionPercentage}%</span>
 				</div>
 				<div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 mb-4">
 					<div
