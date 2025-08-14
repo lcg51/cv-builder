@@ -2,9 +2,8 @@ import Link from 'next/link';
 
 import LoginForm from './components/LoginForm';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Message } from '../../components/FormMessage';
 import { notebookBG, notebookBGJPG } from '../../../assets';
-import { OptimizedImage } from '@/components/ui';
+import { Message, OptimizedImage } from '@/components/ui';
 
 export default async function Login(props: { searchParams: Promise<Message> }) {
 	const searchParams = await props.searchParams;
