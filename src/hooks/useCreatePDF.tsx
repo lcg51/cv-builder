@@ -1,11 +1,11 @@
 import { useCallback, useState, useEffect } from 'react';
 import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
 import { UserDataType } from '@/app/models/user';
+import { Template } from '@/templates';
 
 type CreatePdfProps = {
 	userResumeData: UserDataType;
-	setSelectedTemplate: (templateId: string) => void;
-	selectedTemplate: string;
+	selectedTemplate: Template | null;
 	useHandlebars?: boolean;
 };
 
@@ -15,10 +15,10 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);
 
-	const compileTemplateFromContent = useCallback(async () => {
+	const compileTemplateFromHTML = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			const template = await compileHandlebarsTemplateFromContent(selectedTemplate);
+			const template = await compileHandlebarsTemplateFromContent(selectedTemplate?.preview ?? '');
 			setCompiledTemplate(() => template);
 		} catch (error) {
 			console.error('Error compiling template:', error);
@@ -27,13 +27,10 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 		}
 	}, [selectedTemplate]);
 
-	const compileTemplate = useCallback(async () => {
+	const compileTemplateFromHandlebars = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			console.log('🔄 Compiling Handlebars template...');
-
-			const result = await compileHandlebarsTemplate(selectedTemplate);
-			console.log('✅ Template compiled from templateId');
+			const result = await compileHandlebarsTemplate(selectedTemplate?.preview ?? '');
 			setCompiledTemplate(() => result.template);
 			setStyles(result.css);
 		} catch (error) {
@@ -46,10 +43,10 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	// Compile Handlebars template once when template changes
 	useEffect(() => {
 		if (!selectedTemplate) return;
-		if (!useHandlebars) compileTemplateFromContent();
+		if (!useHandlebars) compileTemplateFromHTML();
 
-		compileTemplate();
-	}, [selectedTemplate, useHandlebars, compileTemplate, compileTemplateFromContent]);
+		compileTemplateFromHandlebars();
+	}, [selectedTemplate, useHandlebars, compileTemplateFromHandlebars, compileTemplateFromHTML]);
 
 	const refreshTemplates = useCallback(async () => {
 		setStyles('');

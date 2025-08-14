@@ -30,7 +30,7 @@ export default function Templates() {
 
 	return (
 		<div
-			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
+			className={`flex justify-center items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
 		>
 			{isPageLoading ? <TemplateSkeleton /> : <TemplateSelection onTemplateSelect={handleTemplateSelect} />}
 		</div>

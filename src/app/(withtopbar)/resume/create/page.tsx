@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { NavigationStateEnum, resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
@@ -7,7 +7,9 @@ import { TemplateUpdate } from '../components/TemplateUpdate';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { TemplateDownload } from '../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { getTemplate, Template } from '@/templates';
+import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
 const TOPBAR_HEIGHT = 60;
 const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
@@ -15,23 +17,30 @@ const TOTAL_OFFSET = TOPBAR_HEIGHT + 2 * CONTAINER_PADDING;
 
 export default function CreateResume() {
 	const searchParams = useSearchParams();
+	const router = useRouter();
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
-	const selectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.selectedTemplate);
-	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
 	const navigationState = resumeDataStore((state: ResumeDataStoreType) => state.navigationState);
 	const setNavigationState = resumeDataStore((state: ResumeDataStoreType) => state.setNavigationState);
+	const [template, setTemplate] = useState<Template | null>(null);
+	const [templateError, setTemplateError] = useState<string | null>(null);
 
-	// Fallback: If store doesn't have template, try to get it from URL params
 	useEffect(() => {
-		if (!selectedTemplate) {
-			const templateFromUrl = searchParams.get('template');
-			if (templateFromUrl) {
-				console.log('CreateResume - Setting template from URL param:', templateFromUrl);
-				setSelectedTemplate(templateFromUrl);
-			}
+		const templateFromUrl = searchParams.get('template');
+
+		if (!templateFromUrl) {
+			setTemplateError('No template specified');
+			return;
 		}
-	}, [selectedTemplate, searchParams, setSelectedTemplate]);
+
+		const foundTemplate = getTemplate(templateFromUrl);
+		if (foundTemplate) {
+			setTemplate(foundTemplate);
+			setTemplateError(null);
+		} else {
+			setTemplateError(`Template "${templateFromUrl}" not found`);
+		}
+	}, [searchParams]);
 
 	const hasUnsavedChanges = Object.values(userResumeData).some(
 		value => value !== '' && value !== null && value !== undefined
@@ -49,8 +58,7 @@ export default function CreateResume() {
 
 	const { styles, compiledTemplate, downloadPDF, isDownloading, isLoading } = useCreatePDF({
 		userResumeData,
-		setSelectedTemplate,
-		selectedTemplate,
+		selectedTemplate: template,
 		useHandlebars: true
 	});
 
@@ -59,8 +67,18 @@ export default function CreateResume() {
 	}, []);
 
 	const NavigationStateComponent = useMemo(() => {
-		if (isLoading) {
+		if (isLoading || (!template && !templateError)) {
 			return <TemplateUpdateSkeleton />;
+		}
+		if (templateError) {
+			return (
+				<DisplayErrorMessage
+					errorMsg={templateError}
+					onClickCallback={() => router.push('/resume/templates')}
+					errorTitle="Template Not Found"
+					errorButtonText="Choose a Template"
+				/>
+			);
 		}
 		if (navigationState === NavigationStateEnum.TEMPLATE_UPDATE) {
 			return (
@@ -75,7 +93,7 @@ export default function CreateResume() {
 		if (navigationState === NavigationStateEnum.TEMPLATE_DOWNLOAD) {
 			return (
 				<TemplateDownload
-					templateId={selectedTemplate}
+					templateId={template?.id}
 					initialValues={userResumeData}
 					onDownloadPDF={downloadPDF}
 					isDownloading={isDownloading}
@@ -84,19 +102,21 @@ export default function CreateResume() {
 		}
 		return null;
 	}, [
+		template,
 		navigationState,
 		isLoading,
 		styles,
-		selectedTemplate,
+		template,
 		onTemplateDownload,
 		userResumeData,
 		downloadPDF,
-		isDownloading
+		isDownloading,
+		templateError
 	]);
 
 	return (
 		<div
-			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
+			className={`flex justify-center items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
 		>
 			{/* Exit Disclaimer Dialog */}
 			<ModalDisclaimer

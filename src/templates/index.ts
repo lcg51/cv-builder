@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export interface Template {
 	id: string;
 	name: string;
@@ -5,6 +7,8 @@ export interface Template {
 	category: 'professional' | 'creative' | 'modern' | 'minimal';
 	files: {
 		handlebars: string;
+		css: string;
+		html: string;
 	};
 	preview: string;
 	tags: string[];
@@ -12,78 +16,94 @@ export interface Template {
 	features: string[];
 }
 
-export const TEMPLATES: Record<string, Template> = {
-	template1: {
-		id: 'template1',
+/**
+ * Generates a UUID v4 for templates
+ * @returns A unique UUID string
+ */
+export function generateTemplateId(): string {
+	return uuidv4();
+}
+
+export const TEMPLATES: Template[] = [
+	{
+		id: '1e8e97cb-ecb3-4e40-a865-d325b1dc009c',
 		name: 'Classic Header',
 		description:
 			'Clean and professional design with a traditional header layout, perfect for corporate environments and traditional industries.',
 		category: 'professional',
 		files: {
-			handlebars: '/templates/template1/template1.hbs'
+			handlebars: '/templates/template1/template1.hbs',
+			css: '/templates/template1/template1.css',
+			html: '/templates/template1/template1.html'
 		},
 		preview: 'template1',
 		tags: ['corporate', 'traditional', 'header', 'professional'],
 		isActive: true,
 		features: ['Header layout', 'Traditional design', 'Corporate style']
 	},
-	template2: {
-		id: 'template2',
+	{
+		id: 'ac3d81a7-caa9-471c-a0c5-eb0e3297b73e',
 		name: 'Modern Sidebar',
 		description:
 			'Contemporary design with a sidebar layout, ideal for creative professionals and modern workplaces.',
 		category: 'modern',
 		files: {
-			handlebars: '/templates/template2/template2.hbs'
+			handlebars: '/templates/template2/template2.hbs',
+			css: '/templates/template2/template2.css',
+			html: '/templates/template2/template2.html'
 		},
 		preview: 'template2',
 		tags: ['modern', 'sidebar', 'creative', 'contemporary'],
 		isActive: true,
 		features: ['Sidebar layout', 'Modern design', 'Creative style']
 	},
-	template3: {
-		id: 'template3',
+	{
+		id: '681ef50c-8ea4-43de-938d-68c322840978',
 		name: 'Card Layout',
 		description:
 			'Innovative card-based design that stands out, perfect for tech professionals and creative portfolios.',
 		category: 'creative',
 		files: {
-			handlebars: '/templates/template3/template3.hbs'
+			handlebars: '/templates/template3/template3.hbs',
+			css: '/templates/template3/template3.css',
+			html: '/templates/template3/template3.html'
 		},
 		preview: 'template3',
 		tags: ['card-based', 'innovative', 'tech', 'portfolio'],
 		isActive: true,
 		features: ['Card layout', 'Innovative design', 'Portfolio style']
 	},
-	template4: {
-		id: 'template4',
+	{
+		id: '9d297f66-b54b-44dc-bc19-ff2ab9633fd6',
 		name: 'Minimalist Design',
 		description:
 			'Clean and minimal design focusing on content and readability, perfect for professionals who prefer simplicity.',
 		category: 'minimal',
 		files: {
-			handlebars: '/templates/template4/template4.hbs'
+			handlebars: '/templates/template4/template4.hbs',
+			css: '/templates/template4/template4.css',
+			html: '/templates/template4/template4.html'
 		},
 		preview: 'template4',
 		tags: ['minimal', 'clean', 'readable', 'simple', 'professional'],
 		isActive: true,
 		features: ['Minimal design', 'Focus on content', 'High readability', 'Clean typography']
 	}
-} as const;
+];
 
-export type TemplateId = keyof typeof TEMPLATES;
+export type TemplateId = string;
 
-export async function loadTemplate(id: TemplateId): Promise<{ html: string; css: string }> {
-	const template = TEMPLATES[id];
+export async function loadTemplate(templatePreview: string): Promise<{ html: string; css: string }> {
+	const template = TEMPLATES.find(template => template.preview === templatePreview);
 	if (!template) {
-		throw new Error(`Template ${id} not found`);
+		throw new Error(`Template ${templatePreview} not found`);
 	}
 
 	try {
 		// Load the Handlebars template file
 		const response = await fetch(template.files.handlebars);
 		if (!response.ok) {
-			throw new Error(`Failed to load Handlebars template for ${id}`);
+			throw new Error(`Failed to load Handlebars template for ${templatePreview}`);
 		}
 
 		const templateContent = await response.text();
@@ -97,17 +117,19 @@ export async function loadTemplate(id: TemplateId): Promise<{ html: string; css:
 
 		return { html, css };
 	} catch (error) {
-		console.error(`Error loading template ${id}:`, error);
-		throw new Error(`Failed to load template ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		console.error(`Error loading template ${templatePreview}:`, error);
+		throw new Error(
+			`Failed to load template ${templatePreview}: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
 	}
 }
 
 export function getTemplate(id: TemplateId): Template | undefined {
-	return TEMPLATES[id];
+	return TEMPLATES.find(template => template.id === id) ?? undefined;
 }
 
 export function getAllTemplates(): Template[] {
-	return Object.values(TEMPLATES).filter(template => template.isActive);
+	return TEMPLATES.filter(template => template.isActive);
 }
 
 export function getTemplatesByCategory(category: Template['category']): Template[] {
