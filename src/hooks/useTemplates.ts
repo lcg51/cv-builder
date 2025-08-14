@@ -25,6 +25,7 @@ export function useTemplates() {
 			setError('Failed to load templates');
 			console.error('Error loading templates:', err);
 		} finally {
+			await new Promise(resolve => setTimeout(resolve, 500));
 			setLoading(false);
 		}
 	}, []);

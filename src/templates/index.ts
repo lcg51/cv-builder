@@ -1,10 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 
+export type TemplateCategory = 'professional' | 'creative' | 'modern' | 'minimal';
+
 export interface Template {
 	id: string;
 	name: string;
 	description: string;
-	category: 'professional' | 'creative' | 'modern' | 'minimal';
+	category: TemplateCategory;
 	files: {
 		handlebars: string;
 		css: string;
