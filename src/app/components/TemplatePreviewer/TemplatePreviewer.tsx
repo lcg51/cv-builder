@@ -3,23 +3,48 @@ import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
 import { LockIcon } from '@/components/icons/FormIcons';
-import { processTemplate } from '@/lib/templateProcessor';
+import { processTemplate, processHandlebarsTemplate } from '@/lib/templateProcessor';
 
 type TemplateProps = {
 	userData: UserDataType;
 	templateHTML: string;
 	templateStyles: string;
+	templateId?: string;
+	useHandlebars?: boolean;
 };
 
-export const TemplatePreviewer = ({ userData, templateHTML, templateStyles }: TemplateProps) => {
+export const TemplatePreviewer = ({
+	userData,
+	templateHTML,
+	templateStyles,
+	templateId,
+	useHandlebars = false
+}: TemplateProps) => {
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [scopedStyles, setScopedStyles] = useState('');
 
 	useEffect(() => {
-		if (!templateHTML) return;
-		const updatedTemplate = processTemplate(templateHTML, userData);
-		setProcessedHtml(updatedTemplate);
-	}, [userData, templateHTML]);
+		if (!templateHTML && !templateId) return;
+
+		const processTemplateData = async () => {
+			try {
+				if (useHandlebars && templateId) {
+					// Use Handlebars processing
+					const result = await processHandlebarsTemplate(templateId, userData);
+					setProcessedHtml(result.html);
+					setScopedStyles(result.css);
+				} else if (templateHTML) {
+					// Use legacy template processing
+					const updatedTemplate = processTemplate(templateHTML, userData);
+					setProcessedHtml(updatedTemplate);
+				}
+			} catch (error) {
+				console.error('Error processing template:', error);
+			}
+		};
+
+		processTemplateData();
+	}, [userData, templateHTML, templateId, useHandlebars]);
 
 	useEffect(() => {
 		if (!templateStyles) return;

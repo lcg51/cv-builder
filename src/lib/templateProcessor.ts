@@ -75,3 +75,24 @@ export const processCompleteTemplate = async (
 		);
 	}
 };
+
+/**
+ * Process a Handlebars template with user data
+ */
+export const processHandlebarsTemplate = async (
+	templateId: string,
+	userData: UserDataType
+): Promise<{ html: string; css: string }> => {
+	try {
+		// Import the Handlebars processor
+		const { processCompleteHandlebarsTemplate } = await import('@/lib/handlebarsProcessor');
+
+		// Process the Handlebars template
+		return await processCompleteHandlebarsTemplate(templateId, userData);
+	} catch (error) {
+		console.error(`Error processing Handlebars template ${templateId}:`, error);
+		throw new Error(
+			`Failed to process Handlebars template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+		);
+	}
+};

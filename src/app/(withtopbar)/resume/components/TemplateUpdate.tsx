@@ -134,6 +134,8 @@ export const TemplateUpdate = ({
 								userData={userResumeData}
 								templateHTML={templateHTML}
 								templateStyles={styles}
+								templateId={templateId}
+								useHandlebars={templateId === 'template2' ? false : true}
 							/>
 						</div>
 					</div>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Test Template</title>
+	    <style>.resume{max-width:800px;margin:0 auto;padding:20px;font-family:Arial,sans-serif;}header{text-align:center;margin-bottom:30px;}.about-section,.skills-section,.experience-section,.education-section,.contact-section{margin-bottom:25px;}h2{color:#333;border-bottom:2px solid #007bff;padding-bottom:5px;}.skill{margin-bottom:10px;}.skill-bar{width:100%;height:20px;background-color:#f0f0f0;border-radius:10px;overflow:hidden;}.skill-fill{height:100%;background-color:#007bff;transition:width 0.3s ease;}.job,.degree{margin-bottom:15px;padding:10px;border-left:3px solid #007bff;background-color:#f9f9f9;}</style>
+</head>
+	<body>
+		<div class="resume">
+			<header>
+				<h1>{{firstName}} {{lastName}}</h1>
+				<p>{{role}}</p>
+			</header>
+
+			<!-- About Me -->
+			<div class="about-section">
+				<h2>About Me</h2>
+				<p>{{aboutMe}}</p>
+			</div>
+
+			<!-- Skills -->
+			<div class="skills-section">
+				<h2>Skills</h2>
+				<div class="skills-list">
+					{{#each skills}}
+					<div class="skill">
+						<span>{{title}}</span>
+						<div class="skill-bar">
+							<div class="skill-fill" style="width: {{skillLevel level}}%"></div>
+						</div>
+					</div>
+					{{/each}}
+				</div>
+			</div>
+
+			<!-- Work Experience -->
+			<div class="experience-section">
+				<h2>Work Experience</h2>
+				{{#each workExperience}}
+				<div class="job">
+					<h3>{{jobTitle}}</h3>
+					<p>{{company}}</p>
+					<p>{{formatDate startDate 'MMM yyyy'}} - {{formatDate endDate 'MMM yyyy'}}</p>
+					<p>{{description}}</p>
+				</div>
+				{{/each}}
+			</div>
+
+			<!-- Education -->
+			<div class="education-section">
+				<h2>Education</h2>
+				{{#each education}}
+				<div class="degree">
+					<h3>{{degree}}</h3>
+					<p>{{university}}</p>
+					<p>{{formatDate finishDate 'PPP'}}</p>
+				</div>
+				{{/each}}
+			</div>
+
+			<!-- Contact -->
+			<div class="contact-section">
+				<h2>Contact</h2>
+				<p>Email: {{email}}</p>
+				<p>Phone: {{phone}}</p>
+				<p>LinkedIn: {{#ifNotEmpty linkedin}}{{linkedin}}{{/ifNotEmpty}}</p>
+				<p>GitHub: {{#ifNotEmpty github}}{{github}}{{/ifNotEmpty}}</p>
+			</div>
+		</div>
+	</body>
+</html>
