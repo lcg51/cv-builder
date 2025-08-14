@@ -1,8 +1,18 @@
 import Handlebars from 'handlebars';
 import { UserDataType } from '@/app/models/user';
 
+// Define proper types for Handlebars helpers
+type HandlebarsHelperOptions = {
+	fn: (context: any) => string;
+	inverse: (context: any) => string;
+	hash: Record<string, any>;
+	data?: any;
+};
+
+type HandlebarsContext = Record<string, any>;
+
 // Register custom Handlebars helpers
-Handlebars.registerHelper('formatDate', function (date: Date, format: string) {
+Handlebars.registerHelper('formatDate', function (this: HandlebarsContext, date: Date, format: string) {
 	if (!date) return '';
 
 	const d = new Date(date);
@@ -21,20 +31,23 @@ Handlebars.registerHelper('formatDate', function (date: Date, format: string) {
 	}
 });
 
-Handlebars.registerHelper('skillLevel', function (level: number) {
+Handlebars.registerHelper('skillLevel', function (this: HandlebarsContext, level: number) {
 	// Convert skill level (1-5) to percentage (20-100)
 	return Math.min(Math.max(level * 20, 20), 100);
 });
 
-Handlebars.registerHelper('ifNotEmpty', function (value: any, options: any) {
-	if (value && (Array.isArray(value) ? value.length > 0 : value.trim() !== '')) {
-		return options.fn(this);
-	} else {
-		return options.inverse(this);
+Handlebars.registerHelper(
+	'ifNotEmpty',
+	function (this: HandlebarsContext, value: unknown, options: HandlebarsHelperOptions) {
+		if (value && (Array.isArray(value) ? value.length > 0 : String(value).trim() !== '')) {
+			return options.fn(this);
+		} else {
+			return options.inverse(this);
+		}
 	}
-});
+);
 
-Handlebars.registerHelper('join', function (array: any[], separator: string = ', ') {
+Handlebars.registerHelper('join', function (this: HandlebarsContext, array: unknown[], separator: string = ', ') {
 	if (!Array.isArray(array)) return '';
 	return array.join(separator);
 });
