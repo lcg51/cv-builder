@@ -4,7 +4,6 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export const NavigationStateEnum = {
-	TEMPLATE_SELECTION: 'templateSelection',
 	TEMPLATE_UPDATE: 'templateUpdate',
 	TEMPLATE_DOWNLOAD: 'templateDownload'
 } as const;
@@ -33,7 +32,7 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			userResumeData: defaultUserData,
 			activeStep: 0,
 			selectedTemplate: '',
-			navigationState: NavigationStateEnum.TEMPLATE_SELECTION,
+			navigationState: NavigationStateEnum.TEMPLATE_UPDATE,
 			resetResumeUserData: () => set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' }),
 			setResumeUserDataValue: (key: string, value: string) =>
 				set((state: ResumeDataStoreType) => ({
@@ -45,7 +44,10 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 				})),
 			setActiveStep: (step: number) => set({ activeStep: step }),
 			setNavigationState: (state: NavigationStateType) => set({ navigationState: state }),
-			setSelectedTemplate: (selectedTemplateId: string) => set({ selectedTemplate: selectedTemplateId }),
+			setSelectedTemplate: (selectedTemplateId: string) => {
+				console.log('Store - setSelectedTemplate called with:', selectedTemplateId);
+				set({ selectedTemplate: selectedTemplateId });
+			},
 			clearStorage: () => {
 				sessionStorage.removeItem(STORAGE_KEY);
 				set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' });

@@ -3,70 +3,23 @@ import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
 import { LockIcon } from '@/components/icons/FormIcons';
-import {
-	processTemplate,
-	compileHandlebarsTemplate,
-	compileHandlebarsTemplateFromContent
-} from '@/lib/templateProcessor';
 
 type TemplateProps = {
 	userData: UserDataType;
-	templateHTML: string;
 	templateStyles: string;
-	templateId?: string;
-	useHandlebars?: boolean;
+	compiledTemplate: ((userData: UserDataType) => string) | null;
 };
 
-export const TemplatePreviewer = ({
-	userData,
-	templateHTML,
-	templateStyles,
-	templateId,
-	useHandlebars = false
-}: TemplateProps) => {
+export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate }: TemplateProps) => {
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [scopedStyles, setScopedStyles] = useState('');
-	const [compiledTemplate, setCompiledTemplate] = useState<((userData: UserDataType) => string) | null>(null);
-
-	// Compile Handlebars template once when templateId or templateHTML changes
-	useEffect(() => {
-		if (!useHandlebars) return;
-
-		const compileTemplate = async () => {
-			try {
-				console.log('🔄 Compiling Handlebars template...');
-				if (templateId) {
-					// Compile from template ID
-					const result = await compileHandlebarsTemplate(templateId);
-					setCompiledTemplate(() => result.template);
-					setScopedStyles(result.css);
-					console.log('✅ Template compiled from templateId');
-				} else if (templateHTML) {
-					// Compile from template HTML content
-					const template = await compileHandlebarsTemplateFromContent(templateHTML);
-					setCompiledTemplate(() => template);
-					setScopedStyles(templateStyles);
-					console.log('✅ Template compiled from templateHTML');
-				}
-			} catch (error) {
-				console.error('Error compiling template:', error);
-			}
-		};
-
-		compileTemplate();
-	}, [templateId, templateHTML, templateStyles, useHandlebars]);
 
 	// Process template with user data using compiled template function
 	useEffect(() => {
-		if (useHandlebars && compiledTemplate) {
-			console.log('⚡ Processing template with user data (using compiled template)');
-			const result = compiledTemplate(userData);
-			setProcessedHtml(result);
-		} else if (!useHandlebars && templateHTML) {
-			const updatedTemplate = processTemplate(templateHTML, userData);
-			setProcessedHtml(updatedTemplate);
+		if (compiledTemplate) {
+			setProcessedHtml(compiledTemplate(userData));
 		}
-	}, [userData, compiledTemplate, templateHTML, useHandlebars]);
+	}, [userData, compiledTemplate]);
 
 	useEffect(() => {
 		if (!templateStyles) return;

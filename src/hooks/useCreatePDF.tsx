@@ -9,100 +9,67 @@ type CreatePdfProps = {
 	useHandlebars?: boolean;
 };
 
-export const useCreatePDF = ({
-	userResumeData,
-	selectedTemplate,
-	setSelectedTemplate,
-	useHandlebars = true
-}: CreatePdfProps) => {
-	const [templateHTML, setTemplateHTML] = useState<string>('');
+export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
+	const [compiledTemplate, setCompiledTemplate] = useState<((userData: UserDataType) => string) | null>(null);
 	const [styles, setStyles] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);
-	const [compiledTemplate, setCompiledTemplate] = useState<((userData: UserDataType) => string) | null>(null);
 
-	// Compile Handlebars template once when template changes
-	useEffect(() => {
-		if (!useHandlebars) return;
-
-		const compileTemplate = async () => {
-			try {
-				console.log('🔄 Compiling Handlebars template for PDF generation...');
-				// Try to compile from template ID first
-				const result = await compileHandlebarsTemplate(selectedTemplate);
-				setCompiledTemplate(() => result.template);
-				setStyles(result.css);
-				console.log('✅ Template compiled for PDF generation');
-			} catch (error) {
-				console.error('Error compiling template for PDF:', error);
-				// Fallback to fetching individual files if compilation fails
-				await fetchTemplatePDF();
-			}
-		};
-
-		compileTemplate();
-	}, [selectedTemplate, useHandlebars]);
-
-	const fetchTemplatePDF = useCallback(async () => {
-		// Prevent duplicate requests if templates are already loaded
-		if (templateHTML && styles) {
-			return;
-		}
-
+	const compileTemplateFromContent = useCallback(async () => {
 		setIsLoading(true);
-
 		try {
-			const htmlResponse = await fetch(`/templates/${selectedTemplate}/${selectedTemplate}.html`);
-			const stylesResponse = await fetch(`/templates/${selectedTemplate}/${selectedTemplate}.css`);
-			if (!htmlResponse.ok || !stylesResponse.ok) {
-				throw new Error(`HTTP error! status: ${htmlResponse.status}`);
-			}
-
-			const template = await htmlResponse.text();
-			const styles = await stylesResponse.text();
-
-			setTemplateHTML(template || '');
-			setStyles(styles || '');
-
-			// If using Handlebars, compile the fetched template
-			if (useHandlebars && template) {
-				try {
-					const compiledTemplateFn = await compileHandlebarsTemplateFromContent(template);
-					setCompiledTemplate(() => compiledTemplateFn);
-					console.log('✅ Template compiled from fetched HTML for PDF generation');
-				} catch (compileError) {
-					console.error('Error compiling fetched template:', compileError);
-				}
-			}
+			const template = await compileHandlebarsTemplateFromContent(selectedTemplate);
+			setCompiledTemplate(() => template);
 		} catch (error) {
-			console.error('Error fetching template:', error);
+			console.error('Error compiling template:', error);
 		} finally {
 			setIsLoading(false);
 		}
-	}, [selectedTemplate, templateHTML, styles, useHandlebars]);
+	}, [selectedTemplate]);
+
+	const compileTemplate = useCallback(async () => {
+		setIsLoading(true);
+		try {
+			console.log('🔄 Compiling Handlebars template...');
+
+			const result = await compileHandlebarsTemplate(selectedTemplate);
+			console.log('✅ Template compiled from templateId');
+			setCompiledTemplate(() => result.template);
+			setStyles(result.css);
+		} catch (error) {
+			console.error('Error compiling template:', error);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [selectedTemplate]);
+
+	// Compile Handlebars template once when template changes
+	useEffect(() => {
+		if (!selectedTemplate) return;
+		if (!useHandlebars) compileTemplateFromContent();
+
+		compileTemplate();
+	}, [selectedTemplate, useHandlebars, compileTemplate, compileTemplateFromContent]);
 
 	const refreshTemplates = useCallback(async () => {
-		setTemplateHTML('');
 		setStyles('');
 		setCompiledTemplate(null);
-		await fetchTemplatePDF();
-	}, [selectedTemplate, fetchTemplatePDF]);
+	}, [selectedTemplate]);
 
 	const downloadPDF = useCallback(async () => {
 		setIsDownloading(true);
 		try {
 			let processedHtml: string;
 
-			if (useHandlebars && compiledTemplate) {
-				// Use the compiled Handlebars template function
-				console.log('⚡ Processing Handlebars template for PDF generation');
-				processedHtml = compiledTemplate(userResumeData);
-			} else if (templateHTML) {
-				// Fallback to legacy template processing
-				const { processTemplate } = await import('@/lib/templateProcessor');
-				processedHtml = processTemplate(templateHTML, userResumeData);
-			} else {
+			if (!compiledTemplate) {
 				throw new Error('No template available for processing');
+			}
+
+			if (useHandlebars) {
+				processedHtml = compiledTemplate(userResumeData);
+			} else {
+				// const { processTemplate } = await import('@/lib/templateProcessor');
+				processedHtml = compiledTemplate(userResumeData);
 			}
 
 			const response = await fetch(`/api/pdf`, {
@@ -125,20 +92,14 @@ export const useCreatePDF = ({
 		} finally {
 			setIsDownloading(false);
 		}
-	}, [templateHTML, styles, userResumeData, useHandlebars, compiledTemplate]);
-
-	const setCurrentTemplate = useCallback((templateId: string) => {
-		setSelectedTemplate(templateId);
-	}, []);
+	}, [styles, userResumeData, useHandlebars, compiledTemplate]);
 
 	return {
-		templateHTML,
 		styles,
 		isLoading,
 		isDownloading,
-		fetchTemplatePDF,
 		refreshTemplates,
 		downloadPDF,
-		setCurrentTemplate
+		compiledTemplate
 	};
 };

@@ -12,7 +12,7 @@ interface TemplateSelectionProps {
 }
 
 export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplateSelect }) => {
-	const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+	const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
 	const [searchQuery, setSearchQuery] = useState<string>('');
 	const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
@@ -46,10 +46,13 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 		}
 	};
 
-	// Retry loading templates
 	const handleRetry = () => {
 		clearError();
 		resetToAllTemplates();
+	};
+
+	const handleTemplateSelect = () => {
+		onTemplateSelect(selectedTemplateId);
 	};
 
 	// Show skeleton while loading
@@ -153,11 +156,11 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 						<Card
 							key={template.id}
 							className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg ${
-								selectedTemplate === template.id
+								selectedTemplateId === template.id
 									? 'ring-2 ring-primary shadow-lg scale-105'
 									: 'hover:scale-105'
 							}`}
-							onClick={() => setSelectedTemplate(template.id)}
+							onClick={() => setSelectedTemplateId(template.id)}
 						>
 							{/* Template Preview */}
 							<div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 p-6 flex items-center justify-center">
@@ -167,7 +170,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 								</div>
 
 								{/* Selection Indicator */}
-								{selectedTemplate === template.id && (
+								{selectedTemplateId === template.id && (
 									<div className="absolute top-4 right-4 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
 										<CheckIcon className="w-4 h-4 text-white" />
 									</div>
@@ -201,7 +204,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 							</div>
 
 							{/* Selection Overlay */}
-							{selectedTemplate === template.id && (
+							{selectedTemplateId === template.id && (
 								<div className="absolute inset-0 bg-primary/5 border-2 border-primary rounded-lg" />
 							)}
 						</Card>
@@ -211,13 +214,13 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({ onTemplate
 				{/* Action Buttons */}
 				<div className="text-center">
 					<Button
-						onClick={() => onTemplateSelect(selectedTemplate)}
-						disabled={!selectedTemplate}
+						onClick={handleTemplateSelect}
+						disabled={!selectedTemplateId}
 						size="lg"
 						className="px-8 py-3 text-lg"
 					>
 						Continue with{' '}
-						{selectedTemplate ? templates.find(t => t.id === selectedTemplate)?.name : 'Template'}
+						{selectedTemplateId ? templates.find(t => t.id === selectedTemplateId)?.name : 'Template'}
 						<svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								strokeLinecap="round"
