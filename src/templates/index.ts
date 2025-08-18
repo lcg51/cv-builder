@@ -1,3 +1,4 @@
+import { template1Screenshot, template2Screenshot, template3Screenshot, template4Screenshot } from '@/assets';
 import { v4 as uuidv4 } from 'uuid';
 
 export type TemplateCategory = 'professional' | 'creative' | 'modern' | 'minimal';
@@ -13,10 +14,19 @@ export interface Template {
 		html: string;
 	};
 	preview: string;
+	previewImage: string;
 	tags: string[];
 	isActive: boolean;
 	features: string[];
 }
+
+// Map template preview names to their screenshot images
+export const templateScreenshotsMap: Record<string, any> = {
+	template1: template1Screenshot,
+	template2: template2Screenshot,
+	template3: template3Screenshot,
+	template4: template4Screenshot
+};
 
 /**
  * Generates a UUID v4 for templates
@@ -38,6 +48,7 @@ export const TEMPLATES: Template[] = [
 			css: '/templates/template1/template1.css',
 			html: '/templates/template1/template1.html'
 		},
+		previewImage: 'template1-screenshot.png',
 		preview: 'template1',
 		tags: ['corporate', 'traditional', 'header', 'professional'],
 		isActive: true,
@@ -55,6 +66,7 @@ export const TEMPLATES: Template[] = [
 			html: '/templates/template2/template2.html'
 		},
 		preview: 'template2',
+		previewImage: 'template2-screenshot.png',
 		tags: ['modern', 'sidebar', 'creative', 'contemporary'],
 		isActive: true,
 		features: ['Sidebar layout', 'Modern design', 'Creative style']
@@ -71,6 +83,7 @@ export const TEMPLATES: Template[] = [
 			html: '/templates/template3/template3.html'
 		},
 		preview: 'template3',
+		previewImage: 'template3-screenshot.png',
 		tags: ['card-based', 'innovative', 'tech', 'portfolio'],
 		isActive: true,
 		features: ['Card layout', 'Innovative design', 'Portfolio style']
@@ -87,6 +100,7 @@ export const TEMPLATES: Template[] = [
 			html: '/templates/template4/template4.html'
 		},
 		preview: 'template4',
+		previewImage: 'template4-screenshot.png',
 		tags: ['minimal', 'clean', 'readable', 'simple', 'professional'],
 		isActive: true,
 		features: ['Minimal design', 'Focus on content', 'High readability', 'Clean typography']
@@ -134,8 +148,12 @@ export function getAllTemplates(): Template[] {
 	return TEMPLATES.filter(template => template.isActive);
 }
 
+export function getHomePageTemplates(): Template[] {
+	return TEMPLATES.filter(template => template.isActive).slice(1, 4);
+}
+
 export function getTemplatesByCategory(category: Template['category']): Template[] {
-	return getAllTemplates().filter(template => template.category === category);
+	return TEMPLATES.filter(template => template.category === category);
 }
 
 export function searchTemplates(query: string): Template[] {

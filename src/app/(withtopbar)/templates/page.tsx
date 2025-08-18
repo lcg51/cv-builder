@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useMemo } from 'react';
-import { TemplateSkeleton } from '../components/TemplateSkeleton';
-import { TemplateSelection } from '../components/TemplateSelection';
+import { TemplateSkeleton } from './components/TemplateSkeleton';
+import { TemplateSelection } from './components/TemplateSelection';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
 import { useTemplates } from '@/hooks/useTemplates';
@@ -27,7 +27,7 @@ export default function Templates() {
 			setSelectedTemplate(templateId);
 
 			await new Promise(resolve => setTimeout(resolve, 100));
-			push(`/resume/create?template=${templateId}`);
+			push(`/templates/${templateId}`);
 		},
 		[setSelectedTemplate, push]
 	);
@@ -65,7 +65,7 @@ export default function Templates() {
 
 	return (
 		<div
-			className={`flex justify-center items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 lg:min-h-[calc(100vh-60px)] xl:min-h-[calc(100vh-60px)]`}
+			className={`w-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 lg:min-h-[calc(100vh-60px)] xl:min-h-[calc(100vh-60px)]`}
 		>
 			{NavigationStateComponent}
 		</div>

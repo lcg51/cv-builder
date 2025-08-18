@@ -7,7 +7,7 @@ import { TemplateUpdate } from '../components/TemplateUpdate';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { TemplateDownload } from '../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getTemplate, Template } from '@/templates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
@@ -15,9 +15,9 @@ const TOPBAR_HEIGHT = 60;
 const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
 const TOTAL_OFFSET = TOPBAR_HEIGHT + 2 * CONTAINER_PADDING;
 
-export default function CreateResume() {
-	const searchParams = useSearchParams();
-	const router = useRouter();
+export default function CreateTemplate() {
+	const params = useParams();
+	const { push } = useRouter();
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
 	const navigationState = resumeDataStore((state: ResumeDataStoreType) => state.navigationState);
@@ -26,21 +26,21 @@ export default function CreateResume() {
 	const [templateError, setTemplateError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const templateFromUrl = searchParams.get('template');
+		const templateID = params.templateId as string;
 
-		if (!templateFromUrl) {
+		if (!templateID) {
 			setTemplateError('No template specified');
 			return;
 		}
 
-		const foundTemplate = getTemplate(templateFromUrl);
+		const foundTemplate = getTemplate(templateID);
 		if (foundTemplate) {
 			setTemplate(foundTemplate);
 			setTemplateError(null);
 		} else {
-			setTemplateError(`Template "${templateFromUrl}" not found`);
+			setTemplateError(`Template "${templateID}" not found`);
 		}
-	}, [searchParams]);
+	}, [params]);
 
 	const hasUnsavedChanges = Object.values(userResumeData).some(
 		value => value !== '' && value !== null && value !== undefined
@@ -74,7 +74,7 @@ export default function CreateResume() {
 			return (
 				<DisplayErrorMessage
 					errorMsg={templateError}
-					onClickCallback={() => router.push('/resume/templates')}
+					onClickCallback={() => push('/templates')}
 					errorTitle="Template Not Found"
 					errorButtonText="Choose a Template"
 				/>
@@ -116,7 +116,7 @@ export default function CreateResume() {
 
 	return (
 		<div
-			className={`flex justify-center items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-3.5rem)] lg:min-h-[calc(100vh-3.75rem)] xl:min-h-[calc(100vh-60px)]`}
+			className={`flex justify-center items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-60px)]`}
 		>
 			{/* Exit Disclaimer Dialog */}
 			<ModalDisclaimer

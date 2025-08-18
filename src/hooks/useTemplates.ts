@@ -3,13 +3,18 @@ import {
 	Template,
 	TemplateId,
 	getAllTemplates,
+	getHomePageTemplates,
 	getTemplatesByCategory,
 	searchTemplates,
 	loadTemplate,
 	getTemplate
 } from '@/templates';
 
-export function useTemplates() {
+type UseTemplatesProps = {
+	isHomePage?: boolean;
+};
+
+export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 	const [templates, setTemplates] = useState<Template[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -95,10 +100,16 @@ export function useTemplates() {
 		}
 	}, []);
 
+	const loadHomePageTemplates = useCallback(() => {
+		const homePageTemplates = getHomePageTemplates();
+		setTemplates(homePageTemplates);
+	}, []);
+
 	// Reset to all templates
 	const resetToAllTemplates = useCallback(() => {
-		loadAllTemplates();
-	}, [loadAllTemplates]);
+		const allTemplates = getAllTemplates();
+		setTemplates(allTemplates);
+	}, []);
 
 	// Clear error
 	const clearError = useCallback(() => {
@@ -107,8 +118,12 @@ export function useTemplates() {
 
 	// Load all templates on mount
 	useEffect(() => {
+		if (isHomePage) {
+			loadHomePageTemplates();
+			return;
+		}
 		loadAllTemplates();
-	}, [loadAllTemplates]);
+	}, [loadAllTemplates, loadHomePageTemplates, isHomePage]);
 
 	return {
 		templates,
@@ -116,6 +131,7 @@ export function useTemplates() {
 		error,
 		loadAllTemplates,
 		loadTemplatesByCategory,
+		loadHomePageTemplates,
 		searchTemplatesByQuery,
 		loadSpecificTemplate,
 		loadTemplateContent,
