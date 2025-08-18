@@ -1,14 +1,14 @@
 'use client';
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckIcon, EyeIcon, SearchIcon, FilterIcon } from 'lucide-react';
-import type { Template, TemplateCategory } from '@/templates';
+import { SearchIcon, FilterIcon } from 'lucide-react';
+import { type Template as TemplateType, type TemplateCategory } from '@/templates';
+import { Template } from '../../../components/Template';
 
 type TemplateCategoryFilter = 'all' | TemplateCategory;
 
 interface TemplateSelectionProps {
-	templates: Template[];
+	templates: TemplateType[];
 	searchTemplatesByQuery: (query: string) => void;
 	resetToAllTemplates: () => void;
 	loadTemplatesByCategory: (category: TemplateCategory) => void;
@@ -42,7 +42,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 		if (category === 'all') {
 			resetToAllTemplates();
 		} else {
-			loadTemplatesByCategory(category as Template['category']);
+			loadTemplatesByCategory(category as TemplateType['category']);
 		}
 	};
 
@@ -133,63 +133,12 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 						{templates.length > 0 ? (
 							<div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 pb-4">
 								{templates.map(template => (
-									<Card
+									<Template
 										key={template.id}
-										className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg ${
-											selectedTemplateId === template.id
-												? 'ring-2 ring-primary shadow-lg scale-105'
-												: 'hover:scale-105'
-										}`}
-										onClick={() => setSelectedTemplateId(template.id)}
-									>
-										{/* Template Preview */}
-										<div className="relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 p-6 flex items-center justify-center">
-											<div className="text-center">
-												<EyeIcon className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-												<div className="text-sm text-slate-500 dark:text-slate-400">
-													{template.preview}
-												</div>
-											</div>
-
-											{/* Selection Indicator */}
-											{selectedTemplateId === template.id && (
-												<div className="absolute top-4 right-4 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-													<CheckIcon className="w-4 h-4 text-muted" />
-												</div>
-											)}
-										</div>
-
-										{/* Template Info */}
-										<div className="p-6">
-											<div className="flex items-center justify-between mb-2">
-												<h3 className="text-xl font-semibold text-slate-800 dark:text-slate-200">
-													{template.name}
-												</h3>
-												<span className="px-2 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full capitalize">
-													{template.category}
-												</span>
-											</div>
-											<p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-3">
-												{template.description}
-											</p>
-											{/* Tags */}
-											<div className="flex flex-wrap gap-1">
-												{template.tags.slice(0, 3).map((tag, index) => (
-													<span
-														key={index}
-														className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
-													>
-														{tag}
-													</span>
-												))}
-											</div>
-										</div>
-
-										{/* Selection Overlay */}
-										{selectedTemplateId === template.id && (
-											<div className="absolute inset-0 bg-muted/5 border-2 border-muted rounded-lg" />
-										)}
-									</Card>
+										template={template}
+										selectedTemplateId={selectedTemplateId}
+										onClickTemplate={setSelectedTemplateId}
+									/>
 								))}
 							</div>
 						) : (

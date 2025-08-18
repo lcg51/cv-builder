@@ -15,7 +15,9 @@
 		"test": "jest --config jest.config.ts",
 		"convert-images": "tsx scripts/convert-images-optimized.ts",
 		"convert-to-handlebars": "npx tsx scripts/convert-to-handlebars.ts",
-		"convert-to-handlebars:no-minify": "npx tsx scripts/convert-to-handlebars.ts --no-minify"
+		"convert-to-handlebars:no-minify": "npx tsx scripts/convert-to-handlebars.ts --no-minify",
+		"generate-screenshot": "npx tsx scripts/generate-template-screenshot.ts",
+		"generate-all-screenshots": "npx tsx scripts/generate-all-template-screenshots.ts"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.1",

@@ -26,13 +26,13 @@ export const features = [
 export const steps = [
 	{
 		number: '01',
-		title: 'Fill Your Information',
-		description: 'Add your contact details, experience, education, and skills'
+		title: 'Choose Template',
+		description: 'Select from our collection of professional CV templates'
 	},
 	{
 		number: '02',
-		title: 'Choose Template',
-		description: 'Select from our collection of professional CV templates'
+		title: 'Fill Your Information',
+		description: 'Add your contact details, experience, education, and skills'
 	},
 	{
 		number: '03',
@@ -45,22 +45,4 @@ export const stats = [
 	{ label: 'CVs Created', value: '10,000+' },
 	{ label: 'Job Interviews', value: '5,000+' },
 	{ label: 'Success Rate', value: '92%' }
-];
-
-export const templates = [
-	{
-		name: 'Modern Professional',
-		description: 'Clean and contemporary design perfect for tech and business roles',
-		preview: 'template1'
-	},
-	{
-		name: 'Executive Elite',
-		description: 'Sophisticated layout ideal for senior management positions',
-		preview: 'template2'
-	},
-	{
-		name: 'Creative Focus',
-		description: 'Distinctive design for creative and design professionals',
-		preview: 'template3'
-	}
 ];

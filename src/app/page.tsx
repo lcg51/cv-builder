@@ -2,12 +2,25 @@
 import { Button } from '@/components/ui';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, loginBGJPG } from '../assets';
+import {
+	jobapplicantBG,
+	laptopBG,
+	loginBG,
+	jobapplicantBGJPG,
+	laptopBGJPG,
+	loginBGJPG,
+	template1Screenshot
+} from '../assets';
 import { OptimizedImage } from '@/components/ui';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
-import { features, stats, steps, templates } from './models/sections';
+import { features, stats, steps } from './models/sections';
+import { TEMPLATES } from '@/templates';
+import { Template } from './components/Template';
+
+const templates = TEMPLATES.slice(1, 4);
 
 export default function Home() {
 	const { push } = useRouter();
@@ -81,28 +94,15 @@ export default function Home() {
 						</div>
 
 						<div className="relative">
-							<div className="relative z-10 md:max-w-md md:mx-auto lg:mx-0 lg:max-w-2xl bg-white dark:bg-card dark:bg-slate-800 rounded-2xl shadow-2xl p-8">
-								<div className="mt-4 space-y-2">
-									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
-								</div>
-								<div className="mt-4 space-y-2">
-									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
-								</div>
-								<div className="mt-4 space-y-2">
-									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
-								</div>
-								<div className="mt-4 space-y-2">
-									<div className="h-3 bg-muted-foreground/40 rounded w-full"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-3/4"></div>
-									<div className="h-3 bg-muted-foreground/40 rounded w-5/6"></div>
-								</div>
-								<div className="aspect-[7/5] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center"></div>
+							<div className="relative z-10 md:max-w-md md:mx-auto lg:mx-0 bg-white dark:bg-card dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+								<Image
+									src={template1Screenshot}
+									alt="Template 1 Preview"
+									width={600}
+									height={800}
+									className="w-full h-auto object-cover"
+									priority
+								/>
 							</div>
 						</div>
 					</div>
@@ -123,53 +123,7 @@ export default function Home() {
 
 					<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
 						{templates.map((template, index) => (
-							<Card
-								key={index}
-								className="group overflow-hidden hover:shadow-xl dark:hover:shadow-xl dark:bg-slate-700 dark:hover:shadow-primary/20 transition-all duration-300 transform hover:-translate-y-2"
-							>
-								<div className="aspect-[3/4] bg-gradient-to-br from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10 p-6 relative overflow-hidden">
-									<div className="absolute inset-4 bg-white dark:bg-slate-800 rounded-lg shadow-lg p-4 border dark:border-slate-700">
-										<div className="space-y-3">
-											{/* Header simulation */}
-											<div className="flex items-center space-x-3">
-												<div className="w-12 h-12 bg-foreground/40 rounded-full"></div>
-												<div className="space-y-1">
-													<div className="h-3 bg-foreground/50 dark:bg-foreground/80 rounded w-24"></div>
-													<div className="h-2 bg-foreground/40 dark:bg-foreground/50 rounded w-20"></div>
-												</div>
-											</div>
-
-											{/* Content simulation */}
-											<div className="space-y-2">
-												<div className="h-2 bg-primary rounded w-16"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-full"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-3/4"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-5/6"></div>
-											</div>
-
-											<div className="space-y-2">
-												<div className="h-2 bg-primary rounded w-20"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-full"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-4/5"></div>
-											</div>
-
-											<div className="space-y-2">
-												<div className="h-2 bg-primary rounded w-16"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-full"></div>
-												<div className="h-1.5 bg-muted-foreground/40 rounded w-2/3"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div className="p-6">
-									<h3 className="text-xl font-semibold mb-2 text-foreground dark:text-slate-200">
-										{template.name}
-									</h3>
-									<p className="text-muted-foreground dark:text-slate-400 text-sm">
-										{template.description}
-									</p>
-								</div>
-							</Card>
+							<Template key={index} template={template} />
 						))}
 					</div>
 
