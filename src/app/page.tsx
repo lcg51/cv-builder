@@ -17,17 +17,17 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
 import { features, stats, steps } from './models/sections';
-import { TEMPLATES } from '@/templates';
 import { Template } from './components/Template';
-
-const templates = TEMPLATES.slice(1, 4);
+import { useTemplates } from '@/hooks/useTemplates';
 
 export default function Home() {
 	const { push } = useRouter();
 
 	const redirectToTemplates = useCallback(() => {
-		push('/resume/templates');
+		push('/templates');
 	}, []);
+
+	const { templates } = useTemplates({ isHomePage: true });
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/30 dark:from-slate-900 dark:to-slate-800">

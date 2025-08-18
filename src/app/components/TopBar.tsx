@@ -27,7 +27,7 @@ export type TopBarProps = {
 export default function TopBar({ user }: TopBarProps) {
 	const pathname = usePathname();
 	const { push } = useRouter();
-	const isResumeCreatePage = pathname.includes('/resume/create');
+	const isResumeCreatePage = pathname.includes('/templates');
 
 	const { triggerNavigationEvent } = useBrowserBackNavigation();
 

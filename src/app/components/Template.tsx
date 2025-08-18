@@ -20,13 +20,18 @@ export const Template = ({
 			}`}
 			onClick={() => onClickTemplate?.(template.id)}
 		>
-			{/* Template Preview Image */}
+			{/* Template Preview Image - Fixed Aspect Ratio Container */}
 			<div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800">
-				<Image
-					src={templateScreenshotsMap[template.preview]}
-					alt={`${template.name} preview`}
-					className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-				/>
+				{/* Fixed aspect ratio container (16:9 ratio) */}
+				<div className="relative w-full aspect-[4/3] md:aspect-[3/4] xl:aspect-[3/4]">
+					<Image
+						src={templateScreenshotsMap[template.preview]}
+						alt={`${template.name} preview`}
+						fill
+						className="object-contain transition-transform duration-300 group-hover:scale-110"
+						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+					/>
+				</div>
 
 				{/* Hover Overlay with Template Info */}
 				<div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -69,8 +74,8 @@ export const Template = ({
 
 				{/* Selection Indicator */}
 				{selectedTemplateId === template.id && (
-					<div className="absolute top-4 right-4 w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg">
-						<CheckIcon className="w-5 h-5 text-white" />
+					<div className="absolute top-4 right-4 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
+						<CheckIcon className="w-5 h-5 text-muted" />
 					</div>
 				)}
 
@@ -86,7 +91,7 @@ export const Template = ({
 
 			{/* Selection Overlay */}
 			{selectedTemplateId === template.id && (
-				<div className="absolute inset-0 bg-primary/5 border-2 border-primary rounded-lg pointer-events-none" />
+				<div className="absolute inset-0 bg-primary/5 border-2 border-muted rounded-lg pointer-events-none" />
 			)}
 		</Card>
 	);

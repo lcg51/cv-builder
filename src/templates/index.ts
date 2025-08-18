@@ -148,8 +148,12 @@ export function getAllTemplates(): Template[] {
 	return TEMPLATES.filter(template => template.isActive);
 }
 
+export function getHomePageTemplates(): Template[] {
+	return TEMPLATES.filter(template => template.isActive).slice(1, 4);
+}
+
 export function getTemplatesByCategory(category: Template['category']): Template[] {
-	return getAllTemplates().filter(template => template.category === category);
+	return TEMPLATES.filter(template => template.category === category);
 }
 
 export function searchTemplates(query: string): Template[] {
