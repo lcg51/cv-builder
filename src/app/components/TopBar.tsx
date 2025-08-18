@@ -19,6 +19,7 @@ import { UserProps } from '@/lib/models';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
 import { useMemo } from 'react';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
+import { uuidRegex } from '@/lib/utils';
 
 export type TopBarProps = {
 	user?: UserProps | null;
@@ -27,12 +28,13 @@ export type TopBarProps = {
 export default function TopBar({ user }: TopBarProps) {
 	const pathname = usePathname();
 	const { push } = useRouter();
-	const isResumeCreatePage = pathname.includes('/templates');
+
+	const isTemplateDetailPage = pathname.includes('/templates') && uuidRegex.test(pathname);
 
 	const { triggerNavigationEvent } = useBrowserBackNavigation();
 
 	const handleNavigation = (targetUrl: string) => {
-		if (!isResumeCreatePage) {
+		if (!isTemplateDetailPage) {
 			push(targetUrl);
 			return;
 		}
