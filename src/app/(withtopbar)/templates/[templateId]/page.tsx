@@ -11,10 +11,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { getTemplate, Template } from '@/templates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
-const TOPBAR_HEIGHT = 60;
-const CONTAINER_PADDING = 32; // 2rem = 32px (p-4 lg:p-6)
-const TOTAL_OFFSET = TOPBAR_HEIGHT + 2 * CONTAINER_PADDING;
-
 export default function CreateTemplate() {
 	const params = useParams();
 	const { push } = useRouter();
@@ -83,7 +79,6 @@ export default function CreateTemplate() {
 		if (navigationState === NavigationStateEnum.TEMPLATE_UPDATE) {
 			return (
 				<TemplateUpdate
-					totalOffset={TOTAL_OFFSET}
 					styles={styles}
 					compiledTemplate={compiledTemplate}
 					onTemplateDownload={onTemplateDownload}
@@ -116,7 +111,7 @@ export default function CreateTemplate() {
 
 	return (
 		<div
-			className={`flex justify-center items-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-[calc(100vh-60px)]`}
+			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 md:min-h-[calc(100vh-60px)]`}
 		>
 			{/* Exit Disclaimer Dialog */}
 			<ModalDisclaimer
