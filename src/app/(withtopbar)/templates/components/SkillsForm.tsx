@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react';
 import { SkillType } from '@/app/models/user';
-import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,8 +9,9 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
-import { SkillsIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import { SkillsIcon, PlusIcon } from '@/components/icons/FormIcons';
 import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	skillsForms: z.array(
@@ -30,7 +30,7 @@ const formSchema = z.object({
 
 export type SkillsFormProps = StepsBarComponentProps;
 
-export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFormProps) => {
+export const SkillsForm = ({ initialValues, onFieldChange, formId }: SkillsFormProps) => {
 	const skillsForms = initialValues?.skills ?? ([] as unknown as SkillType[]);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -39,20 +39,34 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 		}
 	});
 
-	const { control, handleSubmit, watch } = form;
+	const { control, watch, trigger } = form;
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: 'skillsForms'
 	});
 
+	// Register form validation with StepsBar
+	const { registerForm, unregisterForm } = useFormValidation();
+
+	useEffect(() => {
+		// Only register validation if formId is provided
+		if (formId) {
+			registerForm(formId, async () => {
+				const isValid = await trigger();
+				return isValid;
+			});
+
+			// Cleanup on unmount
+			return () => {
+				unregisterForm(formId);
+			};
+		}
+	}, [formId, registerForm, unregisterForm, trigger]);
+
 	useEffect(() => {
 		const subscription = watch(values => onFieldChange?.('skills', values.skillsForms));
 		return () => subscription.unsubscribe();
 	}, [watch, onFieldChange]);
-
-	const onSubmit = () => {
-		onSuccess?.();
-	};
 
 	return (
 		<div>
@@ -72,7 +86,7 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 				</div>
 			</div>
 			<Form {...form}>
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+				<div className="space-y-6">
 					{fields.map((field, index) => (
 						<div
 							key={field.id}
@@ -148,7 +162,7 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 					<div className="flex justify-center">
 						<button
 							type="button"
-							className="flex items-center gap-2 px-6 py-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 hover:border-primary hover:text-primary transition-colors duration-200"
+							className="flex justify-center gap-2 px-6 py-3 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg text-slate-600 dark:text-slate-400 hover:border-primary hover:text-primary transition-colors duration-200"
 							onClick={() =>
 								append({
 									title: '',
@@ -160,15 +174,7 @@ export const SkillsForm = ({ initialValues, onSuccess, onFieldChange }: SkillsFo
 							Add Another Skill
 						</button>
 					</div>
-
-					<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
-						<div className="text-sm text-slate-500 dark:text-slate-400">Step 4 of 6</div>
-						<Button variant="default" type="submit" className="px-2 py-2 h-11">
-							Continue
-							<ArrowRightIcon className="w-4 h-4" />
-						</Button>
-					</div>
-				</form>
+				</div>
 			</Form>
 		</div>
 	);

@@ -1,6 +1,6 @@
 import { StepsBar } from '@/components/ui/StepsBar/StepsBar';
 import { TemplatePreviewer } from '@/components/ui/TemplatePreviewer/TemplatePreviewer';
-import { EyeIcon } from 'lucide-react';
+import { EyeIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';
@@ -13,13 +13,12 @@ import { deserializeDates, needsDateConversion } from '@/lib/helpers';
 import { UserDataType } from '@/app/models/user';
 
 type TemplateUpdateProps = {
-	totalOffset: number;
 	compiledTemplate: ((userData: UserDataType) => string) | null;
 	styles: string;
 	onTemplateDownload: () => void;
 };
 
-export const TemplateUpdate = ({ totalOffset, compiledTemplate, styles, onTemplateDownload }: TemplateUpdateProps) => {
+export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }: TemplateUpdateProps) => {
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const updateResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.updateResumeUserData);
@@ -65,15 +64,12 @@ export const TemplateUpdate = ({ totalOffset, compiledTemplate, styles, onTempla
 	}, []);
 
 	return (
-		<div className="container mx-auto p-4 lg:p-6 pb-10">
+		<div className="2xl:container 2xl:mx-auto p-4 pb-10">
 			{/* Main Content */}
-			<div
-				className="flex flex-col xl:flex-row gap-6 h-auto"
-				style={{ height: `calc(100vh - ${totalOffset}px)` }}
-			>
+			<div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[calc(100vh-115px)]">
 				{/* Form Section - Hidden on mobile when preview is active */}
 				<div
-					className={`${showMobilePreview ? 'xl:block hidden' : 'block'} w-full h-full xl:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
+					className={`${showMobilePreview ? 'lg:block hidden' : 'block'} w-full h-full lg:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
 				>
 					<div className="p-4 lg:p-6 h-full xl:h-full flex flex-col">
 						<StepsBar
@@ -88,7 +84,7 @@ export const TemplateUpdate = ({ totalOffset, compiledTemplate, styles, onTempla
 
 				{/* Preview Section - Desktop always visible, mobile conditionally visible */}
 				<div
-					className={`h-full ${showMobilePreview ? 'block' : 'hidden'} xl:flex w-full xl:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
+					className={`h-full ${showMobilePreview ? 'block' : 'hidden'} lg:flex w-full lg:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
 				>
 					<div className="flex flex-col w-full h-full xl:h-full">
 						<div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex-shrink-0">
@@ -100,16 +96,9 @@ export const TemplateUpdate = ({ totalOffset, compiledTemplate, styles, onTempla
 								{/* Mobile Close Button */}
 								<button
 									onClick={toggleMobilePreview}
-									className="xl:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
+									className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
 								>
-									<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											strokeWidth={2}
-											d="M6 18L18 6M6 6l12 12"
-										/>
-									</svg>
+									<XIcon className="w-5 h-5" />
 								</button>
 							</div>
 						</div>
@@ -124,7 +113,9 @@ export const TemplateUpdate = ({ totalOffset, compiledTemplate, styles, onTempla
 				</div>
 
 				{/* Mobile Preview Button */}
-				<div className={`xl:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'hidden' : 'block'}`}>
+				<div
+					className={`hidden sm:hidden md:block lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'md:hidden' : 'sm:hidden md:block lg:hidden'}`}
+				>
 					<button
 						onClick={toggleMobilePreview}
 						className="bg-primary hover:bg-primary/90 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"

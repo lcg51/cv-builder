@@ -4,13 +4,14 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon, CheckCircleIcon, LockIcon } from '@/components/icons/FormIcons';
 import { CheckIcon } from 'lucide-react';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { UserDataType } from '@/app/models/user';
 
-export type TemplateDownloadProps = StepsBarComponentProps & {
+export type TemplateDownloadProps = {
 	onDownloadPDF?: () => void;
 	isDownloadEnabled?: boolean;
 	isDownloading?: boolean;
 	templateId?: string;
+	initialValues?: UserDataType;
 };
 
 export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initialValues }: TemplateDownloadProps) => {

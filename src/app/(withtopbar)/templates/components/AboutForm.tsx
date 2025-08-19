@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import React, { useEffect } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { AboutIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import { AboutIcon } from '@/components/icons/FormIcons';
 import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	aboutMe: z.string().min(2, {
@@ -37,15 +37,33 @@ const formSchema = z.object({
 		.or(z.literal(''))
 });
 
-export type ContactFormPropsType = StepsBarComponentProps;
+export type AboutFormPropsType = StepsBarComponentProps;
 
-export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFormPropsType) => {
+export const AboutForm = ({ initialValues, onFieldChange, formId }: AboutFormPropsType) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			...initialValues
 		}
 	});
+
+	// Register form validation with StepsBar
+	const { registerForm, unregisterForm } = useFormValidation();
+
+	useEffect(() => {
+		// Only register validation if formId is provided
+		if (formId) {
+			registerForm(formId, async () => {
+				const isValid = await form.trigger();
+				return isValid;
+			});
+
+			// Cleanup on unmount
+			return () => {
+				unregisterForm(formId);
+			};
+		}
+	}, [formId, registerForm, unregisterForm, form]);
 
 	useEffect(() => {
 		const subscription = form.watch(values => {
@@ -56,10 +74,6 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 		return () => subscription.unsubscribe();
 	}, [form.watch, onFieldChange]);
 
-	// 2. Define a submit handler.
-	function onSubmit() {
-		onSuccess?.();
-	}
 	return (
 		<Form {...form}>
 			<div className="mb-6">
@@ -77,7 +91,7 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 					</div>
 				</div>
 			</div>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+			<div className="space-y-6">
 				<div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700 space-y-6">
 					<FormField
 						control={form.control}
@@ -150,14 +164,7 @@ export const AboutForm = ({ initialValues, onFieldChange, onSuccess }: ContactFo
 						)}
 					/>
 				</div>
-				<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
-					<div className="text-sm text-slate-500 dark:text-slate-400">Step 5 of 6</div>
-					<Button variant="default" type="submit" className="px-2 py-2 h-11">
-						Continue
-						<ArrowRightIcon className="w-4 h-4" />
-					</Button>
-				</div>
-			</form>
+			</div>
 		</Form>
 	);
 };

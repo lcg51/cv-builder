@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -11,8 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Textarea } from '@/components/ui/textarea';
-import { ExperienceIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import { ExperienceIcon, PlusIcon } from '@/components/icons/FormIcons';
 import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	experienceForms: z.array(
@@ -39,7 +39,7 @@ const formSchema = z.object({
 
 export type ExperienceFormProps = StepsBarComponentProps;
 
-export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: ExperienceFormProps) => {
+export const ExperienceForm = ({ initialValues, onFieldChange, formId }: ExperienceFormProps) => {
 	// Convert string dates to Date objects and provide defaults
 	const experienceForms = (initialValues?.workExperience ?? []).map(exp => ({
 		...exp,
@@ -54,11 +54,29 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 		}
 	});
 
-	const { control, handleSubmit, watch } = form;
+	const { control, watch, trigger } = form;
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: 'experienceForms'
 	});
+
+	// Register form validation with StepsBar
+	const { registerForm, unregisterForm } = useFormValidation();
+
+	useEffect(() => {
+		// Only register validation if formId is provided
+		if (formId) {
+			registerForm(formId, async () => {
+				const isValid = await trigger();
+				return isValid;
+			});
+
+			// Cleanup on unmount
+			return () => {
+				unregisterForm(formId);
+			};
+		}
+	}, [formId, registerForm, unregisterForm, trigger]);
 
 	useEffect(() => {
 		const subscription = watch(values => {
@@ -66,10 +84,6 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 		});
 		return () => subscription.unsubscribe();
 	}, [watch, onFieldChange]);
-
-	const onSubmit = () => {
-		onSuccess?.();
-	};
 
 	return (
 		<div>
@@ -87,7 +101,7 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 				</div>
 			</div>
 			<Form {...form}>
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+				<div className="space-y-6">
 					{fields.map((field, index) => (
 						<div
 							key={field.id}
@@ -136,7 +150,7 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 												</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Google Inc."
+														placeholder="Google"
 														className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
 														{...field}
 													/>
@@ -146,7 +160,7 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 										)}
 									/>
 								</div>
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<FormField
 										control={control}
 										name={`experienceForms.${index}.startDate`}
@@ -239,15 +253,7 @@ export const ExperienceForm = ({ initialValues, onSuccess, onFieldChange }: Expe
 							Add Another Experience
 						</button>
 					</div>
-
-					<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
-						<div className="text-sm text-slate-500 dark:text-slate-400">Step 2 of 6</div>
-						<Button variant="default" type="submit" className="px-2 py-2 h-11">
-							Continue
-							<ArrowRightIcon className="w-4 h-4" />
-						</Button>
-					</div>
-				</form>
+				</div>
 			</Form>
 		</div>
 	);

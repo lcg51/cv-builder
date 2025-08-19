@@ -54,19 +54,6 @@ export default function TopBar({ user }: TopBarProps) {
 
 	return (
 		<header className="flex justify-between sticky top-0 z-40 h-14 items-center gap-4 bg-white dark:bg-slate-900 px-4 lg:h-[60px] lg:px-6 topbar-header">
-			{/* Back Navigation / Home Button */}
-			{/* {isOnCreatePage && (
-				<Button
-					variant="ghost"
-					size="sm"
-					className="inline-flex items-center gap-2"
-					onClick={() => handleNavigation('/')}
-				>
-					<ArrowLeft className="h-4 w-4" color="var(--primary)" />
-					<span className="hidden sm:inline text-muted hover:text-foreground">Back to Home</span>
-				</Button>
-			)} */}
-
 			{/* Logo - Always visible */}
 			<div
 				onClick={() => handleNavigation('/')}

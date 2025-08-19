@@ -1,14 +1,33 @@
 'use client';
-import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { FC, useCallback, useMemo, useState, useEffect, createContext, useContext, useRef } from 'react';
 import './StepsBar.css';
 import { useWindowSize } from '../../../hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from '@/components/icons/FormIcons';
+import { Button } from '@/components/ui/button';
+import { ArrowRightIcon } from '@/components/icons/FormIcons';
+
+// Form validation context
+export type FormValidationContextType = {
+	registerForm: (formId: string | undefined, validate: () => Promise<boolean>) => void;
+	unregisterForm: (formId: string | undefined) => void;
+	submitCurrentForm: () => Promise<boolean>;
+};
+
+const FormValidationContext = createContext<FormValidationContextType | null>(null);
+
+export const useFormValidation = () => {
+	const context = useContext(FormValidationContext);
+	if (!context) {
+		throw new Error('useFormValidation must be used within a FormValidationProvider');
+	}
+	return context;
+};
 
 export type StepsBarComponentProps = {
-	onSuccess?: () => void;
 	onFieldChange?: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
+	formId?: string; // Make formId optional since some forms (like FinishForm) don't need validation
 };
 
 export type StepsBarItemsProps = {
@@ -35,9 +54,39 @@ export const StepsBar = ({
 }: StepsBarProps) => {
 	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
 	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
+	const formValidatorsRef = useRef<Map<string, () => Promise<boolean>>>(new Map());
 	const { width } = useWindowSize();
 	const isTabletResolution = width < 1024;
 	const isLastStep = selectedIndex === stepItems.length - 1;
+
+	// Form validation context value
+	const formValidationContextValue = useMemo<FormValidationContextType>(
+		() => ({
+			registerForm: (formId: string | undefined, validate: () => Promise<boolean>) => {
+				if (formId) {
+					formValidatorsRef.current.set(formId, validate);
+				}
+			},
+			unregisterForm: (formId: string | undefined) => {
+				if (formId) {
+					formValidatorsRef.current.delete(formId);
+				}
+			},
+			submitCurrentForm: async () => {
+				const currentFormId = items[selectedIndex]?.title.toLowerCase().replace(/\s+/g, '-');
+				// If no formId is provided for the current step, allow progression
+				if (!currentFormId) {
+					return true;
+				}
+				const validator = formValidatorsRef.current.get(currentFormId);
+				if (validator) {
+					return await validator();
+				}
+				return true; // If no validator, allow progression
+			}
+		}),
+		[selectedIndex, items]
+	);
 
 	// Sync selectedIndex with activeStep prop when it changes (e.g., when data is loaded from Zustand)
 	useEffect(() => {
@@ -51,7 +100,13 @@ export const StepsBar = ({
 		setStepItems(newItems);
 	}, [activeStep, items]);
 
-	const onSetNextStep = useCallback(() => {
+	const onSetNextStep = useCallback(async () => {
+		// Validate current form before proceeding
+		const isValid = await formValidationContextValue.submitCurrentForm();
+		if (!isValid) {
+			return; // Don't proceed if validation fails
+		}
+
 		if (isLastStep) {
 			onNextStepCallback?.(selectedIndex + 1);
 			return;
@@ -64,7 +119,7 @@ export const StepsBar = ({
 		setStepItems(newItems);
 		setSelectedIndex(selectedIndex + 1);
 		onNextStepCallback?.(selectedIndex + 1);
-	}, [selectedIndex, stepItems]);
+	}, [selectedIndex, stepItems, isLastStep, onNextStepCallback, formValidationContextValue]);
 
 	const onClickStepItem = useCallback(
 		({ item, index }: { item: StepsBarItemsProps; index: number }) => {
@@ -85,12 +140,13 @@ export const StepsBar = ({
 	const stepsViewRender = useMemo(() => {
 		return stepItems.map(({ component }, index) => {
 			const ComponentView = component;
+			const formId = stepItems[index]?.title.toLowerCase().replace(/\s+/g, '-');
 
 			return (
 				selectedIndex === index && (
 					<div key={index}>
 						<ComponentView
-							onSuccess={onSetNextStep}
+							formId={formId}
 							onFieldChange={onFieldChangeCallback}
 							initialValues={initialValues}
 						/>
@@ -98,7 +154,7 @@ export const StepsBar = ({
 				)
 			);
 		});
-	}, [stepItems, selectedIndex, onSetNextStep, onFieldChangeCallback, initialValues]);
+	}, [stepItems, selectedIndex, onFieldChangeCallback, initialValues]);
 
 	const stepsTabsRender = useMemo(() => {
 		if (isTabletResolution) {
@@ -176,7 +232,7 @@ export const StepsBar = ({
 						{isCompleted ? (
 							<CheckIcon />
 						) : (
-							<span className="text-sm text-foreground font-bold">{index + 1}</span>
+							<span className="text-sm text-foreground dark:text-slate-500 font-bold">{index + 1}</span>
 						)}
 					</div>
 				</div>
@@ -185,40 +241,58 @@ export const StepsBar = ({
 	}, [stepItems, selectedIndex, isTabletResolution, onClickStepItem]);
 
 	return (
-		<div className="flex flex-col w-full h-full xl:flex-1">
-			{/* Progress Bar */}
-			<div className="mb-8">
-				<div className="flex justify-between items-center mb-2">
-					<span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-						Step {selectedIndex + 1} of {stepItems.length}
-					</span>
-					<span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-						{Math.round(((selectedIndex + 1) / stepItems.length) * 100)}% Complete
-					</span>
+		<FormValidationContext.Provider value={formValidationContextValue}>
+			<div className="flex flex-col w-full h-full xl:flex-1">
+				{/* Progress Bar */}
+				<div className="mb-8">
+					<div className="flex justify-between items-center mb-2">
+						<span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+							Step {selectedIndex + 1} of {stepItems.length}
+						</span>
+						<span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+							{Math.round(((selectedIndex + 1) / stepItems.length) * 100)}% Complete
+						</span>
+					</div>
+					<div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-6">
+						<div
+							className="bg-primary h-2 rounded-full transition-all duration-300 ease-out"
+							style={{ width: `${((selectedIndex + 1) / stepItems.length) * 100}%` }}
+						></div>
+					</div>
 				</div>
-				<div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-6">
+
+				{/* Steps Navigation */}
+				<div className="flex justify-between w-full relative mb-8">
+					<div className="absolute top-5 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-700"></div>
 					<div
-						className="bg-primary h-2 rounded-full transition-all duration-300 ease-out"
-						style={{ width: `${((selectedIndex + 1) / stepItems.length) * 100}%` }}
+						data-testid="steps-bar-fill"
+						className="absolute top-5 left-0 h-0.5 bg-primary transition-all duration-300 ease-out"
+						style={{ width: `${(selectedIndex / (stepItems.length - 1)) * 100}%` }}
 					></div>
+					{stepsTabsRender}
+				</div>
+
+				<div className="flex flex-col bg-slate-50 dark:bg-slate-900 rounded-lg lg:overflow-y-auto">
+					{/* Form Content */}
+					<div className="p-6 xl:flex-1 overflow-y-auto min-h-0">{stepsViewRender}</div>
+
+					{/* Centralized Submit Button */}
+					<div className="sticky xl:relative bottom-0 left-0 right-0 bg-white dark:bg-slate-900 md:relative flex justify-between items-center p-6 border-t border-slate-200 dark:border-slate-700 mt-6">
+						<div className="text-sm text-slate-500 dark:text-slate-400">
+							Step {selectedIndex + 1} of {stepItems.length}
+						</div>
+						<Button
+							variant="default"
+							onClick={onSetNextStep}
+							className="px-6 py-2 h-11"
+							disabled={!stepItems[selectedIndex]?.active}
+						>
+							{isLastStep ? 'Finish' : 'Continue'}
+							<ArrowRightIcon className="w-4 h-4" />
+						</Button>
+					</div>
 				</div>
 			</div>
-
-			{/* Steps Navigation */}
-			<div className="flex justify-between w-full relative mb-8">
-				<div className="absolute top-5 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-700"></div>
-				<div
-					data-testid="steps-bar-fill"
-					className="absolute top-5 left-0 h-0.5 bg-primary transition-all duration-300 ease-out"
-					style={{ width: `${(selectedIndex / (stepItems.length - 1)) * 100}%` }}
-				></div>
-				{stepsTabsRender}
-			</div>
-
-			{/* Form Content */}
-			<div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-6 xl:flex-1 overflow-y-auto min-h-0">
-				{stepsViewRender}
-			</div>
-		</div>
+		</FormValidationContext.Provider>
 	);
 };
