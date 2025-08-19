@@ -7,6 +7,18 @@ const nextConfig = {
 				hostname: 'lh3.googleusercontent.com',
 				port: '',
 				pathname: '/**'
+			},
+			{
+				protocol: 'http',
+				hostname: 'localhost',
+				port: '1337',
+				pathname: '/uploads/**'
+			},
+			{
+				protocol: 'https',
+				hostname: 'glorious-fitness-badee061c9.media.strapiapp.com',
+				port: '',
+				pathname: '/**'
 			}
 		]
 	},

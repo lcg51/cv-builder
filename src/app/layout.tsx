@@ -5,6 +5,8 @@ import React from 'react';
 import TopBar from './components/TopBar';
 import { auth } from '@/auth';
 import { UserProps } from '@/lib/models';
+import getHypertune from '@/hypertune';
+import { HypertuneProvider } from '../../generated/hypertune.react';
 
 export const metadata: Metadata = {
 	title: 'CV Builder',
@@ -23,12 +25,24 @@ export default async function RootLayout({
 }>) {
 	const session = await auth();
 
+	const hypertune = await getHypertune();
+
+	const serverDehydratedState = hypertune.dehydrate();
+	const serverRootArgs = hypertune.getRootArgs();
+
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<head>
-				<script
-					dangerouslySetInnerHTML={{
-						__html: `
+		<HypertuneProvider
+			createSourceOptions={{
+				token: process.env.NEXT_PUBLIC_HYPERTUNE_TOKEN!
+			}}
+			dehydratedState={serverDehydratedState}
+			rootArgs={serverRootArgs}
+		>
+			<html lang="en" suppressHydrationWarning>
+				<head>
+					<script
+						dangerouslySetInnerHTML={{
+							__html: `
 							// On page load or when changing themes, best to add inline in \`head\` to avoid FOUC
 							document.documentElement.classList.toggle(
 								"dark",
@@ -42,15 +56,16 @@ export default async function RootLayout({
 							// Whenever the user explicitly chooses to respect the OS preference
 							localStorage.removeItem("theme");
 						`
-					}}
-				/>
-			</head>
-			<body className="antialiased">
-				<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-					<TopBar user={(session?.user as unknown as UserProps) || null} />
-					{children}
-				</ThemeProvider>
-			</body>
-		</html>
+						}}
+					/>
+				</head>
+				<body className="antialiased">
+					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+						<TopBar user={(session?.user as unknown as UserProps) || null} />
+						{children}
+					</ThemeProvider>
+				</body>
+			</html>
+		</HypertuneProvider>
 	);
 }
