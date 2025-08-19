@@ -4,14 +4,14 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import React, { useEffect } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
-import { EducationIcon, PlusIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import { EducationIcon, PlusIcon } from '@/components/icons/FormIcons';
 import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	educationForms: z.array(
@@ -40,7 +40,7 @@ const formSchema = z.object({
 
 export type EducationFormPropsType = StepsBarComponentProps;
 
-export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: EducationFormPropsType) => {
+export const EducationForm = ({ initialValues, onFieldChange, formId }: EducationFormPropsType) => {
 	// Convert string dates to Date objects and provide defaults
 	const educationForms = (initialValues?.education ?? []).map(edu => ({
 		...edu,
@@ -54,11 +54,29 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 		}
 	});
 
-	const { control, handleSubmit, watch } = form;
+	const { control, watch, trigger } = form;
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: 'educationForms'
 	});
+
+	// Register form validation with StepsBar
+	const { registerForm, unregisterForm } = useFormValidation();
+
+	useEffect(() => {
+		// Only register validation if formId is provided
+		if (formId) {
+			registerForm(formId, async () => {
+				const isValid = await trigger();
+				return isValid;
+			});
+
+			// Cleanup on unmount
+			return () => {
+				unregisterForm(formId);
+			};
+		}
+	}, [formId, registerForm, unregisterForm, trigger]);
 
 	useEffect(() => {
 		const subscription = watch(values => {
@@ -66,10 +84,6 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 		});
 		return () => subscription.unsubscribe();
 	}, [watch, onFieldChange]);
-
-	function onSubmit() {
-		onSuccess?.();
-	}
 
 	return (
 		<div>
@@ -87,7 +101,7 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 				</div>
 			</div>
 			<Form {...form}>
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+				<div className="space-y-6">
 					{fields.map((field, index) => (
 						<div
 							key={field.id}
@@ -224,15 +238,7 @@ export const EducationForm = ({ initialValues, onFieldChange, onSuccess }: Educa
 							Add Another Education
 						</button>
 					</div>
-
-					<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
-						<div className="text-sm text-slate-500 dark:text-slate-400">Step 3 of 6</div>
-						<Button variant="default" type="submit" className="px-2 py-2 h-11">
-							Continue
-							<ArrowRightIcon className="w-4 h-4" />
-						</Button>
-					</div>
-				</form>
+				</div>
 			</Form>
 		</div>
 	);

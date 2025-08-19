@@ -74,7 +74,7 @@ export const TemplateUpdateSkeleton: React.FC = () => {
 
 						{/* Preview Content */}
 						<div className="flex-1 p-4 bg-slate-100 dark:bg-slate-900">
-							<div className="max-w-[8.5in] mx-auto bg-white shadow-lg">
+							<div className="max-w-[8.5in] mx-auto bg-white dark:bg-slate-800 shadow-lg">
 								{/* Resume Header Skeleton */}
 								<div className="p-6 border-b border-slate-200">
 									<Skeleton className="h-8 w-48 mx-auto mb-4" />

@@ -113,7 +113,9 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 				</div>
 
 				{/* Mobile Preview Button */}
-				<div className={`lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'hidden' : 'block'}`}>
+				<div
+					className={`hidden sm:hidden md:block lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'md:hidden' : 'sm:hidden md:block lg:hidden'}`}
+				>
 					<button
 						onClick={toggleMobilePreview}
 						className="bg-primary hover:bg-primary/90 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"

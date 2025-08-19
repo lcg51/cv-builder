@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import React, { useEffect } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ContactIcon, ArrowRightIcon } from '@/components/icons/FormIcons';
+import { ContactIcon } from '@/components/icons/FormIcons';
 import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
 
 const formSchema = z.object({
 	firstName: z.string().min(2, {
@@ -38,13 +38,31 @@ const formSchema = z.object({
 
 export type ContactFormPropsType = StepsBarComponentProps;
 
-export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: ContactFormPropsType) => {
+export const ContactForm = ({ initialValues, onFieldChange, formId }: ContactFormPropsType) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			...initialValues
 		}
 	});
+
+	// Register form validation with StepsBar
+	const { registerForm, unregisterForm } = useFormValidation();
+
+	useEffect(() => {
+		// Only register validation if formId is provided
+		if (formId) {
+			registerForm(formId, async () => {
+				const isValid = await form.trigger();
+				return isValid;
+			});
+
+			// Cleanup on unmount
+			return () => {
+				unregisterForm(formId);
+			};
+		}
+	}, [formId, registerForm, unregisterForm, form]);
 
 	useEffect(() => {
 		const subscription = form.watch(values => {
@@ -55,12 +73,8 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 		return () => subscription.unsubscribe();
 	}, [form.watch, onFieldChange]);
 
-	// 2. Define a submit handler.
-	function onSubmit() {
-		onSuccess?.();
-	}
 	return (
-		<Form {...form}>
+		<>
 			<div className="mb-6">
 				<div className="flex items-center gap-3 mb-3">
 					<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
@@ -76,133 +90,128 @@ export const ContactForm = ({ initialValues, onFieldChange, onSuccess }: Contact
 					</div>
 				</div>
 			</div>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-					<FormField
-						control={form.control}
-						name="firstName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									First Name
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="John"
-										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="lastName"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									Last Name
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="Doe"
-										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="email"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									Email Address
-								</FormLabel>
-								<FormControl>
-									<Input
-										type="email"
-										placeholder="john.doe@example.com"
-										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="phone"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									Phone Number
-								</FormLabel>
-								<FormControl>
-									<Input
-										type="tel"
-										placeholder="+1 (555) 123-4567"
-										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="city"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									City
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="New York"
-										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="postalCode"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									Postal Code
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="10001"
-										className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+			<Form {...form}>
+				<div className="space-y-6">
+					<div className="grid grid-cols-1 gap-6 md:grid-cols-2 bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+										First Name
+									</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="John"
+											className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+										Last Name
+									</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="Doe"
+											className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+										Email Address
+									</FormLabel>
+									<FormControl>
+										<Input
+											type="email"
+											placeholder="john.doe@example.com"
+											className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="phone"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+										Phone Number
+									</FormLabel>
+									<FormControl>
+										<Input
+											type="tel"
+											placeholder="+1 (555) 123-4567"
+											className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="city"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+										City
+									</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="New York"
+											className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="postalCode"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+										Postal Code
+									</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="10001"
+											className="h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
 				</div>
-				<div className="flex justify-between items-center pt-6 border-t border-slate-200 dark:border-slate-700">
-					<div className="text-sm text-slate-500 dark:text-slate-400">Step 1 of 6</div>
-					<Button variant="default" type="submit" className="px-2 py-2 h-11">
-						Continue
-						<ArrowRightIcon className="w-4 h-4" />
-					</Button>
-				</div>
-			</form>
-		</Form>
+			</Form>
+		</>
 	);
 };
