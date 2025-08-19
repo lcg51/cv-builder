@@ -17,8 +17,8 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
 import { features, stats, steps } from './models/sections';
-import { Template } from './components/Template';
-import { useTemplates } from '@/hooks/useTemplates';
+import { useHypertune } from '../../generated/hypertune.react';
+import { HomeTemplates } from './components/HomeTemplates';
 
 export default function Home() {
 	const { push } = useRouter();
@@ -27,7 +27,9 @@ export default function Home() {
 		push('/templates');
 	}, []);
 
-	const { templates } = useTemplates({ isHomePage: true });
+	const hypertune = useHypertune();
+
+	const isTemplatesV2Enabled = hypertune.isV2TemplatesEnabled({ fallback: false });
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/30 dark:from-slate-900 dark:to-slate-800">
@@ -121,11 +123,7 @@ export default function Home() {
 						</p>
 					</div>
 
-					<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-						{templates.map((template, index) => (
-							<Template key={index} template={template} />
-						))}
-					</div>
+					<HomeTemplates isTemplatesV2Enabled={isTemplatesV2Enabled} />
 
 					<div className="text-center mt-12">
 						<Button variant="outline" size="lg" onClick={redirectToTemplates}>

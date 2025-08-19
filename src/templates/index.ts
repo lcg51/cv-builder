@@ -1,7 +1,13 @@
 import { template1Screenshot, template2Screenshot, template3Screenshot, template4Screenshot } from '@/assets';
-import { v4 as uuidv4 } from 'uuid';
 
 export type TemplateCategory = 'professional' | 'creative' | 'modern' | 'minimal';
+
+export type Feature = {
+	id: string;
+	name: string;
+	description: string;
+	documentId: string;
+};
 
 export interface Template {
 	id: string;
@@ -20,6 +26,27 @@ export interface Template {
 	features: string[];
 }
 
+export type TemplateV2Props = {
+	id: string;
+	name: string;
+	description: string;
+	category: TemplateCategory;
+	preview: string;
+	previewImage: string;
+	previewImageUrl: string;
+	tags: string[];
+	features: Feature[];
+	imagePreview?: {
+		url: string;
+		alternativeText: string;
+		previewUrl?: string;
+		width: number;
+		height: number;
+		formats: any;
+		name: string;
+	};
+};
+
 // Map template preview names to their screenshot images
 export const templateScreenshotsMap: Record<string, any> = {
 	template1: template1Screenshot,
@@ -27,14 +54,6 @@ export const templateScreenshotsMap: Record<string, any> = {
 	template3: template3Screenshot,
 	template4: template4Screenshot
 };
-
-/**
- * Generates a UUID v4 for templates
- * @returns A unique UUID string
- */
-export function generateTemplateId(): string {
-	return uuidv4();
-}
 
 export const TEMPLATES: Template[] = [
 	{
