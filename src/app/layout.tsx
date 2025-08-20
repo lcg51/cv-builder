@@ -39,27 +39,7 @@ export default async function RootLayout({
 			rootArgs={serverRootArgs}
 		>
 			<html lang="en" suppressHydrationWarning>
-				<head>
-					<script
-						dangerouslySetInnerHTML={{
-							__html: `
-							// On page load or when changing themes, best to add inline in \`head\` to avoid FOUC
-							document.documentElement.classList.toggle(
-								"dark",
-								localStorage.theme === "dark" ||
-									(!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
-							);
-							// Whenever the user explicitly chooses light mode
-							localStorage.theme = "light";
-							// Whenever the user explicitly chooses dark mode
-							localStorage.theme = "dark";
-							// Whenever the user explicitly chooses to respect the OS preference
-							localStorage.removeItem("theme");
-						`
-						}}
-					/>
-				</head>
-				<body className="antialiased">
+				<body className="antialiased bg-white dark:bg-slate-900">
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 						<TopBar user={(session?.user as unknown as UserProps) || null} />
 						{children}
