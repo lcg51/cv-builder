@@ -1,17 +1,12 @@
 'use client';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { TemplateSkeleton } from './components/TemplateSkeleton';
 import { TemplateSelection } from './components/TemplateSelection';
-import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useRouter } from 'next/navigation';
 import { useTemplates } from '@/hooks/useTemplates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 import { RefreshCwIcon } from 'lucide-react';
 
 export default function Templates() {
-	const { push } = useRouter();
-	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
-
 	const {
 		templates,
 		loading: isLoading,
@@ -21,16 +16,6 @@ export default function Templates() {
 		resetToAllTemplates,
 		clearError
 	} = useTemplates();
-
-	const handleTemplateSelect = useCallback(
-		async (templateId: string) => {
-			setSelectedTemplate(templateId);
-
-			await new Promise(resolve => setTimeout(resolve, 100));
-			push(`/templates/${templateId}`);
-		},
-		[setSelectedTemplate, push]
-	);
 
 	const handleRetry = () => {
 		clearError();
@@ -54,7 +39,6 @@ export default function Templates() {
 		}
 		return (
 			<TemplateSelection
-				onTemplateSelect={handleTemplateSelect}
 				templates={templates}
 				searchTemplatesByQuery={searchTemplatesByQuery}
 				resetToAllTemplates={resetToAllTemplates}

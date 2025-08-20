@@ -1,9 +1,11 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { SearchIcon, FilterIcon } from 'lucide-react';
 import { type Template as TemplateType, type TemplateCategory } from '@/templates';
 import { Template } from '../../../components/Template';
+import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
+import { useRouter } from 'next/navigation';
 
 type TemplateCategoryFilter = 'all' | TemplateCategory;
 
@@ -12,11 +14,9 @@ interface TemplateSelectionProps {
 	searchTemplatesByQuery: (query: string) => void;
 	resetToAllTemplates: () => void;
 	loadTemplatesByCategory: (category: TemplateCategory) => void;
-	onTemplateSelect: (templateId: string) => void;
 }
 
 export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
-	onTemplateSelect,
 	templates,
 	searchTemplatesByQuery,
 	resetToAllTemplates,
@@ -25,6 +25,17 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 	const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
 	const [searchQuery, setSearchQuery] = useState<string>('');
 	const [selectedCategory, setSelectedCategory] = useState<TemplateCategoryFilter>('all');
+	const { push } = useRouter();
+	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
+
+	const onSelectTemplate = (templateId: string) => {
+		setSelectedTemplateId(templateId);
+		setSelectedTemplate(templateId);
+	};
+
+	const handleProceedToTemplate = useCallback(() => {
+		push(`/templates/${selectedTemplateId}`);
+	}, [push, selectedTemplateId]);
 
 	// Handle search
 	const handleSearch = (query: string) => {
@@ -44,10 +55,6 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 		} else {
 			loadTemplatesByCategory(category as TemplateType['category']);
 		}
-	};
-
-	const handleTemplateSelect = () => {
-		onTemplateSelect(selectedTemplateId);
 	};
 
 	return (
@@ -137,7 +144,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 										key={template.id}
 										template={template}
 										selectedTemplateId={selectedTemplateId}
-										onClickTemplate={setSelectedTemplateId}
+										onClickTemplate={onSelectTemplate}
 									/>
 								))}
 							</div>
@@ -193,7 +200,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 						{/* Action Buttons */}
 						<div className="text-center">
 							<Button
-								onClick={handleTemplateSelect}
+								onClick={handleProceedToTemplate}
 								disabled={!selectedTemplateId}
 								size="lg"
 								className="px-8 py-3 text-lg"

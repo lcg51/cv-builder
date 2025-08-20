@@ -10,7 +10,6 @@ export type TemplateDownloadProps = {
 	onDownloadPDF?: () => void;
 	isDownloadEnabled?: boolean;
 	isDownloading?: boolean;
-	templateId?: string;
 	initialValues?: UserDataType;
 };
 
@@ -78,101 +77,6 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 				</div>
 			</div>
 
-			{/* Template Information Card */}
-			{/* <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6">
-				<div className="flex items-start gap-4">
-					<div className="flex-shrink-0">
-						<div className="w-12 h-12 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
-							<EyeIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-						</div>
-					</div>
-					<div className="flex-1 min-w-0">
-						<h4 className="text-xl font-semibold text-blue-800 dark:text-blue-200 mb-4">
-							Template Details
-						</h4>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div className="space-y-3">
-								<div className="flex items-center gap-3">
-									<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-									<span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-										Template:
-									</span>
-									<span className="text-sm text-blue-800 dark:text-blue-200 font-semibold">
-										{templateId ? getTemplateName(templateId) : 'Professional Template'}
-									</span>
-								</div>
-								<div className="flex items-center gap-3">
-									<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-									<span className="text-sm font-medium text-blue-700 dark:text-blue-300">Name:</span>
-									<span className="text-sm text-blue-800 dark:text-blue-200 font-semibold">
-										{initialValues?.firstName} {initialValues?.lastName}
-									</span>
-								</div>
-								<div className="flex items-center gap-3">
-									<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-									<span className="text-sm font-medium text-blue-700 dark:text-blue-300">Email:</span>
-									<span className="text-sm text-blue-800 dark:text-blue-200 font-semibold">
-										{initialValues?.email}
-									</span>
-								</div>
-							</div>
-							<div className="space-y-3">
-								<div className="flex items-center gap-3">
-									<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-									<span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-										Experience:
-									</span>
-									<span className="text-sm text-blue-800 dark:text-blue-200 font-semibold">
-										{initialValues?.workExperience?.length || 0} position(s)
-									</span>
-								</div>
-								<div className="flex items-center gap-3">
-									<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-									<span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-										Education:
-									</span>
-									<span className="text-sm text-blue-800 dark:text-blue-200 font-semibold">
-										{initialValues?.education?.length || 0} degree(s)
-									</span>
-								</div>
-								<div className="flex items-center gap-3">
-									<div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-									<span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-										Skills:
-									</span>
-									<span className="text-sm text-blue-800 dark:text-blue-200 font-semibold">
-										{initialValues?.skills?.length || 0} skill(s)
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> */}
-
-			{/* Success Message Card */}
-			{/* {canDownload && (
-				<div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-xl shadow-lg p-6">
-					<div className="flex items-start gap-4">
-						<div className="flex-shrink-0">
-							<div className="w-12 h-12 bg-green-100 dark:bg-green-800/50 rounded-lg flex items-center justify-center">
-								<CheckCircleIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
-							</div>
-						</div>
-						<div className="flex-1">
-							<h4 className="text-xl font-semibold text-green-800 dark:text-green-200 mb-3">
-								Ready to Download! 🎉
-							</h4>
-							<p className="text-green-700 dark:text-green-300 leading-relaxed">
-								Congratulations! Your resume has been completed successfully. Click the download button
-								below to get your professional PDF resume that&apos;s ready for job applications and
-								career advancement.
-							</p>
-						</div>
-					</div>
-				</div>
-			)} */}
-
 			{/* Additional Information */}
 			<div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 text-center">
 				<div className="max-w-2xl mx-auto space-y-3">
@@ -205,14 +109,14 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 			</div>
 
 			{/* Download Button Section */}
-			<div className="text-center space-y-6">
+			<div className="sticky bottom-0 left-0 right-0 md:relative text-center space-y-6">
 				<Button
 					variant="default"
 					onClick={onDownloadPDF}
 					disabled={isDownloading}
-					className={`group relative inline-flex items-center gap-3 px-10 py-4 text-lg font-semibold transition-all duration-300 transform ${
+					className={`group relative inline-flex items-center gap-3 px-10 py-4 text-lg font-semibold transition-all duration-300 ${
 						!isDownloading
-							? 'text-white shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95'
+							? 'text-white shadow-xl hover:shadow-2xl'
 							: 'bg-slate-300 dark:bg-slate-600 text-slate-500 dark:text-slate-400 cursor-not-allowed shadow-md'
 					} rounded-xl`}
 				>
@@ -223,7 +127,7 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 						</>
 					) : (
 						<>
-							<DownloadIcon className="w-6 h-6 transition-transform" />
+							<DownloadIcon className="w-6 h-6" />
 							<span>Download PDF Resume</span>
 						</>
 					)}
