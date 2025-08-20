@@ -20,7 +20,6 @@ type ResumeDataStoreType = {
 	setActiveStep: (step: number) => void;
 	selectedTemplate: string;
 	setSelectedTemplate: (template: string) => void;
-	setNavigationState: (state: NavigationStateType) => void;
 	clearStorage: () => void;
 };
 
@@ -43,7 +42,6 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 					userResumeData: { ...state.userResumeData, ...data }
 				})),
 			setActiveStep: (step: number) => set({ activeStep: step }),
-			setNavigationState: (state: NavigationStateType) => set({ navigationState: state }),
 			setSelectedTemplate: (selectedTemplateId: string) => {
 				console.log('Store - setSelectedTemplate called with:', selectedTemplateId);
 				set({ selectedTemplate: selectedTemplateId });
@@ -59,8 +57,7 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			partialize: state => ({
 				userResumeData: state.userResumeData,
 				activeStep: state.activeStep,
-				selectedTemplate: state.selectedTemplate,
-				navigationState: state.navigationState
+				selectedTemplate: state.selectedTemplate
 			}),
 			// Version control for migrations
 			version: 1,
