@@ -13,35 +13,31 @@ import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 export default function CreateTemplate() {
 	const params = useParams();
 	const { push } = useRouter();
-	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
-	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
+	const templateID = params.templateId as string;
+	const { userResumeData, resetResumeUserData } = resumeDataStore((state: ResumeDataStoreType) => state);
 	const [template, setTemplate] = useState<Template | null>(null);
 	const [templateError, setTemplateError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const templateID = params.templateId as string;
-
 		if (!templateID) {
 			setTemplateError('No template specified');
 			return;
 		}
 
 		const foundTemplate = getTemplate(templateID);
-		if (foundTemplate) {
-			setTemplate(foundTemplate);
-			setTemplateError(null);
-		} else {
-			setTemplateError(`Template "${templateID}" not found`);
-		}
-	}, [params]);
 
-	const resetResumeProccess = useCallback(() => {
-		resetResumeUserData();
-	}, [resetResumeUserData]);
+		if (!foundTemplate) {
+			setTemplateError(`Template "${templateID}" not found`);
+			return;
+		}
+
+		setTemplate(foundTemplate);
+		setTemplateError(null);
+	}, [templateID]);
 
 	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
 		hasUnsavedChanges: true,
-		onConfirmExit: resetResumeProccess
+		onConfirmExit: resetResumeUserData
 	});
 
 	const { styles, compiledTemplate, downloadPDF, isDownloading, isLoading } = useCreatePDF({

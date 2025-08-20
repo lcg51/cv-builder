@@ -28,12 +28,8 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 	const { push } = useRouter();
 	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
 
-	const onSelectTemplate = (templateId: string) => {
-		setSelectedTemplateId(templateId);
-		setSelectedTemplate(templateId);
-	};
-
 	const handleProceedToTemplate = useCallback(() => {
+		setSelectedTemplate(selectedTemplateId);
 		push(`/templates/${selectedTemplateId}`);
 	}, [push, selectedTemplateId]);
 
@@ -144,7 +140,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 										key={template.id}
 										template={template}
 										selectedTemplateId={selectedTemplateId}
-										onClickTemplate={onSelectTemplate}
+										onClickTemplate={setSelectedTemplateId}
 									/>
 								))}
 							</div>

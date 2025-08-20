@@ -31,12 +31,6 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 	);
 
 	useEffect(() => {
-		return () => {
-			onConfirmExit();
-		};
-	}, []);
-
-	useEffect(() => {
 		const handleNavigationAttempt = (event: CustomEvent<NavigationEventDetail>) => {
 			const { targetUrl } = event.detail;
 			if (hasUnsavedChanges) {

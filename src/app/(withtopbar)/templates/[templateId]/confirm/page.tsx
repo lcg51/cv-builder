@@ -1,5 +1,5 @@
 'use client';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
@@ -9,30 +9,39 @@ import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
 import { useNavigationGuard } from '@/hooks/useNavigationGuard';
 
 export default function ConfirmPage() {
-	const params = useParams();
 	const { replace } = useRouter();
-	const templateId = params.templateId as string;
-	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
-	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
-	const selectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.selectedTemplate);
+	const {
+		userResumeData,
+		selectedTemplate: selectedTemplateId,
+		resetResumeUserData
+	} = resumeDataStore((state: ResumeDataStoreType) => state);
+
 	const [template, setTemplate] = useState<Template | null>(null);
 
-	useEffect(() => {
-		const foundTemplate = getTemplate(templateId);
-		if (foundTemplate) {
-			setTemplate(foundTemplate);
-		} else {
-			replace('/templates');
-		}
-	}, [params, selectedTemplate]);
-
 	const resetResumeProccess = useCallback(() => {
+		replace('/templates');
 		resetResumeUserData();
-	}, [resetResumeUserData]);
+	}, [replace, resetResumeUserData]);
+
+	useEffect(() => {
+		if (!selectedTemplateId) {
+			resetResumeProccess();
+			return;
+		}
+
+		const foundTemplate = getTemplate(selectedTemplateId);
+
+		if (!foundTemplate) {
+			resetResumeProccess();
+			return;
+		}
+
+		setTemplate(foundTemplate);
+	}, [selectedTemplateId, resetResumeProccess]);
 
 	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
 		hasUnsavedChanges: true,
-		onConfirmExit: resetResumeProccess
+		onConfirmExit: resetResumeUserData
 	});
 
 	const { downloadPDF, isDownloading } = useCreatePDF({
