@@ -43,7 +43,6 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 				})),
 			setActiveStep: (step: number) => set({ activeStep: step }),
 			setSelectedTemplate: (selectedTemplateId: string) => {
-				console.log('Store - setSelectedTemplate called with:', selectedTemplateId);
 				set({ selectedTemplate: selectedTemplateId });
 			},
 			clearStorage: () => {

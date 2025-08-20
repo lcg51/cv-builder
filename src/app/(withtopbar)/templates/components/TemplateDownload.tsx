@@ -10,7 +10,6 @@ export type TemplateDownloadProps = {
 	onDownloadPDF?: () => void;
 	isDownloadEnabled?: boolean;
 	isDownloading?: boolean;
-	templateId?: string;
 	initialValues?: UserDataType;
 };
 

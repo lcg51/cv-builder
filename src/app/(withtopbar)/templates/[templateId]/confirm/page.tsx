@@ -18,9 +18,8 @@ export default function ConfirmPage() {
 	const [template, setTemplate] = useState<Template | null>(null);
 
 	useEffect(() => {
-		const templateID = params.templateId as string;
-		const foundTemplate = getTemplate(templateID);
-		if (foundTemplate && selectedTemplate) {
+		const foundTemplate = getTemplate(templateId);
+		if (foundTemplate) {
 			setTemplate(foundTemplate);
 		} else {
 			replace('/templates');
@@ -54,7 +53,11 @@ export default function ConfirmPage() {
 				onConfirm={confirmExit}
 				onCancel={cancelExit}
 			/>
-			<TemplateDownload templateId={templateId} onDownloadPDF={downloadPDF} isDownloading={isDownloading} />
+			<TemplateDownload
+				initialValues={userResumeData}
+				onDownloadPDF={downloadPDF}
+				isDownloading={isDownloading}
+			/>
 		</>
 	);
 }
