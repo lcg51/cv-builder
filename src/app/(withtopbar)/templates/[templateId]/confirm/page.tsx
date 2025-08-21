@@ -5,8 +5,7 @@ import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useCallback, useEffect, useState } from 'react';
 import { getTemplate, Template } from '@/templates';
-import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
-import { useNavigationGuard } from '@/hooks/useNavigationGuard';
+import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 
 export default function ConfirmPage() {
 	const { replace } = useRouter();
@@ -39,7 +38,7 @@ export default function ConfirmPage() {
 		setTemplate(foundTemplate);
 	}, [selectedTemplateId, resetResumeProccess]);
 
-	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
+	useNavigationGuardProvider({
 		hasUnsavedChanges: true,
 		onConfirmExit: resetResumeUserData
 	});
@@ -51,22 +50,6 @@ export default function ConfirmPage() {
 	});
 
 	return (
-		<>
-			<ModalDisclaimer
-				open={showExitDialog}
-				onOpenChange={() => {
-					if (!showExitDialog) {
-						attemptNavigation('/');
-					}
-				}}
-				onConfirm={confirmExit}
-				onCancel={cancelExit}
-			/>
-			<TemplateDownload
-				initialValues={userResumeData}
-				onDownloadPDF={downloadPDF}
-				isDownloading={isDownloading}
-			/>
-		</>
+		<TemplateDownload initialValues={userResumeData} onDownloadPDF={downloadPDF} isDownloading={isDownloading} />
 	);
 }

@@ -1,8 +1,7 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useNavigationGuard } from '@/hooks/useNavigationGuard';
-import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
+import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
@@ -35,7 +34,7 @@ export default function CreateTemplate() {
 		setTemplateError(null);
 	}, [templateID]);
 
-	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
+	useNavigationGuardProvider({
 		hasUnsavedChanges: true,
 		onConfirmExit: resetResumeUserData
 	});
@@ -89,17 +88,6 @@ export default function CreateTemplate() {
 		<div
 			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 md:min-h-[calc(100vh-60px)]`}
 		>
-			{/* Exit Disclaimer Dialog */}
-			<ModalDisclaimer
-				open={showExitDialog}
-				onOpenChange={() => {
-					if (!showExitDialog) {
-						attemptNavigation('/');
-					}
-				}}
-				onConfirm={confirmExit}
-				onCancel={cancelExit}
-			/>
 			{NavigationStateComponent}
 		</div>
 	);
