@@ -1,38 +1,46 @@
 'use client';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useCallback, useEffect, useState } from 'react';
 import { getTemplate, Template } from '@/templates';
-import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
-import { useNavigationGuard } from '@/hooks/useNavigationGuard';
+import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 
 export default function ConfirmPage() {
-	const params = useParams();
 	const { replace } = useRouter();
-	const templateId = params.templateId as string;
-	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
-	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
-	const selectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.selectedTemplate);
+	const {
+		userResumeData,
+		selectedTemplate: selectedTemplateId,
+		resetResumeUserData
+	} = resumeDataStore((state: ResumeDataStoreType) => state);
+
 	const [template, setTemplate] = useState<Template | null>(null);
 
-	useEffect(() => {
-		const foundTemplate = getTemplate(templateId);
-		if (foundTemplate) {
-			setTemplate(foundTemplate);
-		} else {
-			replace('/templates');
-		}
-	}, [params, selectedTemplate]);
-
 	const resetResumeProccess = useCallback(() => {
+		replace('/templates');
 		resetResumeUserData();
-	}, [resetResumeUserData]);
+	}, [replace, resetResumeUserData]);
 
-	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
+	useEffect(() => {
+		if (!selectedTemplateId) {
+			resetResumeProccess();
+			return;
+		}
+
+		const foundTemplate = getTemplate(selectedTemplateId);
+
+		if (!foundTemplate) {
+			resetResumeProccess();
+			return;
+		}
+
+		setTemplate(foundTemplate);
+	}, [selectedTemplateId, resetResumeProccess]);
+
+	useNavigationGuardProvider({
 		hasUnsavedChanges: true,
-		onConfirmExit: resetResumeProccess
+		onConfirmExit: resetResumeUserData
 	});
 
 	const { downloadPDF, isDownloading } = useCreatePDF({
@@ -42,22 +50,6 @@ export default function ConfirmPage() {
 	});
 
 	return (
-		<>
-			<ModalDisclaimer
-				open={showExitDialog}
-				onOpenChange={() => {
-					if (!showExitDialog) {
-						attemptNavigation('/');
-					}
-				}}
-				onConfirm={confirmExit}
-				onCancel={cancelExit}
-			/>
-			<TemplateDownload
-				initialValues={userResumeData}
-				onDownloadPDF={downloadPDF}
-				isDownloading={isDownloading}
-			/>
-		</>
+		<TemplateDownload initialValues={userResumeData} onDownloadPDF={downloadPDF} isDownloading={isDownloading} />
 	);
 }

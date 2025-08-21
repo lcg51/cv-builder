@@ -1,8 +1,7 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useNavigationGuard } from '@/hooks/useNavigationGuard';
-import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
+import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
@@ -13,35 +12,31 @@ import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 export default function CreateTemplate() {
 	const params = useParams();
 	const { push } = useRouter();
-	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
-	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
+	const templateID = params.templateId as string;
+	const { userResumeData, resetResumeUserData } = resumeDataStore((state: ResumeDataStoreType) => state);
 	const [template, setTemplate] = useState<Template | null>(null);
 	const [templateError, setTemplateError] = useState<string | null>(null);
 
 	useEffect(() => {
-		const templateID = params.templateId as string;
-
 		if (!templateID) {
 			setTemplateError('No template specified');
 			return;
 		}
 
 		const foundTemplate = getTemplate(templateID);
-		if (foundTemplate) {
-			setTemplate(foundTemplate);
-			setTemplateError(null);
-		} else {
+
+		if (!foundTemplate) {
 			setTemplateError(`Template "${templateID}" not found`);
+			return;
 		}
-	}, [params]);
 
-	const resetResumeProccess = useCallback(() => {
-		resetResumeUserData();
-	}, [resetResumeUserData]);
+		setTemplate(foundTemplate);
+		setTemplateError(null);
+	}, [templateID]);
 
-	const { showExitDialog, confirmExit, cancelExit, attemptNavigation } = useNavigationGuard({
+	useNavigationGuardProvider({
 		hasUnsavedChanges: true,
-		onConfirmExit: resetResumeProccess
+		onConfirmExit: resetResumeUserData
 	});
 
 	const { styles, compiledTemplate, downloadPDF, isDownloading, isLoading } = useCreatePDF({
@@ -93,17 +88,6 @@ export default function CreateTemplate() {
 		<div
 			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 md:min-h-[calc(100vh-60px)]`}
 		>
-			{/* Exit Disclaimer Dialog */}
-			<ModalDisclaimer
-				open={showExitDialog}
-				onOpenChange={() => {
-					if (!showExitDialog) {
-						attemptNavigation('/');
-					}
-				}}
-				onConfirm={confirmExit}
-				onCancel={cancelExit}
-			/>
 			{NavigationStateComponent}
 		</div>
 	);

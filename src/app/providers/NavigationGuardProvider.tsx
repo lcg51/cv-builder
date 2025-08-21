@@ -1,9 +1,22 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+'use client';
 
-interface UseNavigationGuardProps {
-	hasUnsavedChanges: boolean;
-	onConfirmExit: () => void;
+import React, { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
+
+interface NavigationGuardContextType {
+	showExitDialog: boolean;
+	attemptNavigation: (targetUrl: string) => boolean;
+	confirmExit: () => void;
+	cancelExit: () => void;
+	setHasUnsavedChanges: (hasChanges: boolean) => void;
+	setOnConfirmExit: (callback: () => void) => void;
+}
+
+const NavigationGuardContext = createContext<NavigationGuardContextType | undefined>(undefined);
+
+interface NavigationGuardProviderProps {
+	children: ReactNode;
 }
 
 interface NavigationEventDetail {
@@ -13,9 +26,11 @@ interface NavigationEventDetail {
 	navigationType?: 'forward' | 'back';
 }
 
-export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavigationGuardProps) {
+export function NavigationGuardProvider({ children }: NavigationGuardProviderProps) {
 	const [showExitDialog, setShowExitDialog] = useState(false);
 	const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+	const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+	const [onConfirmExit, setOnConfirmExit] = useState<() => void>(() => {});
 	const router = useRouter();
 
 	const attemptNavigation = useCallback(
@@ -69,10 +84,39 @@ export function useNavigationGuard({ hasUnsavedChanges, onConfirmExit }: UseNavi
 		setPendingNavigation(null);
 	}, []);
 
-	return {
+	const handleOpenChange = (newOpen: boolean) => {
+		if (!newOpen) {
+			cancelExit();
+		}
+		setShowExitDialog(newOpen);
+	};
+
+	const contextValue: NavigationGuardContextType = {
 		showExitDialog,
 		attemptNavigation,
 		confirmExit,
-		cancelExit
+		cancelExit,
+		setHasUnsavedChanges,
+		setOnConfirmExit
 	};
+
+	return (
+		<NavigationGuardContext.Provider value={contextValue}>
+			{children}
+			<ModalDisclaimer
+				open={showExitDialog}
+				onOpenChange={handleOpenChange}
+				onConfirm={confirmExit}
+				onCancel={cancelExit}
+			/>
+		</NavigationGuardContext.Provider>
+	);
+}
+
+export function useNavigationGuardContext() {
+	const context = useContext(NavigationGuardContext);
+	if (context === undefined) {
+		throw new Error('useNavigationGuardContext must be used within a NavigationGuardProvider');
+	}
+	return context;
 }
