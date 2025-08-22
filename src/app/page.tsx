@@ -2,17 +2,8 @@
 import { Button } from '@/components/ui';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-	jobapplicantBG,
-	laptopBG,
-	loginBG,
-	jobapplicantBGJPG,
-	laptopBGJPG,
-	loginBGJPG,
-	template1Screenshot
-} from '../assets';
+import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, loginBGJPG } from '../assets';
 import { OptimizedImage } from '@/components/ui';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
@@ -47,65 +38,50 @@ export default function Home() {
 					/>
 				</div>
 
-				<div className="container mx-auto px-8 pb-8 lg:pb-0 md:pb-12 relative z-10 w-full lg:max-w-7xl">
-					<div className="grid lg:grid-cols-2 gap-12 items-center">
-						<div className="py-8 lg:py-0 space-y-8">
-							<div className="space-y-4">
-								<Badge variant="secondary" className="px-0 py-0 lg:py-3 text-sm font-medium bg-primary">
-									<Sparkles className="w-4 h-4 mr-2" />
-									AI-Powered CV Builder
-								</Badge>
-								<h1 className="text-4xl lg:text-6xl font-bold tracking-tight text-foreground dark:text-slate-200">
-									Create Your
-									<span className="text-primary block">Dream CV</span>
-									in Minutes
-								</h1>
-								<p className="text-xl text-muted-foreground dark:text-slate-400 max-w-lg">
-									Build professional, ATS-friendly resumes that get you noticed by top employers. No
-									design skills required.
-								</p>
-							</div>
-
-							<div className="flex flex-col sm:flex-row gap-4">
-								<Button size="lg" onClick={redirectToTemplates} className="text-lg px-8 py-6">
-									Start Building Free
-									<ArrowRight className="ml-2 w-5 h-5" />
-								</Button>
-								<Button
-									variant="outline"
-									size="lg"
-									className="text-lg px-8 py-6 bg-white dark:bg-slate-800"
-									onClick={redirectToTemplates}
-								>
-									View Templates
-								</Button>
-							</div>
-
-							<div className="flex items-center gap-8 pt-4">
-								{stats.map((stat, index) => (
-									<div key={index} className="text-center">
-										<div className="text-2xl font-bold text-primary dark:text-primary">
-											{stat.value}
-										</div>
-										<div className="text-sm text-muted-foreground dark:text-slate-400">
-											{stat.label}
-										</div>
-									</div>
-								))}
-							</div>
+				<div className="flex flex-col items-center px-8 pb-8 lg:pb-0 relative z-10 w-full">
+					<div className="py-8 lg:py-0 space-y-12">
+						<div className="">
+							<Badge variant="secondary" className="px-0 py-0 lg:py-3 text-sm font-medium bg-primary">
+								<Sparkles className="w-4 h-4 mr-2" />
+								AI-Powered CV Builder
+							</Badge>
+							<h1 className="text-4xl md:text-6xl font-bold text-foreground dark:text-slate-200">
+								Create Your
+								<span className="text-primary block">Dream CV</span>
+								in Minutes
+							</h1>
+							<p className="text-xl text-muted-foreground dark:text-slate-400 max-w-lg">
+								Build professional, ATS-friendly resumes that get you noticed by top employers. No
+								design skills required.
+							</p>
 						</div>
 
-						<div className="relative">
-							<div className="relative z-10 md:max-w-md md:mx-auto lg:mx-0 bg-white dark:bg-card dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden">
-								<Image
-									src={template1Screenshot}
-									alt="Template 1 Preview"
-									width={600}
-									height={800}
-									className="w-full h-auto object-cover"
-									priority
-								/>
-							</div>
+						<div className="flex flex-col sm:flex-row gap-4">
+							<Button size="lg" onClick={redirectToTemplates} className="text-lg px-8 py-6">
+								Start Building Free
+								<ArrowRight className="ml-2 w-5 h-5" />
+							</Button>
+							<Button
+								variant="outline"
+								size="lg"
+								className="text-lg px-8 py-6 bg-white dark:bg-slate-800"
+								onClick={redirectToTemplates}
+							>
+								View Templates
+							</Button>
+						</div>
+
+						<div className="flex items-center gap-8 pt-4">
+							{stats.map((stat, index) => (
+								<div key={index} className="text-center">
+									<div className="text-2xl font-bold text-primary dark:text-primary">
+										{stat.value}
+									</div>
+									<div className="text-sm text-muted-foreground dark:text-slate-400">
+										{stat.label}
+									</div>
+								</div>
+							))}
 						</div>
 					</div>
 				</div>

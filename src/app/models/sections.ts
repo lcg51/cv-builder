@@ -44,5 +44,5 @@ export const steps = [
 export const stats = [
 	{ label: 'CVs Created', value: '10,000+' },
 	{ label: 'Job Interviews', value: '5,000+' },
-	{ label: 'Success Rate', value: '92%' }
+	{ label: 'Success Rate', value: '96%' }
 ];

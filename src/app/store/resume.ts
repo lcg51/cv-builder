@@ -21,6 +21,9 @@ type ResumeDataStoreType = {
 	selectedTemplate: string;
 	setSelectedTemplate: (template: string) => void;
 	clearStorage: () => void;
+	// Add hydration state
+	_hasHydrated: boolean;
+	setHasHydrated: (hasHydrated: boolean) => void;
 };
 
 const STORAGE_KEY = 'resume-data-store';
@@ -32,6 +35,7 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			activeStep: 0,
 			selectedTemplate: '',
 			navigationState: NavigationStateEnum.TEMPLATE_UPDATE,
+			_hasHydrated: false,
 			resetResumeUserData: () => set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' }),
 			setResumeUserDataValue: (key: string, value: string) =>
 				set((state: ResumeDataStoreType) => ({
@@ -45,6 +49,7 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			setSelectedTemplate: (selectedTemplateId: string) => {
 				set({ selectedTemplate: selectedTemplateId });
 			},
+			setHasHydrated: (hasHydrated: boolean) => set({ _hasHydrated: hasHydrated }),
 			clearStorage: () => {
 				sessionStorage.removeItem(STORAGE_KEY);
 				set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' });
@@ -71,6 +76,18 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 					};
 				}
 				return persistedState;
+			},
+			// Add onRehydrateStorage callback to track hydration
+			onRehydrateStorage: () => state => {
+				if (state) {
+					// Validate that the rehydrated state is consistent
+					if (state.selectedTemplate && !state.userResumeData.firstName) {
+						// If we have a selected template but no user data, reset to prevent inconsistent state
+						console.warn('Inconsistent store state detected, resetting');
+						state.resetResumeUserData();
+					}
+					state.setHasHydrated(true);
+				}
 			}
 		}
 	)

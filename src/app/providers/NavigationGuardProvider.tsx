@@ -57,17 +57,6 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
 		return () => window.removeEventListener('navigation-attempt', handleNavigationAttempt as EventListener);
 	}, [hasUnsavedChanges, attemptNavigation]);
 
-	useEffect(() => {
-		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-			if (hasUnsavedChanges) {
-				e.preventDefault();
-			}
-		};
-
-		window.addEventListener('beforeunload', handleBeforeUnload);
-		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-	}, [hasUnsavedChanges]);
-
 	const confirmExit = useCallback(() => {
 		onConfirmExit();
 		setShowExitDialog(false);
