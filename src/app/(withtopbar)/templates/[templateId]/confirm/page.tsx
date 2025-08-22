@@ -4,7 +4,7 @@ import { TemplateDownload } from '../../components/TemplateDownload';
 import { ConfirmPageSkeleton } from '../../components/ConfirmPageSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getTemplate, Template } from '@/templates';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { useStoreHydration } from '@/hooks/useStoreHydration';
@@ -69,21 +69,34 @@ export default function ConfirmPage() {
 		onConfirmExit: resetResumeUserData
 	});
 
-	const { downloadPDF, isDownloading } = useCreatePDF({
+	const { downloadPDF, isDownloading, styles, compiledTemplate } = useCreatePDF({
 		userResumeData,
 		selectedTemplate: template,
 		useHandlebars: true
 	});
 
-	if (!template || isLoading) {
-		return <ConfirmPageSkeleton />;
-	}
+	const NavigationStateComponent = useMemo(() => {
+		if (!template || isLoading) {
+			return <ConfirmPageSkeleton />;
+		}
+
+		return (
+			<TemplateDownload
+				completionPercentage={calculateCompletion()}
+				onDownloadPDF={downloadPDF}
+				isDownloading={isDownloading}
+				userResumeData={userResumeData}
+				compiledTemplate={compiledTemplate ?? (() => '')}
+				styles={styles}
+			/>
+		);
+	}, [template, isLoading, styles, downloadPDF, isDownloading, userResumeData]);
 
 	return (
-		<TemplateDownload
-			completionPercentage={calculateCompletion()}
-			onDownloadPDF={downloadPDF}
-			isDownloading={isDownloading}
-		/>
+		<div
+			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 md:min-h-[calc(100vh-60px)]`}
+		>
+			{NavigationStateComponent}
+		</div>
 	);
 }

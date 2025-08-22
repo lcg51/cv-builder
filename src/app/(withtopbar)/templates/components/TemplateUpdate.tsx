@@ -1,6 +1,6 @@
 import { StepsBar } from '@/components/ui/StepsBar/StepsBar';
 import { TemplatePreviewer } from '@/components/ui/TemplatePreviewer/TemplatePreviewer';
-import { EyeIcon, XIcon } from 'lucide-react';
+import { EyeIcon, LockIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';
@@ -108,6 +108,15 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 								templateStyles={styles}
 								compiledTemplate={compiledTemplate}
 							/>
+						</div>
+						{/* Controls */}
+						<div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex-shrink-0">
+							<div className="flex items-center justify-center gap-4">
+								<div className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+									<LockIcon />
+									Preview updates automatically
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

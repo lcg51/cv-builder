@@ -72,7 +72,7 @@ export default function CreateTemplate() {
 				onTemplateDownload={onTemplateDownload}
 			/>
 		);
-	}, [template, isLoading, styles, template, onTemplateDownload, downloadPDF, isDownloading, templateError]);
+	}, [template, isLoading, styles, onTemplateDownload, downloadPDF, isDownloading, templateError]);
 
 	return (
 		<div
