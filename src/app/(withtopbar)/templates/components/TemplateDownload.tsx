@@ -4,35 +4,19 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { DownloadIcon, CheckCircleIcon, LockIcon } from '@/components/icons/FormIcons';
 import { CheckIcon } from 'lucide-react';
-import { UserDataType } from '@/app/models/user';
 
 export type TemplateDownloadProps = {
 	onDownloadPDF?: () => void;
 	isDownloadEnabled?: boolean;
 	isDownloading?: boolean;
-	initialValues?: UserDataType;
+	completionPercentage: number;
 };
 
-export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initialValues }: TemplateDownloadProps) => {
-	// Calculate completion percentage
-	const calculateCompletion = () => {
-		if (!initialValues) return 0;
-		let completed = 0;
-		const total = 7; // firstName, lastName, email, workExperience, education, skills, aboutMe
-
-		if (initialValues.firstName) completed++;
-		if (initialValues.lastName) completed++;
-		if (initialValues.email) completed++;
-		if (initialValues.workExperience?.length > 0) completed++;
-		if (initialValues.education?.length > 0) completed++;
-		if (initialValues.skills?.length > 0) completed++;
-		if (initialValues.aboutMe) completed++;
-
-		return Math.round((completed / total) * 100);
-	};
-
-	const completionPercentage = calculateCompletion();
-
+export const TemplateDownload = ({
+	onDownloadPDF,
+	isDownloading = false,
+	completionPercentage
+}: TemplateDownloadProps) => {
 	return (
 		<div className="max-w-4xl mx-auto space-y-8 p-4">
 			{/* Header Section */}
@@ -42,9 +26,6 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 				</div>
 				<div>
 					<h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">Download Your Resume</h2>
-					<p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-						Review your information and download your professional resume in high-quality PDF format
-					</p>
 				</div>
 			</div>
 
@@ -132,17 +113,6 @@ export const TemplateDownload = ({ onDownloadPDF, isDownloading = false, initial
 						</>
 					)}
 				</Button>
-
-				{/* {
-					<div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 max-w-md mx-auto">
-						<div className="flex items-center gap-3 text-amber-700 dark:text-amber-300">
-							<LockIcon className="w-5 h-5 text-amber-500" />
-							<p className="text-sm font-medium">
-								Please complete all required information to enable download
-							</p>
-						</div>
-					</div>
-				} */}
 			</div>
 		</div>
 	);

@@ -1,19 +1,41 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
+import { ConfirmPageSkeleton } from '../../components/ConfirmPageSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useCallback, useEffect, useState } from 'react';
 import { getTemplate, Template } from '@/templates';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
+import { useStoreHydration } from '@/hooks/useStoreHydration';
+import { useParams } from 'next/navigation';
 
 export default function ConfirmPage() {
 	const { replace } = useRouter();
+	const params = useParams();
+	const templateIdFromUrl = params.templateId as string;
+	const { isLoading } = useStoreHydration();
 	const {
 		userResumeData,
 		selectedTemplate: selectedTemplateId,
 		resetResumeUserData
 	} = resumeDataStore((state: ResumeDataStoreType) => state);
+
+	const calculateCompletion = () => {
+		if (!userResumeData) return 0;
+		let completed = 0;
+		const total = 7;
+
+		if (userResumeData.firstName) completed++;
+		if (userResumeData.lastName) completed++;
+		if (userResumeData.email) completed++;
+		if (userResumeData.workExperience?.length > 0) completed++;
+		if (userResumeData.education?.length > 0) completed++;
+		if (userResumeData.skills?.length > 0) completed++;
+		if (userResumeData.aboutMe) completed++;
+
+		return Math.round((completed / total) * 100);
+	};
 
 	const [template, setTemplate] = useState<Template | null>(null);
 
@@ -23,7 +45,11 @@ export default function ConfirmPage() {
 	}, [replace, resetResumeUserData]);
 
 	useEffect(() => {
-		if (!selectedTemplateId) {
+		if (isLoading) {
+			return;
+		}
+
+		if (!selectedTemplateId || selectedTemplateId !== templateIdFromUrl) {
 			resetResumeProccess();
 			return;
 		}
@@ -36,7 +62,7 @@ export default function ConfirmPage() {
 		}
 
 		setTemplate(foundTemplate);
-	}, [selectedTemplateId, resetResumeProccess]);
+	}, [selectedTemplateId, templateIdFromUrl, isLoading, resetResumeProccess]);
 
 	useNavigationGuardProvider({
 		hasUnsavedChanges: true,
@@ -49,7 +75,15 @@ export default function ConfirmPage() {
 		useHandlebars: true
 	});
 
+	if (!template || isLoading) {
+		return <ConfirmPageSkeleton />;
+	}
+
 	return (
-		<TemplateDownload initialValues={userResumeData} onDownloadPDF={downloadPDF} isDownloading={isDownloading} />
+		<TemplateDownload
+			completionPercentage={calculateCompletion()}
+			onDownloadPDF={downloadPDF}
+			isDownloading={isDownloading}
+		/>
 	);
 }
