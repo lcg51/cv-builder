@@ -35,7 +35,7 @@ export const TemplateDownload = ({
 
 	const DownloadButtonSection = useMemo(() => {
 		return (
-			<div className="sticky bottom-0 left-0 right-0 md:relative text-center space-y-6 mt-4">
+			<div className="sticky bottom-4 left-0 right-0 text-center space-y-6 mt-4">
 				<Button
 					variant="default"
 					onClick={onDownloadPDF}
@@ -64,7 +64,7 @@ export const TemplateDownload = ({
 
 	const AdditionalInformationSection = useMemo(() => {
 		return (
-			<div className="lg:hidden bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 text-center mt-4">
+			<div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 text-center mt-4">
 				<div className="max-w-2xl mx-auto space-y-3">
 					<h4 className="text-lg font-semibold text-slate-700 dark:text-slate-300">What You&apos;ll Get</h4>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-600 dark:text-slate-400">
@@ -97,7 +97,7 @@ export const TemplateDownload = ({
 	}, []);
 
 	return (
-		<div className="mx-auto space-y-8 p-4">
+		<div className="container mx-auto space-y-8 p-4">
 			<div className="flex flex-col lg:flex-row gap-4 lg:h-[calc(100vh-115px)]">
 				<div className="lg:w-1/2">
 					{/* Header Section */}

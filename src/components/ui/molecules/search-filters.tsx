@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '../button';
 import { FilterIcon, SearchIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
