@@ -1,5 +1,5 @@
 import { StepsBar } from '@/components/ui';
-import { TemplatePreviewer } from '@/components/ui/TemplatePreviewer/TemplatePreviewer';
+import { TemplatePreviewer } from '@/components/ui';
 import { EyeIcon, LockIcon, XIcon } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ExperienceForm } from './ExperienceForm';

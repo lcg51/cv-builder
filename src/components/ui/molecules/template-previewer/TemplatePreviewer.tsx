@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { UserDataType } from '@/app/models/user';
 import './TemplatePreviewer.css';
-import { LockIcon } from '@/components/icons/FormIcons';
 
 type TemplateProps = {
 	userData: UserDataType;
