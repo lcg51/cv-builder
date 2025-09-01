@@ -11,8 +11,7 @@ import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { ExperienceIcon, PlusIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
-import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
+import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({
 	experienceForms: z.array(

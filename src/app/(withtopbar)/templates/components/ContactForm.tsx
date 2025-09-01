@@ -7,8 +7,7 @@ import React, { useEffect } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ContactIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
-import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
+import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({
 	firstName: z.string().min(2, {

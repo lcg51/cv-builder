@@ -8,8 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { AboutIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
-import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
+import type { StepsBarComponentProps } from '@/components/ui/molecules/steps-bar/StepsBar';
+import { useFormValidation } from '@/components/ui/molecules/steps-bar/StepsBar';
 
 const formSchema = z.object({
 	aboutMe: z.string().min(2, {

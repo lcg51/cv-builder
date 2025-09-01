@@ -10,8 +10,7 @@ import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { EducationIcon, PlusIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
-import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
+import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({
 	educationForms: z.array(

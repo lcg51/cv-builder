@@ -10,8 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { SkillsIcon, PlusIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
-import { useFormValidation } from '@/components/ui/StepsBar/StepsBar';
+import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({
 	skillsForms: z.array(

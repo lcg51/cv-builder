@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useCallback, useMemo, useState, useEffect, createContext, useContext, useRef } from 'react';
 import './StepsBar.css';
-import { useWindowSize } from '../../../hooks/useWindowSize';
+import { useWindowSize } from '../../../../hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from '@/components/icons/FormIcons';
 import { Button } from '@/components/ui/button';

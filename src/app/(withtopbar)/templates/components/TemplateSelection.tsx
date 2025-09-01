@@ -6,8 +6,7 @@ import { type Template as TemplateType, type TemplateCategory } from '@/template
 import { Template } from '../../../components/Template';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
-
-type TemplateCategoryFilter = 'all' | TemplateCategory;
+import { SearchFilters } from '@/components/ui';
 
 interface TemplateSelectionProps {
 	templates: TemplateType[];
@@ -24,9 +23,9 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 }) => {
 	const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
 	const [searchQuery, setSearchQuery] = useState<string>('');
-	const [selectedCategory, setSelectedCategory] = useState<TemplateCategoryFilter>('all');
 	const { push } = useRouter();
 	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
+	const tags = ['professional', 'creative', 'modern', 'minimal'] as TemplateCategory[];
 
 	const handleProceedToTemplate = useCallback(() => {
 		setSelectedTemplate(selectedTemplateId);
@@ -44,12 +43,11 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 	};
 
 	// Handle category filter
-	const handleCategoryFilter = (category: TemplateCategoryFilter) => {
-		setSelectedCategory(category);
+	const handleCategoryFilter = (category: TemplateCategory | 'all') => {
 		if (category === 'all') {
 			resetToAllTemplates();
 		} else {
-			loadTemplatesByCategory(category as TemplateType['category']);
+			loadTemplatesByCategory(category);
 		}
 	};
 
@@ -72,61 +70,12 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 				</div>
 			</div>
 
-			{/* Search and Filter - Now properly sticky */}
-			<div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 sticky top-[3.5rem] z-20 space-y-4 p-4 lg:p-6">
-				{/* Search Bar */}
-				<div className="relative max-w-md mx-auto">
-					<SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-					<input
-						type="text"
-						placeholder="Search templates..."
-						value={searchQuery}
-						onChange={e => handleSearch(e.target.value)}
-						className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-					/>
-				</div>
-
-				{/* Category Filter */}
-				<div className="flex flex-wrap justify-center gap-2 mx-auto">
-					<Button
-						variant={selectedCategory === 'all' ? 'default' : 'outline'}
-						size="sm"
-						onClick={() => handleCategoryFilter('all')}
-						className="flex items-center gap-2"
-					>
-						<FilterIcon className="w-4 h-4" />
-						All
-					</Button>
-					<Button
-						variant={selectedCategory === 'professional' ? 'default' : 'outline'}
-						size="sm"
-						onClick={() => handleCategoryFilter('professional')}
-					>
-						Professional
-					</Button>
-					<Button
-						variant={selectedCategory === 'modern' ? 'default' : 'outline'}
-						size="sm"
-						onClick={() => handleCategoryFilter('modern')}
-					>
-						Modern
-					</Button>
-					<Button
-						variant={selectedCategory === 'creative' ? 'default' : 'outline'}
-						size="sm"
-						onClick={() => handleCategoryFilter('creative')}
-					>
-						Creative
-					</Button>
-					<Button
-						variant={selectedCategory === 'minimal' ? 'default' : 'outline'}
-						size="sm"
-						onClick={() => handleCategoryFilter('minimal')}
-					>
-						Minimal
-					</Button>
-				</div>
-			</div>
+			<SearchFilters
+				searchQuery={searchQuery}
+				onSearch={handleSearch}
+				onSelectCategory={handleCategoryFilter}
+				tags={tags}
+			/>
 
 			{/* Scrollable Template Grid Section */}
 			<div className="min-h-[calc(100vh-300px)]">
@@ -163,7 +112,6 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 										variant="outline"
 										onClick={() => {
 											setSearchQuery('');
-											setSelectedCategory('all');
 											resetToAllTemplates();
 										}}
 										className="flex items-center gap-2"

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { CheckCircleIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/StepsBar/StepsBar';
+import { type StepsBarComponentProps } from '@/components/ui';
 
 export type FinishFormProps = StepsBarComponentProps;
 
