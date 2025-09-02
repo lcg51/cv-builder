@@ -1,0 +1,15 @@
+/* Template Preview Scoping */
+.template-preview-scope {
+	/* Reset any inherited styles that might interfere */
+	all: initial;
+	/* Ensure proper font inheritance */
+	font-family: inherit;
+	line-height: inherit;
+	/* Contain the template styles */
+	contain: style;
+}
+
+.template-preview-scope * {
+	/* Reset box model for template elements */
+	box-sizing: border-box;
+}
