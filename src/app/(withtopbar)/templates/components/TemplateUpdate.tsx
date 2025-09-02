@@ -123,7 +123,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 
 				{/* Mobile Preview Button */}
 				<div
-					className={`hidden sm:hidden md:block lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'md:hidden' : 'sm:hidden md:block lg:hidden'}`}
+					className={`block lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'hidden' : 'block lg:hidden'}`}
 				>
 					<button
 						onClick={toggleMobilePreview}

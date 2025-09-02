@@ -48,6 +48,7 @@ export const SearchFilters = <T extends string>({ searchQuery, onSearch, onSelec
 				</Button>
 				{tags.map(tag => (
 					<Button
+						key={tag}
 						variant={selectedCategory === tag ? 'default' : 'outline'}
 						size="sm"
 						onClick={() => handleSelectCategory(tag)}
