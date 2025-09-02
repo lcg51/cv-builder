@@ -44,6 +44,7 @@
 		"date-fns": "^4.1.0",
 		"flags": "^4.0.1",
 		"handlebars": "^4.7.8",
+		"html2canvas": "^1.4.1",
 		"husky": "^9.1.6",
 		"hypertune": "^2.7.2",
 		"lint-staged": "^15.2.10",
