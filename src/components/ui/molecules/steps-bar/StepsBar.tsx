@@ -1,6 +1,5 @@
 'use client';
 import React, { FC, useCallback, useMemo, useState, useEffect, createContext, useContext, useRef } from 'react';
-import './StepsBar.css';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/components/icons';
@@ -167,6 +166,7 @@ export const StepsBar = ({
 							onClickStepItem({ item: stepItems[selectedIndex - 1], index: selectedIndex - 1 })
 						}
 						disabled={selectedIndex === 0}
+						aria-label="Left Arrow"
 					>
 						<ChevronLeftIcon />
 					</button>
@@ -188,6 +188,7 @@ export const StepsBar = ({
 							onClickStepItem({ item: stepItems[selectedIndex + 1], index: selectedIndex + 1 })
 						}
 						disabled={selectedIndex === stepItems.length - 1 || !stepItems[selectedIndex + 1]?.active}
+						aria-label="Right Arrow"
 					>
 						<ChevronRightIcon />
 					</button>
@@ -284,6 +285,7 @@ export const StepsBar = ({
 							variant="default"
 							onClick={onSetNextStep}
 							className="px-6 py-2 h-11"
+							data-testid="continue-button"
 							disabled={!stepItems[selectedIndex]?.active}
 						>
 							{isLastStep ? 'Finish' : 'Continue'}

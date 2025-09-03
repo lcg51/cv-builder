@@ -7,7 +7,8 @@ const config: Config.InitialOptions = {
 		'^.+\\.(ts|tsx)$': ['babel-jest', { configFile: './jest.babel.config.ts' }]
 	},
 	moduleNameMapper: {
-		'\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+		'\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+		'^@/(.*)$': '<rootDir>/src/$1'
 	},
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']
 };
