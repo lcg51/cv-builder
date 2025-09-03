@@ -7,9 +7,8 @@ import React, { useEffect } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
-import { Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
-import { EducationIcon, PlusIcon } from '@/components/icons/FormIcons';
+import { EducationIcon, PlusIcon, Trash } from '@/components/icons';
 import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({

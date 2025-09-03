@@ -4,7 +4,7 @@ import { TemplateSkeleton } from './components/TemplateSkeleton';
 import { TemplateSelection } from './components/TemplateSelection';
 import { useTemplates } from '@/hooks/useTemplates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
-import { RefreshCwIcon } from 'lucide-react';
+import { RefreshCwIcon } from '@/components/icons';
 
 export default function Templates() {
 	const {

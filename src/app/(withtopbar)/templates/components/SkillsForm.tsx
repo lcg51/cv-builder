@@ -2,14 +2,13 @@
 
 import React, { useEffect } from 'react';
 import { SkillType } from '@/app/models/user';
-import { Trash } from 'lucide-react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
-import { SkillsIcon, PlusIcon } from '@/components/icons/FormIcons';
+import { SkillsIcon, PlusIcon, Trash } from '@/components/icons';
 import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({
