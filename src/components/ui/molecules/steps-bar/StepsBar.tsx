@@ -3,9 +3,8 @@ import React, { FC, useCallback, useMemo, useState, useEffect, createContext, us
 import './StepsBar.css';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
-import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from '@/components/icons/FormIcons';
+import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { ArrowRightIcon } from '@/components/icons/FormIcons';
 
 // Form validation context
 export type FormValidationContextType = {

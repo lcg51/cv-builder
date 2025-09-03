@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { type Template as TemplateType, templateScreenshotsMap } from '@/templates';
-import { CheckIcon, EyeIcon, StarIcon } from 'lucide-react';
+import { CheckIcon, EyeIcon, StarIcon } from '@/components/icons';
 import Image from 'next/image';
 
 export const Template = ({

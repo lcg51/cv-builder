@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Trash } from 'lucide-react';
 
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { MonthYearPicker } from '@/components/ui/month-year-picker';
 import { Textarea } from '@/components/ui/textarea';
-import { ExperienceIcon, PlusIcon } from '@/components/icons/FormIcons';
+import { ExperienceIcon, PlusIcon, Trash } from '@/components/icons';
 import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
 
 const formSchema = z.object({

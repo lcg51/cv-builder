@@ -6,7 +6,7 @@ import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, logi
 import { OptimizedImage } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from 'lucide-react';
+import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/components/icons';
 import { features, stats, steps } from './models/sections';
 import { useHypertune } from '../../generated/hypertune.react';
 import { HomeTemplates } from './components/HomeTemplates';

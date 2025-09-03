@@ -1,4 +1,4 @@
-import { Download, Eye, FileText, Zap } from 'lucide-react';
+import { Download, Eye, FileText, Zap } from '@/components/icons';
 
 export const features = [
 	{

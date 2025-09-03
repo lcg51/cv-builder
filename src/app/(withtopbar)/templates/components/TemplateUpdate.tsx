@@ -1,6 +1,6 @@
 import { StepsBar } from '@/components/ui';
 import { TemplatePreviewer } from '@/components/ui';
-import { EyeIcon, LockIcon, XIcon } from 'lucide-react';
+import { EyeIcon, LockIcon, XIcon } from '@/components/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';

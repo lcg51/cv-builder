@@ -2,8 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { DownloadIcon, CheckCircleIcon, LockIcon } from '@/components/icons/FormIcons';
-import { CheckIcon } from 'lucide-react';
+import { DownloadIcon, CheckCircleIcon, LockIcon, CheckIcon } from '@/components/icons';
 import { TemplatePreviewer } from '@/components/ui';
 import { UserDataType } from '@/app/models/user';
 import { useWindowSize } from '@/hooks/useWindowSize';

@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '../button';
-import { FilterIcon, SearchIcon } from 'lucide-react';
+import { FilterIcon, SearchIcon } from '@/components/icons';
 import { useCallback, useState } from 'react';
 
 type FiltersProps<T> = {
