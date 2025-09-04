@@ -10,6 +10,10 @@ import { useWindowSize } from '../../../../hooks/useWindowSize';
 jest.mock('../../../../hooks/useWindowSize');
 const mockUseWindowSize = useWindowSize as jest.MockedFunction<typeof useWindowSize>;
 
+// Mock the useFormValidation hook
+jest.mock('../../../../hooks/useFormValidation');
+const mockUseFormValidation = useFormValidation as jest.MockedFunction<typeof useFormValidation>;
+
 // Mock components for testing
 const MockFormComponent = ({ onFieldChange, formId, initialValues }: StepsBarComponentProps) => {
 	const [isValid, setIsValid] = React.useState(false);
@@ -36,8 +40,8 @@ const MockSimpleComponent = ({ formId }: StepsBarComponentProps) => (
 );
 
 const MockValidatingComponent = ({ formId }: StepsBarComponentProps) => {
-	const { registerForm } = useFormValidation();
 	const [isValid, setIsValid] = React.useState(false);
+	const { registerForm } = useFormValidation();
 
 	React.useEffect(() => {
 		registerForm(formId, async () => {
@@ -87,6 +91,14 @@ describe('StepsBar Component', () => {
 
 	beforeEach(() => {
 		mockUseWindowSize.mockReturnValue({ width: 1200, height: 800 }); // Desktop by default
+
+		// Mock useFormValidation hook
+		mockUseFormValidation.mockReturnValue({
+			registerForm: jest.fn(),
+			unregisterForm: jest.fn(),
+			submitCurrentForm: jest.fn().mockResolvedValue(true)
+		});
+
 		jest.clearAllMocks();
 	});
 
@@ -297,6 +309,13 @@ describe('StepsBar Component', () => {
 		});
 
 		it('should prevent step progression when form validation fails', async () => {
+			// Mock submitCurrentForm to return false (validation fails)
+			mockUseFormValidation.mockReturnValue({
+				registerForm: jest.fn(),
+				unregisterForm: jest.fn(),
+				submitCurrentForm: jest.fn().mockResolvedValue(false)
+			});
+
 			const items = createValidatingStepItems();
 			render(
 				<StepsBar
@@ -318,6 +337,13 @@ describe('StepsBar Component', () => {
 		});
 
 		it('should allow step progression when form validation passes', async () => {
+			// Mock submitCurrentForm to return true (validation passes)
+			mockUseFormValidation.mockReturnValue({
+				registerForm: jest.fn(),
+				unregisterForm: jest.fn(),
+				submitCurrentForm: jest.fn().mockResolvedValue(true)
+			});
+
 			const items = createValidatingStepItems();
 			render(
 				<StepsBar
