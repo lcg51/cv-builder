@@ -5,11 +5,9 @@ import { z } from 'zod';
 import React, { useEffect } from 'react';
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { AboutIcon } from '@/components/icons/FormIcons';
-import type { StepsBarComponentProps } from '@/components/ui/molecules/steps-bar/StepsBar';
-import { useFormValidation } from '@/components/ui/molecules/steps-bar/StepsBar';
+import { type StepsBarComponentProps, Input, Textarea } from '@/components/ui';
+import { useFormValidation } from '@/hooks/useFormValidation';
 
 const formSchema = z.object({
 	aboutMe: z.string().min(2, {

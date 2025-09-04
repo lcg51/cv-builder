@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { NavigationGuardProvider } from './providers/NavigationGuardProvider';
+import { FormValidationProvider } from '../hooks/useFormValidation';
 import './globals.css';
 import React from 'react';
 import TopBar from './components/TopBar';
@@ -42,10 +43,12 @@ export default async function RootLayout({
 			<html lang="en" suppressHydrationWarning>
 				<body className="antialiased bg-white dark:bg-slate-900">
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-						<NavigationGuardProvider>
-							<TopBar user={(session?.user as unknown as UserProps) || null} />
-							{children}
-						</NavigationGuardProvider>
+						<FormValidationProvider>
+							<NavigationGuardProvider>
+								<TopBar user={(session?.user as unknown as UserProps) || null} />
+								{children}
+							</NavigationGuardProvider>
+						</FormValidationProvider>
 					</ThemeProvider>
 				</body>
 			</html>

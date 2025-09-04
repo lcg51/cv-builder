@@ -2,7 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { StepsBar, StepsBarComponentProps, StepsBarItemsProps, useFormValidation } from './StepsBar';
+import { StepsBar, StepsBarComponentProps, StepsBarItemsProps } from './StepsBar';
+import { useFormValidation } from '../../../../hooks/useFormValidation';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 
 // Mock the useWindowSize hook

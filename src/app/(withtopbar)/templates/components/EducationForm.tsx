@@ -5,11 +5,9 @@ import { z } from 'zod';
 import React, { useEffect } from 'react';
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { MonthYearPicker } from '@/components/ui/month-year-picker';
-import { Textarea } from '@/components/ui/textarea';
 import { EducationIcon, PlusIcon, Trash } from '@/components/icons';
-import { type StepsBarComponentProps, useFormValidation } from '@/components/ui';
+import { type StepsBarComponentProps, Input, MonthYearPicker, Textarea } from '@/components/ui';
+import { useFormValidation } from '@/hooks/useFormValidation';
 
 const formSchema = z.object({
 	educationForms: z.array(
