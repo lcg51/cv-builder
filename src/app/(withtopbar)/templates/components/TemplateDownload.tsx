@@ -2,8 +2,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { DownloadIcon, CheckCircleIcon, LockIcon, CheckIcon } from '@/components/icons';
-import { TemplatePreviewer } from '@/components/ui';
+import { DownloadIcon, CheckIcon } from '@/components/icons';
+import { ProgressBar, TemplatePreviewer } from '@/components/ui';
 import { UserDataType } from '@/app/models/user';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
@@ -110,36 +110,12 @@ export const TemplateDownload = ({
 							</h2>
 						</div>
 					</div>
-					{/* Progress Indicator */}
-					<div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 mt-4">
-						<div className="flex items-center justify-between mb-4">
-							<h3 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-								Resume Completion
-							</h3>
-							<span className="text-2xl font-bold text-muted">{completionPercentage}%</span>
-						</div>
-						<div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 mb-4">
-							<div
-								className="bg-muted h-3 rounded-full transition-all duration-500 ease-out"
-								style={{ width: `${completionPercentage}%` }}
-							></div>
-						</div>
-						<div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-							{completionPercentage === 100 ? (
-								<>
-									<CheckCircleIcon className="w-5 h-5 text-green-500" />
-									<span className="text-green-600 dark:text-green-400 font-medium">
-										All sections completed!
-									</span>
-								</>
-							) : (
-								<>
-									<LockIcon className="w-5 h-5 text-amber-500" />
-									<span>Complete all sections to enable download</span>
-								</>
-							)}
-						</div>
-					</div>
+					<ProgressBar
+						title="Resume Completion"
+						completionPercentage={completionPercentage}
+						completedText="All sections completed!"
+						incompleteText="Complete all sections to enable download"
+					/>
 					{isLargeScreen && AdditionalInformationSection}
 					{isLargeScreen && DownloadButtonSection}
 				</div>
