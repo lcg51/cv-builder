@@ -11,3 +11,4 @@ export * from './molecules/search-filters';
 export * from './molecules/steps-bar/StepsBar';
 export * from './molecules/progress-bar/ProgressBar';
 export * from './molecules/template-previewer/TemplatePreviewer';
+export * from './molecules/top-bar/TopBar';

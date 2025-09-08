@@ -4,7 +4,7 @@ import { NavigationGuardProvider } from './providers/NavigationGuardProvider';
 import { FormValidationProvider } from '../hooks/useFormValidation';
 import './globals.css';
 import React from 'react';
-import TopBar from './components/TopBar';
+import { TopBar } from '@/components/ui';
 import { auth } from '@/auth';
 import { UserProps } from '@/lib/models';
 import getHypertune from '@/hypertune';
