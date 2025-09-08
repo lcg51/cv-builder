@@ -1,0 +1,57 @@
+{
+	"common": {
+		"loading": "Loading...",
+		"error": "An error occurred",
+		"save": "Save",
+		"cancel": "Cancel",
+		"next": "Next",
+		"previous": "Previous",
+		"submit": "Submit"
+	},
+	"navigation": {
+		"home": "Home",
+		"login": "Login",
+		"logout": "Logout"
+	},
+	"forms": {
+		"required": "This field is required",
+		"email": "Email",
+		"password": "Password",
+		"name": "Name",
+		"phone": "Phone",
+		"address": "Address"
+	},
+	"HomePage": {
+		"heroSection": {
+			"badge": "AI-Powered CV Builder",
+			"title": "Create Your Dream CV in Minutes",
+			"description": "Build professional, ATS-friendly resumes that get you noticed by top employers. No design skills required.",
+			"button": "Start Building Free",
+			"button2": "View Templates"
+		},
+		"templatesSection": {
+			"title": "Professional Templates",
+			"description": "Choose from our collection of expertly designed templates that help you stand out",
+			"button": "View All Templates"
+		},
+		"featuresSection": {
+			"title": "Why Choose Our CV Builder?",
+			"description": "Everything you need to create a standout resume that gets results"
+		},
+		"howItWorksSection": {
+			"title": "How It Works",
+			"description": "Create your professional CV in just three simple steps"
+		},
+		"benefitsSection": {
+			"title": "Stand Out From the Competition",
+			"description": "Our CV builder helps you create resumes that not only look professional but also pass through Applicant Tracking Systems (ATS)."
+		},
+		"ctaSection": {
+			"title": "Ready to Land Your Dream Job?",
+			"description": "Join thousands of professionals who have successfully created their perfect CV with our easy-to-use builder.",
+			"button": "Create Your CV Now",
+			"free": "100% Free to start",
+			"minutes": "5 minutes to complete"
+		}
+	}
+}

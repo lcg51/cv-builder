@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import LoginForm from './components/LoginForm';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { notebookBG, notebookBGJPG } from '../../../assets';
+import { notebookBG, notebookBGJPG } from '../../assets';
 import { Message, OptimizedImage } from '@/components/ui';
 
 export default async function Login(props: { searchParams: Promise<Message> }) {

@@ -10,6 +10,7 @@ import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/components/i
 import { features, stats, steps } from './models/sections';
 import { useHypertune } from '../../generated/hypertune.react';
 import { HomeTemplates } from './components/HomeTemplates';
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
 	const { push } = useRouter();
@@ -21,6 +22,7 @@ export default function Home() {
 	const hypertune = useHypertune();
 
 	const isTemplatesV2Enabled = hypertune.isV2TemplatesEnabled({ fallback: false });
+	const $t = useTranslations('HomePage');
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/30 dark:from-slate-900 dark:to-slate-800">
@@ -43,22 +45,19 @@ export default function Home() {
 						<div className="">
 							<Badge variant="secondary" className="px-0 py-0 lg:py-3 text-sm font-medium bg-primary">
 								<Sparkles className="w-4 h-4 mr-2" />
-								AI-Powered CV Builder
+								{$t('heroSection.badge')}
 							</Badge>
-							<h1 className="text-4xl md:text-6xl font-bold text-foreground dark:text-slate-200">
-								Create Your
-								<span className="text-primary block">Dream CV</span>
-								in Minutes
+							<h1 className="text-4xl md:text-6xl font-bold text-foreground dark:text-slate-200 max-w-lg">
+								{$t('heroSection.title')}
 							</h1>
 							<p className="text-xl text-muted-foreground dark:text-slate-400 max-w-lg">
-								Build professional, ATS-friendly resumes that get you noticed by top employers. No
-								design skills required.
+								{$t('heroSection.description')}
 							</p>
 						</div>
 
 						<div className="flex flex-col sm:flex-row gap-4">
 							<Button size="lg" onClick={redirectToTemplates} className="text-lg px-8 py-6">
-								Start Building Free
+								{$t('heroSection.button')}
 								<ArrowRight className="ml-2 w-5 h-5" />
 							</Button>
 							<Button
@@ -67,7 +66,7 @@ export default function Home() {
 								className="text-lg px-8 py-6 bg-white dark:bg-slate-800"
 								onClick={redirectToTemplates}
 							>
-								View Templates
+								{$t('heroSection.button2')}
 							</Button>
 						</div>
 
@@ -92,10 +91,10 @@ export default function Home() {
 				<div className="container mx-auto px-4 relative z-10">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-200">
-							Professional Templates
+							{$t('templatesSection.title')}
 						</h2>
 						<p className="text-xl text-muted-foreground dark:text-slate-400 max-w-2xl mx-auto">
-							Choose from our collection of expertly designed templates that help you stand out
+							{$t('templatesSection.description')}
 						</p>
 					</div>
 
@@ -103,7 +102,7 @@ export default function Home() {
 
 					<div className="text-center mt-12">
 						<Button variant="outline" size="lg" onClick={redirectToTemplates}>
-							View All Templates
+							{$t('templatesSection.button')}
 							<ArrowRight className="ml-2 w-5 h-5" />
 						</Button>
 					</div>
@@ -127,10 +126,10 @@ export default function Home() {
 				<div className="container mx-auto px-4 relative z-10">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-200">
-							Why Choose Our CV Builder?
+							{$t('featuresSection.title')}
 						</h2>
 						<p className="text-xl text-muted-foreground dark:text-slate-400 max-w-2xl mx-auto">
-							Everything you need to create a standout resume that gets results
+							{$t('featuresSection.description')}
 						</p>
 					</div>
 
@@ -169,10 +168,10 @@ export default function Home() {
 				<div className="container mx-auto px-4 relative z-10">
 					<div className="text-center space-y-4 mb-16">
 						<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-400">
-							How It Works
+							{$t('howItWorksSection.title')}
 						</h2>
 						<p className="text-xl text-muted-foreground dark:text-slate-400 max-w-2xl mx-auto">
-							Create your professional CV in just three simple steps
+							{$t('howItWorksSection.description')}
 						</p>
 					</div>
 
@@ -203,11 +202,10 @@ export default function Home() {
 						<div className="space-y-8">
 							<div>
 								<h2 className="text-3xl lg:text-4xl font-bold mb-4 text-foreground dark:text-slate-200">
-									Stand Out From the Competition
+									{$t('benefitsSection.title')}
 								</h2>
 								<p className="text-xl text-muted-foreground dark:text-slate-400">
-									Our CV builder helps you create resumes that not only look professional but also
-									pass through Applicant Tracking Systems (ATS).
+									{$t('benefitsSection.description')}
 								</p>
 							</div>
 
@@ -251,25 +249,25 @@ export default function Home() {
 					<Card className="p-12 text-center bg-gradient-to-r from-primary/10 to-secondary/10 dark:bg-slate-700 dark:from-primary/20 dark:to-secondary/20 backdrop-blur-sm">
 						<div className="space-y-6 max-w-2xl mx-auto">
 							<h2 className="text-3xl lg:text-4xl font-bold text-foreground dark:text-slate-200">
-								Ready to Land Your Dream Job?
+								{$t('ctaSection.title')}
 							</h2>
 							<p className="text-xl text-muted-foreground dark:text-slate-400">
-								Join thousands of professionals who have successfully created their perfect CV with our
-								easy-to-use builder.
+								{$t('ctaSection.description')}
 							</p>
 							<div className="flex flex-col sm:flex-row gap-4 justify-center">
 								<Button size="lg" onClick={redirectToTemplates} className="text-lg px-8 py-6">
-									Create Your CV Now
+									{$t('ctaSection.button')}
 									<ArrowRight className="ml-2 w-5 h-5" />
 								</Button>
 							</div>
 							<div className="flex items-center justify-center gap-4 text-sm text-muted-foreground dark:text-muted-foreground">
 								<div className="flex items-center gap-1 dark:text-slate-400">
-									<Clock className="w-4 h-4" />5 minutes to complete
+									<Clock className="w-4 h-4" />
+									{$t('ctaSection.minutes')}
 								</div>
 								<div className="flex items-center gap-1 dark:text-slate-400">
 									<Shield className="w-4 h-4" />
-									100% Free to start
+									{$t('ctaSection.free')}
 								</div>
 							</div>
 						</div>

@@ -1,0 +1,58 @@
+{
+	"common": {
+		"loading": "Cargando...",
+		"error": "Ocurrió un error",
+		"save": "Guardar",
+		"cancel": "Cancelar",
+		"next": "Siguiente",
+		"previous": "Anterior",
+		"submit": "Enviar"
+	},
+	"navigation": {
+		"home": "Inicio",
+		"templates": "Plantillas",
+		"login": "Iniciar sesión",
+		"logout": "Cerrar sesión"
+	},
+	"forms": {
+		"required": "Este campo es obligatorio",
+		"email": "Correo electrónico",
+		"password": "Contraseña",
+		"name": "Nombre",
+		"phone": "Teléfono",
+		"address": "Dirección"
+	},
+	"HomePage": {
+		"heroSection": {
+			"badge": "Constructor de CV AI-Powered",
+			"title": "Crea tu CV en minutos",
+			"description": "Crea currículums profesionales, ATS-friendly que te hacen destacar. Sin habilidades de diseño.",
+			"button": "Comenzar a construir gratis",
+			"button2": "Ver plantillas"
+		},
+		"templatesSection": {
+			"title": "Plantillas profesionales",
+			"description": "Elige de nuestra colección de plantillas diseñadas expertamente que te ayudan a destacar",
+			"button": "Ver todas las plantillas"
+		},
+		"featuresSection": {
+			"title": "¿Por qué elegir nuestro constructor de CV?",
+			"description": "Todo lo que necesitas para crear un currículum que te haga destacar"
+		},
+		"howItWorksSection": {
+			"title": "¿Cómo funciona?",
+			"description": "Crea tu currículum profesional en solo tres simples pasos"
+		},
+		"benefitsSection": {
+			"title": "Destaca de la competencia",
+			"description": "Nuestro constructor de CV te ayuda a crear currículums que no solo se ven profesionales sino que también pasan por los sistemas de Applicant Tracking Systems (ATS)."
+		},
+		"ctaSection": {
+			"title": "¿Listo para conseguir tu trabajo soñado?",
+			"description": "Únete a miles de profesionales que han creado su currículum perfecto con nuestro constructor de CV fácil de usar.",
+			"button": "Crea tu CV ahora",
+			"free": "100% gratis para empezar",
+			"minutes": "5 minutos para completar"
+		}
+	}
+}

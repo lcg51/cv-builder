@@ -1,4 +1,5 @@
 'use client';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -14,18 +15,18 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 
-import { googleSignOut } from '../server-actions/session';
+import { googleSignOut } from '../../../../app/server-actions/session';
 import { UserProps } from '@/lib/models';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
-import { useMemo } from 'react';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { uuidRegex } from '@/lib/utils';
+import Image from 'next/image';
 
 export type TopBarProps = {
 	user?: UserProps | null;
 };
 
-export default function TopBar({ user }: TopBarProps) {
+export const TopBar = ({ user }: TopBarProps) => {
 	const pathname = usePathname();
 	const { push } = useRouter();
 
@@ -59,7 +60,7 @@ export default function TopBar({ user }: TopBarProps) {
 				onClick={() => handleNavigation('/')}
 				className="logo-container text-lg font-semibold text-foreground hover:text-muted-foreground transition-colors cursor-pointer"
 			>
-				<img src="/assets/logo.svg" alt="CV Builder Logo" className="logo-svg" />
+				<Image src="/assets/logo.svg" alt="CV Builder Logo" className="logo-svg" width={150} height={150} />
 			</div>
 
 			{/* User Menu - Conditional Rendering */}
@@ -98,4 +99,4 @@ export default function TopBar({ user }: TopBarProps) {
 			)}
 		</header>
 	);
-}
+};
