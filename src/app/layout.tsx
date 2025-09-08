@@ -9,6 +9,7 @@ import { auth } from '@/auth';
 import { UserProps } from '@/lib/models';
 import getHypertune from '@/hypertune';
 import { HypertuneProvider } from '../../generated/hypertune.react';
+import { NextIntlClientProvider } from 'next-intl';
 
 export const metadata: Metadata = {
 	title: 'CV Builder',
@@ -42,14 +43,16 @@ export default async function RootLayout({
 		>
 			<html lang="en" suppressHydrationWarning>
 				<body className="antialiased bg-white dark:bg-slate-900">
-					<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-						<FormValidationProvider>
-							<NavigationGuardProvider>
-								<TopBar user={(session?.user as unknown as UserProps) || null} />
-								{children}
-							</NavigationGuardProvider>
-						</FormValidationProvider>
-					</ThemeProvider>
+					<NextIntlClientProvider>
+						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+							<FormValidationProvider>
+								<NavigationGuardProvider>
+									<TopBar user={(session?.user as unknown as UserProps) || null} />
+									{children}
+								</NavigationGuardProvider>
+							</FormValidationProvider>
+						</ThemeProvider>
+					</NextIntlClientProvider>
 				</body>
 			</html>
 		</HypertuneProvider>

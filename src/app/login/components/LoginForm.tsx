@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 
-import { googleSignIn } from '../../../server-actions/session';
+import { googleSignIn } from '../../server-actions/session';
 import { FormMessage, Message } from '@/components/ui';
 
 export default function LoginForm({ searchParams }: { searchParams: Message }) {

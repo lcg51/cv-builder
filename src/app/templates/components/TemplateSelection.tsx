@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { SearchIcon, FilterIcon } from '@/components/icons';
 import { type Template as TemplateType, type TemplateCategory } from '@/templates';
-import { Template } from '../../../components/Template';
+import { Template } from '../../components/Template';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
 import { SearchFilters } from '@/components/ui';
