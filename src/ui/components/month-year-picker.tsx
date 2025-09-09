@@ -2,12 +2,12 @@
 
 import { useEffect, useState, useMemo, forwardRef } from 'react';
 import { format } from 'date-fns';
-import { CalendarIcon } from '@/components/icons';
+import { CalendarIcon } from '@/ui/icons';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/ui/components/button';
+import { Calendar } from '@/ui/components/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/components/popover';
 
 export interface MonthYearPickerProps {
 	onChange?: (date: Date) => void;

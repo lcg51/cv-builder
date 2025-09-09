@@ -6,8 +6,8 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/ui/components/dialog';
+import { Button } from '@/ui/components/button';
 
 interface ModalDisclaimerProps {
 	open: boolean;

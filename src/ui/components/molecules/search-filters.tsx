@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '../button';
-import { FilterIcon, SearchIcon } from '@/components/icons';
+import { FilterIcon, SearchIcon } from '@/ui/icons';
 import { useCallback, useState } from 'react';
 
 type FiltersProps<T> = {

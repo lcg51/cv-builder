@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/ui/components/card';
+import { Skeleton } from '@/ui/components/skeleton';
 
 export const TemplateSkeleton: React.FC = () => {
 	return (

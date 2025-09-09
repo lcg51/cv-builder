@@ -1,4 +1,4 @@
-import { Download, Eye, FileText, Zap } from '@/components/icons';
+import { Download, Eye, FileText, Zap } from '@/ui/icons';
 
 export const features = [
 	{

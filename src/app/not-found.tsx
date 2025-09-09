@@ -1,7 +1,7 @@
 'use client';
 import { DisplayErrorMessage } from './components/DisplayErrorMessage';
 import { useRouter } from 'next/navigation';
-import { HomeIcon } from '@/components/icons';
+import { HomeIcon } from '@/ui/icons';
 
 export default function NotFound() {
 	const router = useRouter();

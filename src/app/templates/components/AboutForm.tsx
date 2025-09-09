@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import React, { useEffect } from 'react';
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { AboutIcon } from '@/components/icons/FormIcons';
-import { type StepsBarComponentProps, Input, Textarea } from '@/components/ui';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
+import { AboutIcon } from '@/ui/icons/FormIcons';
+import { type StepsBarComponentProps, Input, Textarea } from '@/ui/components';
 import { useFormValidation } from '@/hooks/useFormValidation';
 
 const formSchema = z.object({

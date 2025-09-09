@@ -1,6 +1,6 @@
-import { StepsBar } from '@/components/ui';
-import { TemplatePreviewer } from '@/components/ui';
-import { EyeIcon, LockIcon, XIcon } from '@/components/icons';
+import { StepsBar } from '@/ui/components';
+import { TemplatePreviewer } from '@/ui/components';
+import { EyeIcon, LockIcon, XIcon } from '@/ui/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';

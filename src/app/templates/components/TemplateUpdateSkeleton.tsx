@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/ui/components/skeleton';
 
 export const TemplateUpdateSkeleton: React.FC = () => {
 	return (

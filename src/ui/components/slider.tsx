@@ -5,10 +5,6 @@ import * as SliderPrimitive from '@radix-ui/react-slider';
 
 import { cn } from '@/lib/utils';
 
-type SliderProps = Omit<SliderPrimitive.SliderProps, 'onValueChange'> & {
-	onChange?: (value: number) => void;
-};
-
 const Slider = React.forwardRef<
 	React.ElementRef<typeof SliderPrimitive.Root>,
 	React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>

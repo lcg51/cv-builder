@@ -1,12 +1,12 @@
 'use client';
 import React, { useCallback, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { SearchIcon, FilterIcon } from '@/components/icons';
+import { Button } from '@/ui/components/button';
+import { SearchIcon, FilterIcon } from '@/ui/icons';
 import { type Template as TemplateType, type TemplateCategory } from '@/templates';
 import { Template } from '../../components/Template';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
-import { SearchFilters } from '@/components/ui';
+import { SearchFilters } from '@/ui/components';
 
 interface TemplateSelectionProps {
 	templates: TemplateType[];

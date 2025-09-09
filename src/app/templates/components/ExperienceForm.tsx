@@ -5,10 +5,10 @@ import React, { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { ExperienceIcon, PlusIcon, Trash } from '@/components/icons';
-import { type StepsBarComponentProps, Input, MonthYearPicker } from '@/components/ui';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
+import { Textarea } from '@/ui/components/textarea';
+import { ExperienceIcon, PlusIcon, Trash } from '@/ui/icons';
+import { type StepsBarComponentProps, Input, MonthYearPicker } from '@/ui/components';
 import { useFormValidation } from '@/hooks/useFormValidation';
 
 const formSchema = z.object({

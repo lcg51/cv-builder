@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { DownloadIcon, CheckIcon } from '@/components/icons';
-import { ProgressBar, TemplatePreviewer } from '@/components/ui';
+import { Button } from '@/ui/components/button';
+import { DownloadIcon, CheckIcon } from '@/ui/icons';
+import { ProgressBar, TemplatePreviewer } from '@/ui/components';
 import { UserDataType } from '@/app/models/user';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
