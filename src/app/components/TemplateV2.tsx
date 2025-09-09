@@ -1,6 +1,6 @@
-import { Card } from '@/components/ui/card';
+import { Card } from '@/ui/components/card';
 import { type TemplateV2Props } from '@/templates';
-import { CheckIcon, EyeIcon, StarIcon } from '@/components/icons';
+import { CheckIcon, EyeIcon, StarIcon } from '@/ui/icons';
 import Image from 'next/image';
 
 export const TemplateV2 = ({

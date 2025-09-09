@@ -2,8 +2,8 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/ui/components/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/ui/components/avatar';
 import './TopBar.css';
 
 import {
@@ -13,7 +13,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+} from '@/ui/components/dropdown-menu';
 
 import { googleSignOut } from '../../../../app/server-actions/session';
 import { UserProps } from '@/lib/models';

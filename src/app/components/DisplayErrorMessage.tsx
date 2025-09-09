@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui';
+import { Button } from '@/ui/components';
 
 type DisplayErrorMessageProps = {
 	errorMsg: string;

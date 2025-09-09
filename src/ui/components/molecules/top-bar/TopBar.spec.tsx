@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { usePathname, useRouter } from 'next/navigation';
-import { TopBar, TopBarProps } from './TopBar';
+import { TopBar } from './TopBar';
 import { UserProps } from '@/lib/models';
 import { googleSignOut } from '../../../../app/server-actions/session';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
@@ -27,7 +27,7 @@ jest.mock('../../../../app/server-actions/session', () => ({
 jest.mock('../TopBar.css', () => ({}));
 
 // Mock UI components
-jest.mock('@/components/ui/button', () => ({
+jest.mock('@/ui/components/button', () => ({
 	Button: ({ children, onClick, className, variant, size, ...props }: any) => (
 		<button onClick={onClick} className={className} data-variant={variant} data-size={size} {...props}>
 			{children}
@@ -35,7 +35,7 @@ jest.mock('@/components/ui/button', () => ({
 	)
 }));
 
-jest.mock('@/components/ui/avatar', () => ({
+jest.mock('@/ui/components/avatar', () => ({
 	Avatar: ({ children }: any) => <div data-testid="avatar">{children}</div>,
 	AvatarImage: ({ src, alt, onError }: any) => (
 		<img src={src} alt={alt} onError={onError} data-testid="avatar-image" />
@@ -43,7 +43,7 @@ jest.mock('@/components/ui/avatar', () => ({
 	AvatarFallback: ({ children }: any) => <div data-testid="avatar-fallback">{children}</div>
 }));
 
-jest.mock('@/components/ui/dropdown-menu', () => ({
+jest.mock('@/ui/components/dropdown-menu', () => ({
 	DropdownMenu: ({ children }: any) => <div data-testid="dropdown-menu">{children}</div>,
 	DropdownMenuContent: ({ children, align }: any) => (
 		<div data-testid="dropdown-content" data-align={align}>
@@ -66,11 +66,13 @@ jest.mock('@/components/ui/dropdown-menu', () => ({
 
 // Mock Link component
 jest.mock('next/link', () => {
-	return ({ children, href }: any) => (
+	const MockLink = ({ children, href }: any) => (
 		<a href={href} data-testid="link">
 			{children}
 		</a>
 	);
+	MockLink.displayName = 'MockLink';
+	return MockLink;
 });
 
 // Test data
@@ -81,15 +83,6 @@ const mockUser: UserProps = {
 	phone: '+1234567890',
 	role: 'user',
 	image: 'https://lh3.googleusercontent.com/a/default-user'
-};
-
-const mockUserWithoutImage: UserProps = {
-	id: '2',
-	name: 'Jane Smith',
-	email: 'jane.smith@example.com',
-	phone: '+1234567891',
-	role: 'user',
-	image: ''
 };
 
 const mockUserWithoutName: UserProps = {

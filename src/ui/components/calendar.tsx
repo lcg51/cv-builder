@@ -1,13 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronLeft, ChevronRight } from '@/components/icons';
+import { ChevronLeft, ChevronRight } from '@/ui/icons';
 import { DayPicker } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/ui/components/button';
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+	className?: string;
+	classNames?: Record<string, string>;
+	showOutsideDays?: boolean;
+};
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
 	return (

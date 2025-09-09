@@ -1,12 +1,12 @@
 'use client';
-import { Button } from '@/components/ui';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/ui/components';
+import { Card } from '@/ui/components/card';
+import { Badge } from '@/ui/components/badge';
 import { jobapplicantBG, laptopBG, loginBG, jobapplicantBGJPG, laptopBGJPG, loginBGJPG } from '../assets';
-import { OptimizedImage } from '@/components/ui';
+import { OptimizedImage } from '@/ui/components';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
-import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/components/icons';
+import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/ui/icons';
 import { features, stats, steps } from './models/sections';
 import { useHypertune } from '../../generated/hypertune.react';
 import { HomeTemplates } from './components/HomeTemplates';

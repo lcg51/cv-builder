@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { CheckCircleIcon } from '@/components/icons/FormIcons';
-import { type StepsBarComponentProps } from '@/components/ui';
+import { CheckCircleIcon } from '@/ui/icons/FormIcons';
+import { type StepsBarComponentProps } from '@/ui/components';
 
 export type FinishFormProps = StepsBarComponentProps;
 

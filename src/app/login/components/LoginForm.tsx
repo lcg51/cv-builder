@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/components/button';
 
 import { googleSignIn } from '../../server-actions/session';
-import { FormMessage, Message } from '@/components/ui';
+import { FormMessage, Message } from '@/ui/components';
 
 export default function LoginForm({ searchParams }: { searchParams: Message }) {
 	return (

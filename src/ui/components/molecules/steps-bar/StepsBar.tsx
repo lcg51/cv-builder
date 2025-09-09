@@ -2,8 +2,8 @@
 import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
 import { UserDataType } from '@/app/models/user';
-import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/ui/icons';
+import { Button } from '@/ui/components/button';
 import { useFormValidation } from '../../../../hooks/useFormValidation';
 
 export type StepsBarComponentProps = {
