@@ -232,7 +232,7 @@ export const StepsBar = ({
 				<div className="p-6 xl:flex-1 overflow-y-auto min-h-0">{stepsViewRender}</div>
 
 				{/* Centralized Submit Button */}
-				<div className="sticky xl:relative bottom-0 left-0 right-0 bg-white dark:bg-slate-900 md:relative flex justify-between items-center p-6 border-t border-slate-200 dark:border-slate-700 mt-6">
+				<div className="sticky xl:relative bottom-0 left-0 right-0 bg-white dark:bg-slate-900 md:relative flex justify-between items-center p-6 mt-6">
 					<div className="text-sm text-slate-500 dark:text-slate-400">
 						Step {selectedIndex + 1} of {stepItems.length}
 					</div>

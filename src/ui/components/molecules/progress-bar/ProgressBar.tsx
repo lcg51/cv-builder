@@ -31,7 +31,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 			{/* Progress Bar */}
 			<div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-4">
 				<div
-					className="progress-bar-fill bg-primary h-2 rounded-full transition-all duration-300 ease-out"
+					className="progress-bar-fill bg-muted h-2 rounded-full transition-all duration-300 ease-out"
 					style={{ width: `${completionPercentage}%` }}
 					data-testid="progress-fill"
 				/>
