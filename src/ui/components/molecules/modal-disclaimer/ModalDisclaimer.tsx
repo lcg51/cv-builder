@@ -31,7 +31,7 @@ export function ModalDisclaimer({
 	cancelText = 'Stay and Continue',
 	onConfirm,
 	onCancel,
-	confirmVariant = 'destructive',
+	confirmVariant = 'default',
 	cancelVariant = 'outline'
 }: ModalDisclaimerProps) {
 	const handleOpenChange = (newOpen: boolean) => {
@@ -45,24 +45,16 @@ export function ModalDisclaimer({
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent className="sm:max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
 				<DialogHeader>
-					<DialogTitle className="text-red-600 dark:text-red-400 text-xl font-bold">{title}</DialogTitle>
+					<DialogTitle className="text-muted dark:text-muted text-xl font-bold">{title}</DialogTitle>
 					<DialogDescription className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
 						{description}
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter className="flex flex-col sm:flex-row gap-3 pt-4">
-					<Button
-						variant={cancelVariant}
-						onClick={onCancel}
-						className="w-full sm:w-auto border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
-					>
+					<Button variant={cancelVariant} onClick={onCancel} className="w-full sm:w-auto">
 						{cancelText}
 					</Button>
-					<Button
-						variant={confirmVariant}
-						onClick={onConfirm}
-						className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white transition-colors"
-					>
+					<Button variant={confirmVariant} onClick={onConfirm} className="w-full sm:w-auto">
 						{confirmText}
 					</Button>
 				</DialogFooter>

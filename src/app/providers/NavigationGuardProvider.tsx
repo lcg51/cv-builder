@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ModalDisclaimer } from '@/app/components/ModalDisclaimer';
+import { ModalDisclaimer } from '@/ui/components';
 
 interface NavigationGuardContextType {
 	showExitDialog: boolean;
