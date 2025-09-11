@@ -2,15 +2,15 @@ import { StepsBar } from '@/ui/components';
 import { TemplatePreviewer } from '@/ui/components';
 import { EyeIcon, LockIcon, XIcon } from '@/ui/icons';
 import { useCallback, useEffect, useState } from 'react';
-import { ExperienceForm } from './ExperienceForm';
-import { EducationForm } from './EducationForm';
-import { SkillsForm } from './SkillsForm';
-import { ContactForm } from './ContactForm';
-import { AboutForm } from './AboutForm';
 import { FinishForm } from './FinishForm';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
 import { UserDataType } from '@/app/models/user';
+import { ContactForm } from './ContactForm';
+import { ExperienceForm } from './ExperienceForm';
+import { EducationForm } from './EducationForm';
+import { SkillsForm } from './SkillsForm';
+import { AboutForm } from './AboutForm';
 
 type TemplateUpdateProps = {
 	compiledTemplate: ((userData: UserDataType) => string) | null;

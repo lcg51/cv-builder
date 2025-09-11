@@ -1,168 +1,95 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+
+import React from 'react';
 import { z } from 'zod';
-import React, { useEffect } from 'react';
-
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
 import { AboutIcon } from '@/ui/icons/FormIcons';
-import { type StepsBarComponentProps, Input, Textarea } from '@/ui/components';
-import { useFormValidation } from '@/hooks/useFormValidation';
+import { DynamicFormAdapter, type DynamicFormConfig } from './DynamicFormAdapter';
+import { type StepsBarComponentProps } from '@/ui/components';
 
-const formSchema = z.object({
-	aboutMe: z.string().min(2, {
-		message: 'Username must be at least 2 characters.'
-	}),
-	github: z
-		.string()
-		.url({
-			message: 'Please enter a valid URL.'
-		})
-		.refine(url => url === '' || url.includes('github.com'), {
-			message: 'Please enter a valid GitHub URL (must contain github.com)'
-		})
-		.optional()
-		.or(z.literal('')),
-	linkedin: z
-		.string()
-		.url({
-			message: 'Please enter a valid URL.'
-		})
-		.refine(url => url === '' || url.includes('linkedin.com'), {
-			message: 'Please enter a valid LinkedIn URL (must contain linkedin.com)'
-		})
-		.optional()
-		.or(z.literal(''))
-});
-
-export type AboutFormPropsType = StepsBarComponentProps;
-
-export const AboutForm = ({ initialValues, onFieldChange, formId }: AboutFormPropsType) => {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			...initialValues
+// Custom validation schemas for GitHub and LinkedIn URLs
+const githubValidation = z
+	.string()
+	.refine(
+		url => {
+			if (url === '') return true; // Allow empty string
+			try {
+				new URL(url); // Check if it's a valid URL
+				return url.includes('github.com');
+			} catch {
+				return false;
+			}
+		},
+		{
+			message: 'Please enter a valid GitHub URL (must contain github.com) or leave empty'
 		}
-	});
+	)
+	.optional()
+	.or(z.literal(''));
 
-	// Register form validation with StepsBar
-	const { registerForm, unregisterForm } = useFormValidation();
-
-	useEffect(() => {
-		// Only register validation if formId is provided
-		if (formId) {
-			registerForm(formId, async () => {
-				const isValid = await form.trigger();
-				return isValid;
-			});
-
-			// Cleanup on unmount
-			return () => {
-				unregisterForm(formId);
-			};
+const linkedinValidation = z
+	.string()
+	.refine(
+		url => {
+			if (url === '') return true; // Allow empty string
+			try {
+				new URL(url); // Check if it's a valid URL
+				return url.includes('linkedin.com');
+			} catch {
+				return false;
+			}
+		},
+		{
+			message: 'Please enter a valid LinkedIn URL (must contain linkedin.com) or leave empty'
 		}
-	}, [formId, registerForm, unregisterForm, form]);
+	)
+	.optional()
+	.or(z.literal(''));
 
-	useEffect(() => {
-		const subscription = form.watch(values => {
-			Object.entries(values).forEach(([key, value]) => {
-				onFieldChange?.(key, value);
-			});
-		});
-		return () => subscription.unsubscribe();
-	}, [form.watch, onFieldChange]);
+// Configuration for the About form using the dynamic adapter
+const aboutFormConfig: DynamicFormConfig = {
+	header: {
+		title: 'Professional Summary',
+		description: 'Write a brief summary that highlights your key achievements and career goals',
+		icon: <AboutIcon color="black" />
+	},
+	fields: [
+		{
+			name: 'aboutMe',
+			label: 'Professional Summary',
+			type: 'textarea',
+			placeholder:
+				'I am a passionate software engineer with 5+ years of experience in full-stack development. I specialize in building scalable web applications using modern technologies and frameworks. My goal is to create innovative solutions that drive business growth and enhance user experiences.',
+			required: true,
+			minLength: 2,
+			gridColumn: 'full',
+			helpText:
+				'Tip: Keep it concise and highlight your most relevant skills and achievements (2-3 sentences recommended)'
+		},
+		{
+			name: 'github',
+			label: 'GitHub Profile',
+			type: 'url',
+			placeholder: 'https://github.com/yourusername',
+			required: false,
+			validation: githubValidation,
+			gridColumn: 'full',
+			helpText: 'Tip: Include your full GitHub profile URL to showcase your projects and contributions'
+		},
+		{
+			name: 'linkedin',
+			label: 'LinkedIn Profile',
+			type: 'url',
+			placeholder: 'https://linkedin.com/in/yourusername',
+			required: false,
+			validation: linkedinValidation,
+			gridColumn: 'full',
+			helpText: 'Tip: Include your full LinkedIn profile URL to connect with potential employers'
+		}
+	]
+};
 
-	return (
-		<Form {...form}>
-			<div className="mb-6">
-				<div className="flex items-center gap-3 mb-3">
-					<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white">
-						<AboutIcon color="black" />
-					</div>
-					<div>
-						<h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-1">
-							Professional Summary
-						</h3>
-						<p className="text-slate-600 dark:text-slate-400">
-							Write a brief summary that highlights your key achievements and career goals
-						</p>
-					</div>
-				</div>
-			</div>
-			<div className="space-y-6">
-				<div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700 space-y-6">
-					<FormField
-						control={form.control}
-						name="aboutMe"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									Professional Summary
-								</FormLabel>
-								<FormControl>
-									<Textarea
-										placeholder="I am a passionate software engineer with 5+ years of experience in full-stack development. I specialize in building scalable web applications using modern technologies and frameworks. My goal is to create innovative solutions that drive business growth and enhance user experiences."
-										className="min-h-32 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-									Tip: Keep it concise and highlight your most relevant skills and achievements (2-3
-									sentences recommended)
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+export type AboutFormProps = StepsBarComponentProps;
 
-					<FormField
-						control={form.control}
-						name="github"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									GitHub Profile
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="https://github.com/yourusername"
-										className="border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-									Tip: Include your full GitHub profile URL to showcase your projects and
-									contributions
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name="linkedin"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-									LinkedIn Profile
-								</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="https://linkedin.com/in/yourusername"
-										className="border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary"
-										{...field}
-									/>
-								</FormControl>
-								<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-									Tip: Include your full LinkedIn profile URL to connect with potential employers
-								</div>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				</div>
-			</div>
-		</Form>
-	);
+export const AboutForm: React.FC<AboutFormProps> = props => {
+	return <DynamicFormAdapter config={aboutFormConfig} {...props} />;
 };
