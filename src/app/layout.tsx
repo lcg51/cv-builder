@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { NavigationGuardProvider } from './providers/NavigationGuardProvider';
+import { IPProvider } from './providers/IPProvider';
 import { FormValidationProvider } from '../hooks/useFormValidation';
 import './globals.css';
 import React from 'react';
@@ -45,12 +46,17 @@ export default async function RootLayout({
 				<body className="antialiased bg-white dark:bg-slate-900">
 					<NextIntlClientProvider>
 						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-							<FormValidationProvider>
-								<NavigationGuardProvider>
-									<TopBar user={(session?.user as unknown as UserProps) || null} />
-									{children}
-								</NavigationGuardProvider>
-							</FormValidationProvider>
+							<IPProvider
+								enableAnalytics={process.env.NODE_ENV === 'production'}
+								debugMode={process.env.NODE_ENV === 'development'}
+							>
+								<FormValidationProvider>
+									<NavigationGuardProvider>
+										<TopBar user={(session?.user as unknown as UserProps) || null} />
+										{children}
+									</NavigationGuardProvider>
+								</FormValidationProvider>
+							</IPProvider>
 						</ThemeProvider>
 					</NextIntlClientProvider>
 				</body>
