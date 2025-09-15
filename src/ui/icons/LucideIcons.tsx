@@ -20,10 +20,13 @@ import {
 	Eye,
 	ChevronLeft,
 	ChevronRight,
+	ChevronDown,
 	CalendarIcon,
 	X,
 	Circle,
-	Check
+	Check,
+	Globe,
+	MapPin
 } from 'lucide-react';
 
 export {
@@ -48,8 +51,11 @@ export {
 	Eye,
 	ChevronLeft,
 	ChevronRight,
+	ChevronDown,
 	CalendarIcon,
 	X,
 	Circle,
-	Check
+	Check,
+	Globe,
+	MapPin
 };

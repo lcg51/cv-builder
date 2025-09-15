@@ -40,6 +40,9 @@ export async function middleware(request: NextRequest) {
 			response.headers.set('x-client-ip', clientIP);
 		}
 
+		// Add URL to headers for i18n locale detection
+		response.headers.set('x-url', request.url);
+
 		return response;
 	} catch (error) {
 		console.error(error);
