@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
 			return NextResponse.redirect(new URL('/', request.url));
 		}
 
-		if (!session && isAccessingAuthRoute) {
+		if (!session && !isAccessingAuthRoute) {
 			return NextResponse.redirect(new URL('/login', request.url));
 		}
 

@@ -45,7 +45,7 @@ export function getClientIP(request: NextRequest): string {
 	// Fallback to request.headers (Next.js doesn't expose request.ip directly)
 	// In production with proper proxy setup, this should be handled by the headers above
 	// For development or edge cases, we'll try to get from the socket if available
-	const remoteAddress = (request as any)?.socket?.remoteAddress;
+	const remoteAddress = (request as unknown as { socket?: { remoteAddress?: string } })?.socket?.remoteAddress;
 	if (remoteAddress && isValidIP(remoteAddress)) {
 		return remoteAddress;
 	}
@@ -94,28 +94,85 @@ export async function getIPInfo(ip: string): Promise<{
 	timezone?: string;
 	isp?: string;
 }> {
-	try {
-		// Using ipapi.co as it's free and doesn't require API key for basic usage
-		const response = await fetch(`https://ipapi.co/${ip}/json/`);
-
-		if (!response.ok) {
-			throw new Error('Failed to fetch IP info');
+	// List of free IP geolocation services as fallbacks
+	const services = [
+		{
+			name: 'ipapi.co',
+			url: `https://ipapi.co/${ip}/json/`,
+			parser: (data: {
+				country_name?: string;
+				region?: string;
+				city?: string;
+				timezone?: string;
+				org?: string;
+			}) => ({
+				ip,
+				country: data.country_name,
+				region: data.region,
+				city: data.city,
+				timezone: data.timezone,
+				isp: data.org
+			})
+		},
+		{
+			name: 'ip-api.com',
+			url: `http://ip-api.com/json/${ip}`,
+			parser: (data: {
+				country?: string;
+				regionName?: string;
+				city?: string;
+				timezone?: string;
+				isp?: string;
+			}) => ({
+				ip,
+				country: data.country,
+				region: data.regionName,
+				city: data.city,
+				timezone: data.timezone,
+				isp: data.isp
+			})
 		}
+	];
 
-		const data = await response.json();
+	for (const service of services) {
+		try {
+			console.log(`[IP Info] Trying ${service.name} for IP: ${ip}`);
 
-		return {
-			ip,
-			country: data.country_name,
-			region: data.region,
-			city: data.city,
-			timezone: data.timezone,
-			isp: data.org
-		};
-	} catch (error) {
-		console.error('Error fetching IP info:', error);
-		return { ip };
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+			const response = await fetch(service.url, {
+				signal: controller.signal,
+				headers: {
+					'User-Agent': 'CV-Builder-App/1.0'
+				}
+			});
+
+			clearTimeout(timeoutId);
+
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+			}
+
+			const data = await response.json();
+
+			// Check if the response contains error
+			if (data.error || data.status === 'fail') {
+				throw new Error(data.message || 'Service returned error');
+			}
+
+			const result = service.parser(data);
+			console.log(`[IP Info] Success with ${service.name}:`, result);
+			return result;
+		} catch (error) {
+			console.warn(`[IP Info] ${service.name} failed:`, error instanceof Error ? error.message : error);
+			continue; // Try next service
+		}
 	}
+
+	// All services failed, return basic info
+	console.warn('[IP Info] All geolocation services failed, returning basic IP info');
+	return { ip };
 }
 
 /**
