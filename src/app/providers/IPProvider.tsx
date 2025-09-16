@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect } from 'react';
 import { useAppIP } from '@/hooks/useUserIP';
+import { LocaleSync } from '@/app/components/LocaleSync';
 
 interface IPInfo {
 	ip: string;
@@ -92,7 +93,12 @@ export function IPProvider({ children, enableAnalytics = false, debugMode = fals
 		logIP
 	};
 
-	return <IPContext.Provider value={contextValue}>{children}</IPContext.Provider>;
+	return (
+		<IPContext.Provider value={contextValue}>
+			<LocaleSync />
+			{children}
+		</IPContext.Provider>
+	);
 }
 
 /**

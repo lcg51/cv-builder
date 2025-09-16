@@ -1,7 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
 import { headers } from 'next/headers';
-import { NextRequest } from 'next/server';
-import { detectUserLocale, DEFAULT_LOCALE, isValidLocale, type SupportedLocale } from './lib/locale-detection';
+import { DEFAULT_LOCALE, isValidLocale, BROWSER_LOCALE_MAP, type SupportedLocale } from './lib/locale-detection';
 
 export default getRequestConfig(async () => {
 	let locale: SupportedLocale = DEFAULT_LOCALE;
@@ -10,46 +9,76 @@ export default getRequestConfig(async () => {
 		// Get headers from the request
 		const headersList = await headers();
 
-		// Create a mock NextRequest object for locale detection
-		// Note: This is a workaround since we can't get the full request in getRequestConfig
-		const mockRequest = {
-			headers: headersList,
-			cookies: {
-				get: (name: string) => {
-					const cookieHeader = headersList.get('cookie');
-					if (!cookieHeader) return undefined;
-
-					const cookies = cookieHeader.split(';').reduce(
-						(acc: Record<string, string>, cookie: string) => {
-							const [key, value] = cookie.trim().split('=');
-							acc[key] = value;
-							return acc;
-						},
-						{} as Record<string, string>
-					);
-
-					return cookies[name] ? { value: cookies[name] } : undefined;
-				}
-			},
-			url: headersList.get('x-url') || 'http://localhost:3000',
-			nextUrl: {
-				searchParams: new URLSearchParams(new URL(headersList.get('x-url') || 'http://localhost:3000').search)
+		// First try simple detection methods that don't require external API calls
+		// 1. Check URL parameter
+		const url = headersList.get('x-url') || '';
+		if (url) {
+			const urlObj = new URL(url);
+			const localeParam = urlObj.searchParams.get('locale');
+			if (localeParam && isValidLocale(localeParam)) {
+				locale = localeParam;
+				console.log('[i18n] Locale from URL param:', locale);
+				return {
+					locale,
+					messages: (await import(`../messages/${locale}.json`)).default
+				};
 			}
-		} as unknown as NextRequest;
+		}
 
-		// Detect locale based on IP and other factors
-		const detectionResult = await detectUserLocale(mockRequest);
-		locale = detectionResult.locale;
+		// 2. Check cookie
+		const cookieHeader = headersList.get('cookie');
+		if (cookieHeader) {
+			const cookies = cookieHeader.split(';').reduce(
+				(acc: Record<string, string>, cookie: string) => {
+					const [key, value] = cookie.trim().split('=');
+					if (key && value) acc[key] = value;
+					return acc;
+				},
+				{} as Record<string, string>
+			);
 
-		// Log the detection result in development
-		if (process.env.NODE_ENV === 'development') {
-			console.log('[i18n] Locale detection:', {
-				detectedLocale: locale,
-				source: detectionResult.source,
-				confidence: detectionResult.confidence,
-				country: detectionResult.ipInfo?.country,
-				browserLanguages: detectionResult.browserLanguages
+			const cookieLocale = cookies['locale'];
+			if (cookieLocale && isValidLocale(cookieLocale)) {
+				locale = cookieLocale;
+				console.log('[i18n] Locale from cookie:', locale);
+				return {
+					locale,
+					messages: (await import(`../messages/${locale}.json`)).default
+				};
+			}
+		}
+
+		// 3. Check browser language (Accept-Language header)
+		const acceptLanguage = headersList.get('accept-language');
+		if (acceptLanguage) {
+			const languages = acceptLanguage.split(',').map(lang => {
+				const [code] = lang.trim().split(';');
+				return code.trim();
 			});
+
+			for (const langCode of languages) {
+				// Try exact match first
+				if (BROWSER_LOCALE_MAP[langCode]) {
+					locale = BROWSER_LOCALE_MAP[langCode];
+					console.log('[i18n] Locale from browser language:', locale, '(from', langCode, ')');
+					break;
+				}
+
+				// Try language code without country
+				const simpleLang = langCode.split('-')[0];
+				if (BROWSER_LOCALE_MAP[simpleLang]) {
+					locale = BROWSER_LOCALE_MAP[simpleLang];
+					console.log('[i18n] Locale from browser language:', locale, '(from', simpleLang, ')');
+					break;
+				}
+			}
+		}
+
+		// Note: IP geolocation is deferred to client-side to avoid blocking SSR
+		// The client-side IP provider will handle geolocation-based locale updates
+
+		if (process.env.NODE_ENV === 'development') {
+			console.log('[i18n] Final locale (no IP geolocation):', locale);
 		}
 	} catch (error) {
 		console.warn('[i18n] Failed to detect locale, using default:', error);

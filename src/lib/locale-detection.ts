@@ -112,13 +112,13 @@ export async function detectUserLocale(request: NextRequest): Promise<LocaleDete
 		() => detectFromUrlParam(request),
 		() => detectFromCookie(request),
 		() => detectFromIPGeolocation(request),
-		() => detectFromBrowserHeaders(request),
 		() => Promise.resolve(getDefaultLocale())
 	];
 
 	for (const strategy of strategies) {
 		try {
 			const result = await strategy();
+			console.log('result', result);
 			if (result) {
 				return result;
 			}
@@ -176,12 +176,21 @@ async function detectFromIPGeolocation(request: NextRequest): Promise<LocaleDete
 
 		// Skip IP detection for local addresses
 		if (isLocalIP(clientIP)) {
+			console.log('[Locale] Skipping IP geolocation for local IP:', clientIP);
 			return null;
 		}
 
-		const ipInfo = await getIPInfo(clientIP);
+		console.log('[Locale] Attempting IP geolocation for:', clientIP);
+
+		// Add timeout and error handling for IP geolocation
+		const timeoutPromise = new Promise<never>((_, reject) => {
+			setTimeout(() => reject(new Error('IP geolocation timeout')), 3000); // 3 second timeout
+		});
+
+		const ipInfo = await Promise.race([getIPInfo(clientIP), timeoutPromise]);
 
 		if (ipInfo.country && COUNTRY_LOCALE_MAP[ipInfo.country]) {
+			console.log('[Locale] IP geolocation successful:', ipInfo.country, '→', COUNTRY_LOCALE_MAP[ipInfo.country]);
 			return {
 				locale: COUNTRY_LOCALE_MAP[ipInfo.country],
 				source: 'ip-geolocation',
@@ -198,64 +207,15 @@ async function detectFromIPGeolocation(request: NextRequest): Promise<LocaleDete
 			};
 		}
 
+		console.log('[Locale] No country mapping found for:', ipInfo.country);
 		return null;
 	} catch (error) {
-		console.warn('IP geolocation failed for locale detection:', error);
+		console.warn(
+			'[Locale] IP geolocation failed for locale detection:',
+			error instanceof Error ? error.message : error
+		);
 		return null;
 	}
-}
-
-/**
- * Detect locale from browser Accept-Language header
- */
-async function detectFromBrowserHeaders(request: NextRequest): Promise<LocaleDetectionResult | null> {
-	const acceptLanguage = request.headers.get('accept-language');
-
-	if (!acceptLanguage) {
-		return null;
-	}
-
-	// Parse Accept-Language header
-	const languages = acceptLanguage
-		.split(',')
-		.map(lang => {
-			const [code, quality = '1'] = lang.trim().split(';q=');
-			return { code: code.trim(), quality: parseFloat(quality) };
-		})
-		.sort((a, b) => b.quality - a.quality);
-
-	for (const { code } of languages) {
-		// Try exact match first
-		if (BROWSER_LOCALE_MAP[code]) {
-			return {
-				locale: BROWSER_LOCALE_MAP[code],
-				source: 'browser-header',
-				confidence: 'medium',
-				browserLanguages: languages.map(l => l.code),
-				debug: {
-					detectedBrowserLang: code,
-					availableStrategies: ['browser-header']
-				}
-			};
-		}
-
-		// Try language code without country (e.g., 'es' from 'es-MX')
-		const langCode = code.split('-')[0];
-		if (BROWSER_LOCALE_MAP[langCode]) {
-			return {
-				locale: BROWSER_LOCALE_MAP[langCode],
-				source: 'browser-header',
-				confidence: 'low',
-				browserLanguages: languages.map(l => l.code),
-				debug: {
-					detectedBrowserLang: langCode,
-					availableStrategies: ['browser-header']
-				}
-			};
-		}
-	}
-
-	return null;
 }
 
 /**
