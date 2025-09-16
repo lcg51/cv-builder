@@ -30,10 +30,6 @@ export async function middleware(request: NextRequest) {
 			return NextResponse.redirect(new URL('/', request.url));
 		}
 
-		if (!session && !isAccessingAuthRoute) {
-			return NextResponse.redirect(new URL('/login', request.url));
-		}
-
 		// Add IP to response headers (optional - for debugging purposes)
 		const response = NextResponse.next();
 		if (process.env.NODE_ENV === 'development') {
