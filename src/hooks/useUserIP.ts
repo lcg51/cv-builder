@@ -54,9 +54,6 @@ interface UseUserIPResult {
 
 	/** Function to manually fetch/refresh the IP information */
 	refetch: () => Promise<void>;
-
-	/** Function to log the IP address for analytics */
-	logIP: (context?: string) => Promise<void>;
 }
 
 // Simple in-memory cache
@@ -122,27 +119,6 @@ export function useUserIP(options: UseUserIPOptions = {}): UseUserIPResult {
 		}
 	}, [detailed, cacheDuration]);
 
-	const logIP = useCallback(async (context = 'user_action') => {
-		try {
-			const response = await fetch('/api/user-ip', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ context })
-			});
-
-			if (!response.ok) {
-				throw new Error(`Failed to log IP: ${response.status}`);
-			}
-
-			const result = await response.json();
-			console.log('IP logged successfully:', result);
-		} catch (err) {
-			console.error('Error logging IP:', err);
-		}
-	}, []);
-
 	// Auto-fetch on mount if enabled
 	useEffect(() => {
 		if (autoFetch) {
@@ -154,8 +130,7 @@ export function useUserIP(options: UseUserIPOptions = {}): UseUserIPResult {
 		ipInfo,
 		loading,
 		error,
-		refetch: fetchIP,
-		logIP
+		refetch: fetchIP
 	};
 }
 
@@ -193,7 +168,7 @@ export function useAppIP(options: UseAppIPOptions = {}): UseUserIPResult {
  * Uses a global cache key for app-wide consistency
  */
 export function useGlobalIP(): UseUserIPResult {
-	const { ipInfo, loading, error, refetch, logIP } = useUserIP({
+	const { ipInfo, loading, error, refetch } = useUserIP({
 		detailed: true,
 		autoFetch: true,
 		cacheDuration: 600000 // 10 minutes for app-level data
@@ -203,7 +178,6 @@ export function useGlobalIP(): UseUserIPResult {
 		ipInfo,
 		loading,
 		error,
-		refetch,
-		logIP
+		refetch
 	};
 }

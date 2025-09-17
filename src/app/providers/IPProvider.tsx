@@ -30,22 +30,12 @@ interface IPContextType {
 
 	/** Function to refresh the IP information */
 	refetch: () => Promise<void>;
-
-	/** Function to log the IP for analytics */
-	logIP: (context?: string) => Promise<void>;
 }
 
 const IPContext = createContext<IPContextType | undefined>(undefined);
 
 interface IPProviderProps {
 	children: React.ReactNode;
-
-	/**
-	 * Whether to log the initial IP detection for analytics
-	 * @default false
-	 */
-	enableAnalytics?: boolean;
-
 	/**
 	 * Whether to show loading state in console
 	 * @default false
@@ -57,15 +47,8 @@ interface IPProviderProps {
  * Provider that automatically detects user IP with geographical data on app load
  * and makes it available throughout the app via context
  */
-export function IPProvider({ children, enableAnalytics = false, debugMode = false }: IPProviderProps) {
-	const { ipInfo, loading, error, refetch, logIP } = useAppIP();
-
-	// Log initial IP detection if analytics is enabled
-	useEffect(() => {
-		if (ipInfo && enableAnalytics) {
-			logIP('app_initialization');
-		}
-	}, [ipInfo, enableAnalytics, logIP]);
+export function IPProvider({ children, debugMode = false }: IPProviderProps) {
+	const { ipInfo, loading, error, refetch } = useAppIP();
 
 	// Debug logging
 	useEffect(() => {
@@ -89,8 +72,7 @@ export function IPProvider({ children, enableAnalytics = false, debugMode = fals
 		ipInfo,
 		loading,
 		error,
-		refetch,
-		logIP
+		refetch
 	};
 
 	return (
