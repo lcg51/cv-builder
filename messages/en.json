@@ -53,5 +53,15 @@
 			"free": "100% Free to start",
 			"minutes": "5 minutes to complete"
 		}
+	},
+	"LoginPage": {
+		"title": "Welcome Back",
+		"description": "Sign in to continue building your professional resume",
+		"signIn": "Sign In",
+		"access": "Access your account to create and manage your resumes",
+		"continueWithGoogle": "Continue with Google",
+		"secureAuthentication": "Secure authentication",
+		"benefits": "Sign in to access your saved resumes and continue where you left off",
+		"termsOfServiceAndPolicy": "By signing in, you agree to our <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
 	}
 }

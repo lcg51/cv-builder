@@ -54,5 +54,15 @@
 			"free": "100% gratis para empezar",
 			"minutes": "5 minutos para completar"
 		}
+	},
+	"LoginPage": {
+		"title": "Bienvenido de nuevo",
+		"description": "Inicia sesión para continuar creando tu currículum profesional",
+		"signIn": "Iniciar sesión",
+		"access": "Accede a tu cuenta para crear y gestionar tus currículums",
+		"continueWithGoogle": "Continuar con Google",
+		"secureAuthentication": "Autenticación segura",
+		"benefits": "Inicia sesión para acceder a tus currículums guardados y continuar donde lo dejaste",
+		"termsOfServiceAndPolicy": "Al iniciar sesión, aceptas nuestros <termsOfService>Términos de servicio</termsOfService> y <privacyPolicy>Política de privacidad</privacyPolicy>"
 	}
 }
