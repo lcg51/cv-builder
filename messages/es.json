@@ -64,5 +64,18 @@
 		"secureAuthentication": "Autenticación segura",
 		"benefits": "Inicia sesión para acceder a tus currículums guardados y continuar donde lo dejaste",
 		"termsOfServiceAndPolicy": "Al iniciar sesión, aceptas nuestros <termsOfService>Términos de servicio</termsOfService> y <privacyPolicy>Política de privacidad</privacyPolicy>"
+	},
+	"TemplatesPage": {
+		"title": "Elige tu plantilla",
+		"description": "Elige una plantilla profesional que mejor represente tu estilo y industria. Puedes previsualizar cómo se verá tu currículum y cambiar plantillas más adelante.",
+		"helpText": "No te preocupes! Puedes cambiar tu plantilla en cualquier momento durante el proceso de creación.",
+		"continueWith": "Continuar con {templateName}",
+		"noTemplatesFound": "No se encontraron plantillas",
+		"noTemplatesMatch": "No se encontraron plantillas que coincidan con {query}. Intenta ajustar tus términos de búsqueda o filtro de categoría.",
+		"noTemplatesMatchCurrentFilters": "No se encontraron plantillas que coincidan con tus filtros actuales. Intenta seleccionar una categoría diferente o limpiar tus filtros.",
+		"clearFilters": "Limpiar filtros",
+		"clearSearch": "Limpiar búsqueda",
+		"searchPlaceholder": "Buscar plantillas...",
+		"defaultTemplateName": "Plantilla"
 	}
 }

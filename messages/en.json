@@ -63,5 +63,18 @@
 		"secureAuthentication": "Secure authentication",
 		"benefits": "Sign in to access your saved resumes and continue where you left off",
 		"termsOfServiceAndPolicy": "By signing in, you agree to our <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
+	},
+	"TemplatesPage": {
+		"title": "Choose Your Template",
+		"description": "Select a professional template that best represents your style and industry. You can preview how your resume will look and change templates later.",
+		"helpText": "Don't worry! You can change your template at any time during the creation process.",
+		"continueWith": "Continue with {templateName}",
+		"noTemplatesFound": "No templates found",
+		"noTemplatesMatch": "No templates match {query}. Try adjusting your search terms or category filter.",
+		"noTemplatesMatchCurrentFilters": "No templates match your current filters. Try selecting a different category or clearing your filters.",
+		"clearFilters": "Clear Filters",
+		"clearSearch": "Clear Search",
+		"searchPlaceholder": "Search templates...",
+		"defaultTemplateName": "Template"
 	}
 }
