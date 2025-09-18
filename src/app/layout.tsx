@@ -46,10 +46,7 @@ export default async function RootLayout({
 				<body className="antialiased bg-white dark:bg-slate-900">
 					<NextIntlClientProvider>
 						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-							<IPProvider
-								enableAnalytics={process.env.NODE_ENV === 'production'}
-								debugMode={process.env.NODE_ENV === 'development'}
-							>
+							<IPProvider debugMode={process.env.NODE_ENV === 'development'}>
 								<FormValidationProvider>
 									<NavigationGuardProvider>
 										<TopBar user={(session?.user as unknown as UserProps) || null} />
