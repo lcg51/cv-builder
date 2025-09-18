@@ -37,7 +37,25 @@
 		},
 		"featuresSection": {
 			"title": "¿Por qué elegir nuestro constructor de CV?",
-			"description": "Todo lo que necesitas para crear un currículum que te haga destacar"
+			"description": "Todo lo que necesitas para crear un currículum que te haga destacar",
+			"features": {
+				"0": {
+					"title": "Plantillas profesionales",
+					"description": "Elige de nuestra colección de plantillas diseñadas expertamente que te ayudan a destacar"
+				},
+				"1": {
+					"title": "Vista previa en tiempo real",
+					"description": "Ve cómo tu currículum se convierte en una realidad mientras lo editas con cambios visuales instantáneos"
+				},
+				"2": {
+					"title": "Exportación PDF",
+					"description": "Descarga tu currículum profesional como un PDF listo para aplicaciones"
+				},
+				"3": {
+					"title": "Rápido y fácil",
+					"description": "Crea un currículum profesional en minutos con nuestro proceso intuitivo paso a paso"
+				}
+			}
 		},
 		"howItWorksSection": {
 			"title": "¿Cómo funciona?",
@@ -45,7 +63,13 @@
 		},
 		"benefitsSection": {
 			"title": "Destaca de la competencia",
-			"description": "Nuestro constructor de CV te ayuda a crear currículums que no solo se ven profesionales sino que también pasan por los sistemas de Applicant Tracking Systems (ATS)."
+			"description": "Nuestro constructor de CV te ayuda a crear currículums que no solo se ven profesionales sino que también pasan por los sistemas de Applicant Tracking Systems (ATS).",
+			"benefits": {
+				"0": "Plantillas ATS-optimizadas que pasan por la pantalla de selección automática",
+				"1": "Diseños específicos para la industria para maximizar el impacto",
+				"2": "Formato en tiempo real que asegura un diseño perfecto",
+				"3": "Exportación PDF en un solo clic para aplicaciones instantáneas"
+			}
 		},
 		"ctaSection": {
 			"title": "¿Listo para conseguir tu trabajo soñado?",
@@ -53,6 +77,41 @@
 			"button": "Crea tu CV ahora",
 			"free": "100% gratis para empezar",
 			"minutes": "5 minutos para completar"
+		},
+		"stepsSection": {
+			"steps": {
+				"0": {
+					"number": "01",
+					"title": "Elige Plantilla",
+					"description": "Selecciona de nuestra colección de plantillas de CV profesionales"
+				},
+				"1": {
+					"number": "02",
+					"title": "Completa tu Información",
+					"description": "Agrega tus datos de contacto, experiencia, educación y habilidades"
+				},
+				"2": {
+					"number": "03",
+					"title": "Vista Previa y Exportar",
+					"description": "Revisa tu CV en tiempo real y descárgalo como PDF"
+				}
+			}
+		},
+		"statsSection": {
+			"stats": {
+				"0": {
+					"label": "CVs Creados",
+					"value": "10,000+"
+				},
+				"1": {
+					"label": "Entrevistas de Trabajo",
+					"value": "5,000+"
+				},
+				"2": {
+					"label": "Tasa de Éxito",
+					"value": "96%"
+				}
+			}
 		}
 	},
 	"LoginPage": {
@@ -64,5 +123,18 @@
 		"secureAuthentication": "Autenticación segura",
 		"benefits": "Inicia sesión para acceder a tus currículums guardados y continuar donde lo dejaste",
 		"termsOfServiceAndPolicy": "Al iniciar sesión, aceptas nuestros <termsOfService>Términos de servicio</termsOfService> y <privacyPolicy>Política de privacidad</privacyPolicy>"
+	},
+	"TemplatesPage": {
+		"title": "Elige tu plantilla",
+		"description": "Elige una plantilla profesional que mejor represente tu estilo y industria. Puedes previsualizar cómo se verá tu currículum y cambiar plantillas más adelante.",
+		"helpText": "No te preocupes! Puedes cambiar tu plantilla en cualquier momento durante el proceso de creación.",
+		"continueWith": "Continuar con {templateName}",
+		"noTemplatesFound": "No se encontraron plantillas",
+		"noTemplatesMatch": "No se encontraron plantillas que coincidan con {query}. Intenta ajustar tus términos de búsqueda o filtro de categoría.",
+		"noTemplatesMatchCurrentFilters": "No se encontraron plantillas que coincidan con tus filtros actuales. Intenta seleccionar una categoría diferente o limpiar tus filtros.",
+		"clearFilters": "Limpiar filtros",
+		"clearSearch": "Limpiar búsqueda",
+		"searchPlaceholder": "Buscar plantillas...",
+		"defaultTemplateName": "Plantilla"
 	}
 }

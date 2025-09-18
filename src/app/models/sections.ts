@@ -1,48 +1,72 @@
 import { Download, Eye, FileText, Zap } from '@/ui/icons';
+import { useTranslations } from 'next-intl';
 
-export const features = [
-	{
-		icon: FileText,
-		title: 'Professional Templates',
-		description: 'Choose from beautifully designed templates crafted by industry experts'
-	},
-	{
-		icon: Eye,
-		title: 'Real-time Preview',
-		description: 'See your CV come to life as you edit with instant visual feedback'
-	},
-	{
-		icon: Download,
-		title: 'PDF Export',
-		description: 'Download your polished CV as a high-quality PDF ready for applications'
-	},
-	{
-		icon: Zap,
-		title: 'Quick & Easy',
-		description: 'Create a professional CV in minutes with our intuitive step-by-step process'
-	}
-];
+// Custom hook to get translated sections data
+export const useSectionsData = () => {
+	const $t = useTranslations('HomePage');
 
-export const steps = [
-	{
-		number: '01',
-		title: 'Choose Template',
-		description: 'Select from our collection of professional CV templates'
-	},
-	{
-		number: '02',
-		title: 'Fill Your Information',
-		description: 'Add your contact details, experience, education, and skills'
-	},
-	{
-		number: '03',
-		title: 'Preview & Export',
-		description: 'Review your CV in real-time and download as PDF'
-	}
-];
+	const features = [
+		{
+			icon: FileText,
+			title: $t('featuresSection.features.0.title'),
+			description: $t('featuresSection.features.0.description')
+		},
+		{
+			icon: Eye,
+			title: $t('featuresSection.features.1.title'),
+			description: $t('featuresSection.features.1.description')
+		},
+		{
+			icon: Download,
+			title: $t('featuresSection.features.2.title'),
+			description: $t('featuresSection.features.2.description')
+		},
+		{
+			icon: Zap,
+			title: $t('featuresSection.features.3.title'),
+			description: $t('featuresSection.features.3.description')
+		}
+	];
 
-export const stats = [
-	{ label: 'CVs Created', value: '10,000+' },
-	{ label: 'Job Interviews', value: '5,000+' },
-	{ label: 'Success Rate', value: '96%' }
-];
+	const steps = [
+		{
+			number: $t('stepsSection.steps.0.number'),
+			title: $t('stepsSection.steps.0.title'),
+			description: $t('stepsSection.steps.0.description')
+		},
+		{
+			number: $t('stepsSection.steps.1.number'),
+			title: $t('stepsSection.steps.1.title'),
+			description: $t('stepsSection.steps.1.description')
+		},
+		{
+			number: $t('stepsSection.steps.2.number'),
+			title: $t('stepsSection.steps.2.title'),
+			description: $t('stepsSection.steps.2.description')
+		}
+	];
+
+	const stats = [
+		{
+			label: $t('statsSection.stats.0.label'),
+			value: $t('statsSection.stats.0.value')
+		},
+		{
+			label: $t('statsSection.stats.1.label'),
+			value: $t('statsSection.stats.1.value')
+		},
+		{
+			label: $t('statsSection.stats.2.label'),
+			value: $t('statsSection.stats.2.value')
+		}
+	];
+
+	const benefits = [
+		$t('benefitsSection.benefits.0'),
+		$t('benefitsSection.benefits.1'),
+		$t('benefitsSection.benefits.2'),
+		$t('benefitsSection.benefits.3')
+	];
+
+	return { features, steps, stats, benefits };
+};

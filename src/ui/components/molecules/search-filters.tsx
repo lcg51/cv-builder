@@ -5,12 +5,19 @@ import { useCallback, useState } from 'react';
 
 type FiltersProps<T> = {
 	searchQuery: string;
+	placeholderText: string;
 	tags: T[];
 	onSearch: (query: string) => void;
 	onSelectCategory: (category: T | 'all') => void;
 };
 
-export const SearchFilters = <T extends string>({ searchQuery, onSearch, onSelectCategory, tags }: FiltersProps<T>) => {
+export const SearchFilters = <T extends string>({
+	searchQuery,
+	onSearch,
+	onSelectCategory,
+	tags,
+	placeholderText
+}: FiltersProps<T>) => {
 	const [selectedCategory, setSelectedCategory] = useState<T | 'all'>('all');
 
 	const handleSelectCategory = useCallback(
@@ -28,7 +35,7 @@ export const SearchFilters = <T extends string>({ searchQuery, onSearch, onSelec
 				<SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
 				<input
 					type="text"
-					placeholder="Search templates..."
+					placeholder={placeholderText}
 					value={searchQuery}
 					onChange={e => onSearch(e.target.value)}
 					className="w-full pl-10 pr-4 py-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"

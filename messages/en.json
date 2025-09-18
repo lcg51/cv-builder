@@ -36,7 +36,25 @@
 		},
 		"featuresSection": {
 			"title": "Why Choose Our CV Builder?",
-			"description": "Everything you need to create a standout resume that gets results"
+			"description": "Everything you need to create a standout resume that gets results",
+			"features": {
+				"0": {
+					"title": "Professional Templates",
+					"description": "Choose from our collection of expertly designed templates that help you stand out"
+				},
+				"1": {
+					"title": "Real-time Preview",
+					"description": "See your resume come to life as you edit with instant visual feedback"
+				},
+				"2": {
+					"title": "PDF Export",
+					"description": "Download your polished resume as a high-quality PDF ready for applications"
+				},
+				"3": {
+					"title": "Quick & Easy",
+					"description": "Create a professional resume in minutes with our intuitive step-by-step process"
+				}
+			}
 		},
 		"howItWorksSection": {
 			"title": "How It Works",
@@ -44,7 +62,13 @@
 		},
 		"benefitsSection": {
 			"title": "Stand Out From the Competition",
-			"description": "Our CV builder helps you create resumes that not only look professional but also pass through Applicant Tracking Systems (ATS)."
+			"description": "Our CV builder helps you create resumes that not only look professional but also pass through Applicant Tracking Systems (ATS).",
+			"benefits": {
+				"0": "ATS-optimized templates that get past automated screening",
+				"1": "Industry-specific designs for maximum impact",
+				"2": "Real-time formatting that ensures perfect layout",
+				"3": "One-click PDF export for instant applications"
+			}
 		},
 		"ctaSection": {
 			"title": "Ready to Land Your Dream Job?",
@@ -52,6 +76,41 @@
 			"button": "Create Your CV Now",
 			"free": "100% Free to start",
 			"minutes": "5 minutes to complete"
+		},
+		"stepsSection": {
+			"steps": {
+				"0": {
+					"number": "01",
+					"title": "Choose Template",
+					"description": "Select from our collection of professional CV templates"
+				},
+				"1": {
+					"number": "02",
+					"title": "Fill Your Information",
+					"description": "Add your contact details, experience, education, and skills"
+				},
+				"2": {
+					"number": "03",
+					"title": "Preview & Export",
+					"description": "Review your CV in real-time and download as PDF"
+				}
+			}
+		},
+		"statsSection": {
+			"stats": {
+				"0": {
+					"label": "CVs Created",
+					"value": "10,000+"
+				},
+				"1": {
+					"label": "Job Interviews",
+					"value": "5,000+"
+				},
+				"2": {
+					"label": "Success Rate",
+					"value": "96%"
+				}
+			}
 		}
 	},
 	"LoginPage": {
@@ -63,5 +122,18 @@
 		"secureAuthentication": "Secure authentication",
 		"benefits": "Sign in to access your saved resumes and continue where you left off",
 		"termsOfServiceAndPolicy": "By signing in, you agree to our <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
+	},
+	"TemplatesPage": {
+		"title": "Choose Your Template",
+		"description": "Select a professional template that best represents your style and industry. You can preview how your resume will look and change templates later.",
+		"helpText": "Don't worry! You can change your template at any time during the creation process.",
+		"continueWith": "Continue with {templateName}",
+		"noTemplatesFound": "No templates found",
+		"noTemplatesMatch": "No templates match {query}. Try adjusting your search terms or category filter.",
+		"noTemplatesMatchCurrentFilters": "No templates match your current filters. Try selecting a different category or clearing your filters.",
+		"clearFilters": "Clear Filters",
+		"clearSearch": "Clear Search",
+		"searchPlaceholder": "Search templates...",
+		"defaultTemplateName": "Template"
 	}
 }
