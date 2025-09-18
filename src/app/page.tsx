@@ -7,7 +7,7 @@ import { OptimizedImage } from '@/ui/components';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/ui/icons';
-import { features, stats, steps } from './models/sections';
+import { useSectionsData } from './models/sections';
 import { useHypertune } from '../../generated/hypertune.react';
 import { HomeTemplates } from './components/HomeTemplates';
 import { useTranslations } from 'next-intl';
@@ -23,6 +23,7 @@ export default function Home() {
 
 	const isTemplatesV2Enabled = hypertune.isV2TemplatesEnabled({ fallback: false });
 	const $t = useTranslations('HomePage');
+	const { features, steps, stats, benefits } = useSectionsData();
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-background to-muted/30 dark:from-slate-900 dark:to-slate-800">
@@ -73,7 +74,7 @@ export default function Home() {
 						<div className="flex items-center gap-8 pt-4">
 							{stats.map((stat, index) => (
 								<div key={index} className="text-center">
-									<div className="text-2xl font-bold text-primary dark:text-primary">
+									<div className="text-2xl font-bold text-foreground dark:text-primary">
 										{stat.value}
 									</div>
 									<div className="text-sm text-muted-foreground dark:text-slate-400">
@@ -210,12 +211,7 @@ export default function Home() {
 							</div>
 
 							<div className="space-y-4">
-								{[
-									'ATS-optimized templates that get past automated screening',
-									'Industry-specific designs for maximum impact',
-									'Real-time formatting that ensures perfect layout',
-									'One-click PDF export for instant applications'
-								].map((benefit, index) => (
+								{benefits.map((benefit, index) => (
 									<div key={index} className="flex items-start gap-3">
 										<CheckCircle className="w-6 h-6 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
 										<p className="text-muted-foreground dark:text-slate-400">{benefit}</p>
