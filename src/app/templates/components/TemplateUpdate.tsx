@@ -11,6 +11,7 @@ import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';
 import { SkillsForm } from './SkillsForm';
 import { AboutForm } from './AboutForm';
+import { useTranslations } from 'next-intl';
 
 type TemplateUpdateProps = {
 	compiledTemplate: ((userData: UserDataType) => string) | null;
@@ -25,13 +26,14 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 	const setActiveStep = resumeDataStore((state: ResumeDataStoreType) => state.setActiveStep);
 	const setResumeUserDataValue = resumeDataStore((state: ResumeDataStoreType) => state.setResumeUserDataValue);
 	const activeStep = resumeDataStore((state: ResumeDataStoreType) => state.activeStep);
+	const $t = useTranslations('TemplateUpdate');
 	const initialSteps = [
-		{ title: 'Contact', active: true, isClickable: false, component: ContactForm },
-		{ title: 'Experience', active: false, isClickable: false, component: ExperienceForm },
-		{ title: 'Education', active: false, isClickable: false, component: EducationForm },
-		{ title: 'Skills', active: false, isClickable: false, component: SkillsForm },
-		{ title: 'About', active: false, isClickable: false, component: AboutForm },
-		{ title: 'Finish', active: false, isClickable: false, component: FinishForm }
+		{ title: $t('steps.0'), active: true, isClickable: false, component: ContactForm },
+		{ title: $t('steps.1'), active: false, isClickable: false, component: ExperienceForm },
+		{ title: $t('steps.2'), active: false, isClickable: false, component: EducationForm },
+		{ title: $t('steps.3'), active: false, isClickable: false, component: SkillsForm },
+		{ title: $t('steps.4'), active: false, isClickable: false, component: AboutForm },
+		{ title: $t('steps.5'), active: false, isClickable: false, component: FinishForm }
 	];
 
 	const updateUserValue = useCallback((key: string, value: unknown) => {
@@ -78,6 +80,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 							onNextStepCallback={onSetNextStep}
 							onFieldChangeCallback={updateUserValue}
 							initialValues={userResumeData}
+							$t={$t}
 						/>
 					</div>
 				</div>
@@ -91,7 +94,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 							<div className="flex items-center justify-between">
 								<h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
 									<EyeIcon />
-									Live Preview
+									{$t('livePreview.title')}
 								</h2>
 								{/* Mobile Close Button */}
 								<button
@@ -114,7 +117,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 							<div className="flex items-center justify-center gap-4">
 								<div className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
 									<LockIcon />
-									Preview updates automatically
+									{$t('livePreview.description')}
 								</div>
 							</div>
 						</div>
@@ -134,10 +137,6 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 					</button>
 				</div>
 			</div>
-
-			{/* {process.env.NODE_ENV === 'development' && (
-				<PersistenceDebug onTemplateChange={setCurrentTemplate} currentTemplate={templateId} />
-			)} */}
 		</div>
 	);
 };

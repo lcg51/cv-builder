@@ -136,5 +136,37 @@
 		"clearSearch": "Limpiar búsqueda",
 		"searchPlaceholder": "Buscar plantillas...",
 		"defaultTemplateName": "Plantilla"
+	},
+	"ContactForm": {
+		"title": "Información de contacto",
+		"description": "Cuéntanos sobre ti y cómo contactarte",
+		"fields": {
+			"firstName": "Nombre",
+			"lastName": "Apellido",
+			"email": "Correo electrónico",
+			"phone": "Teléfono",
+			"city": "Ciudad",
+			"postalCode": "Código postal"
+		}
+	},
+	"TemplateUpdate": {
+		"steps": {
+			"0": "Contacto",
+			"1": "Experiencia",
+			"2": "Educación",
+			"3": "Habilidades",
+			"4": "Acerca de",
+			"5": "Finalizar"
+		},
+		"stepTexts": {
+			"step": "Paso {step} de {total}",
+			"complete": "{completionPercentage}% Completado",
+			"next": "Siguiente",
+			"finish": "Finalizar"
+		},
+		"livePreview": {
+			"title": "Vista previa",
+			"description": "La vista previa se actualiza automáticamente"
+		}
 	}
 }

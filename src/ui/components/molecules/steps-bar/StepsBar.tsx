@@ -5,6 +5,7 @@ import { UserDataType } from '@/app/models/user';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/ui/icons';
 import { Button } from '@/ui/components/button';
 import { useFormValidation } from '../../../../hooks/useFormValidation';
+import { useTranslations } from 'next-intl';
 
 export type StepsBarComponentProps = {
 	onFieldChange?: (key: string, value: unknown) => void;
@@ -25,6 +26,7 @@ export type StepsBarProps = {
 	onNextStepCallback?: (stepIndex: number) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
 	initialValues?: UserDataType;
+	$t: ReturnType<typeof useTranslations>;
 };
 
 export const StepsBar = ({
@@ -32,7 +34,8 @@ export const StepsBar = ({
 	activeStep = 0,
 	onNextStepCallback,
 	onFieldChangeCallback,
-	initialValues
+	initialValues,
+	$t
 }: StepsBarProps) => {
 	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
 	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
@@ -40,6 +43,24 @@ export const StepsBar = ({
 	const isTabletResolution = width < 1024;
 	const isLastStep = selectedIndex === stepItems.length - 1;
 	const { submitCurrentForm } = useFormValidation();
+
+	const stepText = useMemo(
+		() =>
+			$t.rich('stepTexts.step', { step: selectedIndex + 1, total: stepItems.length }) ??
+			`${selectedIndex + 1} of ${stepItems.length}`,
+		[$t]
+	);
+
+	const completeText = useMemo(
+		() =>
+			$t.rich('stepTexts.complete', {
+				completionPercentage: Math.round(((selectedIndex + 1) / stepItems.length) * 100)
+			}) ?? `${Math.round(((selectedIndex + 1) / stepItems.length) * 100)}% Complete`,
+		[$t]
+	);
+
+	const nextText = useMemo(() => $t('stepTexts.next') ?? 'Next', [$t]);
+	const finishText = useMemo(() => $t('stepTexts.finish') ?? 'Finish', [$t]);
 
 	// Sync selectedIndex with activeStep prop when it changes (e.g., when data is loaded from Zustand)
 	useEffect(() => {
@@ -201,12 +222,8 @@ export const StepsBar = ({
 			{/* Progress Bar */}
 			<div className="mb-8">
 				<div className="flex justify-between items-center mb-2">
-					<span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-						Step {selectedIndex + 1} of {stepItems.length}
-					</span>
-					<span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-						{Math.round(((selectedIndex + 1) / stepItems.length) * 100)}% Complete
-					</span>
+					<span className="text-sm font-medium text-slate-600 dark:text-slate-400">{stepText}</span>
+					<span className="text-sm font-medium text-slate-600 dark:text-slate-400">{completeText}</span>
 				</div>
 				<div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-6">
 					<div
@@ -233,9 +250,7 @@ export const StepsBar = ({
 
 				{/* Centralized Submit Button */}
 				<div className="sticky xl:relative bottom-0 left-0 right-0 bg-white dark:bg-slate-900 md:relative flex justify-between items-center p-6 mt-6">
-					<div className="text-sm text-slate-500 dark:text-slate-400">
-						Step {selectedIndex + 1} of {stepItems.length}
-					</div>
+					<div className="text-sm text-slate-500 dark:text-slate-400">{stepText}</div>
 					<Button
 						variant="default"
 						onClick={onSetNextStep}
@@ -243,7 +258,7 @@ export const StepsBar = ({
 						data-testid="continue-button"
 						disabled={!stepItems[selectedIndex]?.active}
 					>
-						{isLastStep ? 'Finish' : 'Continue'}
+						{isLastStep ? finishText : nextText}
 						<ArrowRightIcon className="w-4 h-4" />
 					</Button>
 				</div>
