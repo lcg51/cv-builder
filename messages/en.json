@@ -147,5 +147,25 @@
 			"city": "City",
 			"postalCode": "Postal Code"
 		}
+	},
+	"TemplateUpdate": {
+		"steps": {
+			"0": "Contact",
+			"1": "Experience",
+			"2": "Education",
+			"3": "Skills",
+			"4": "About",
+			"5": "Finish"
+		},
+		"stepTexts": {
+			"step": "Step {step} of {total}",
+			"complete": "{completionPercentage}% Complete",
+			"next": "Next",
+			"finish": "Finish"
+		},
+		"livePreview": {
+			"title": "Live Preview",
+			"description": "Preview updates automatically"
+		}
 	}
 }
