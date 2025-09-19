@@ -135,5 +135,17 @@
 		"clearSearch": "Clear Search",
 		"searchPlaceholder": "Search templates...",
 		"defaultTemplateName": "Template"
+	},
+	"ContactForm": {
+		"title": "Contact Information",
+		"description": "Tell us about yourself and how to reach you",
+		"fields": {
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"email": "Email Address",
+			"phone": "Phone Number",
+			"city": "City",
+			"postalCode": "Postal Code"
+		}
 	}
 }
