@@ -5,6 +5,7 @@ import '@testing-library/jest-dom';
 import { StepsBar, StepsBarComponentProps, StepsBarItemsProps } from './StepsBar';
 import { useFormValidation } from '../../../../hooks/useFormValidation';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
+import { useTranslations } from 'next-intl';
 
 // Mock the useWindowSize hook
 jest.mock('../../../../hooks/useWindowSize');
@@ -89,6 +90,31 @@ describe('StepsBar Component', () => {
 	const onNextStepCallback: jest.Mock = jest.fn();
 	const onFieldChangeCallback: jest.Mock = jest.fn();
 
+	// Mock translation function with proper typing
+	const mockTranslation = Object.assign(
+		jest.fn((key: string) => {
+			const translations: Record<string, string> = {
+				'stepTexts.next': 'Continue',
+				'stepTexts.finish': 'Finish'
+			};
+			return translations[key] || key;
+		}),
+		{
+			rich: jest.fn((key: string, params?: Record<string, unknown>) => {
+				if (key === 'stepTexts.step') {
+					return `Step ${params?.step} of ${params?.total}`;
+				}
+				if (key === 'stepTexts.complete') {
+					return `${params?.completionPercentage}% Complete`;
+				}
+				return key;
+			}),
+			markup: jest.fn((key: string) => key),
+			raw: jest.fn((key: string) => key),
+			has: jest.fn(() => true)
+		}
+	) as ReturnType<typeof useTranslations>;
+
 	beforeEach(() => {
 		mockUseWindowSize.mockReturnValue({ width: 1200, height: 800 }); // Desktop by default
 
@@ -115,6 +141,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -130,6 +157,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -144,6 +172,7 @@ describe('StepsBar Component', () => {
 					activeStep={1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -159,6 +188,7 @@ describe('StepsBar Component', () => {
 					activeStep={2}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -175,6 +205,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -192,6 +223,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -210,6 +242,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -223,6 +256,7 @@ describe('StepsBar Component', () => {
 					activeStep={1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -240,6 +274,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -254,6 +289,7 @@ describe('StepsBar Component', () => {
 					activeStep={2}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -268,6 +304,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -285,6 +322,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -302,6 +340,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -323,6 +362,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -351,6 +391,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -378,6 +419,7 @@ describe('StepsBar Component', () => {
 					activeStep={1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -395,6 +437,7 @@ describe('StepsBar Component', () => {
 					activeStep={1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -413,6 +456,7 @@ describe('StepsBar Component', () => {
 					activeStep={1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -433,6 +477,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -451,6 +496,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -465,6 +511,7 @@ describe('StepsBar Component', () => {
 					activeStep={5}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -479,6 +526,7 @@ describe('StepsBar Component', () => {
 					activeStep={-1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -488,7 +536,14 @@ describe('StepsBar Component', () => {
 
 		it('should handle missing onNextStepCallback', async () => {
 			const items = createStepItems(2);
-			render(<StepsBar items={items} activeStep={0} onFieldChangeCallback={onFieldChangeCallback} />);
+			render(
+				<StepsBar
+					items={items}
+					activeStep={0}
+					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
+				/>
+			);
 
 			const continueButton = screen.getByRole('button', { name: /continue/i });
 			await user.click(continueButton);
@@ -507,6 +562,7 @@ describe('StepsBar Component', () => {
 					activeStep={1}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -523,6 +579,7 @@ describe('StepsBar Component', () => {
 					activeStep={0}
 					onNextStepCallback={onNextStepCallback}
 					onFieldChangeCallback={onFieldChangeCallback}
+					$t={mockTranslation}
 				/>
 			);
 
@@ -546,6 +603,7 @@ describe('StepsBar Component', () => {
 						activeStep={1}
 						onNextStepCallback={onNextStepCallback}
 						onFieldChangeCallback={onFieldChangeCallback}
+						$t={mockTranslation}
 					/>
 				);
 			};
