@@ -148,6 +148,33 @@
 			"postalCode": "Postal Code"
 		}
 	},
+	"EducationForm": {
+		"title": "Education",
+		"description": "Add your educational background, starting with your most recent qualification",
+		"fields": {
+			"university": "School/University",
+			"education": "Education",
+			"degree": "Degree",
+			"fieldOfStudy": "Field of Study",
+			"finishDate": "Graduation Date",
+			"city": "Location",
+			"description": "Description (Optional)"
+		},
+		"button": "Add Another Education"
+	},
+	"ExperienceForm": {
+		"title": "Experience",
+		"description": "Add your professional experience, starting with your most recent position",
+		"fields": {
+			"jobTitle": "Job Title",
+			"company": "Company",
+			"startDate": "Start Date",
+			"endDate": "End Date",
+			"location": "Location",
+			"description": "Description (Optional)"
+		},
+		"button": "Add Another Experience"
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contact",

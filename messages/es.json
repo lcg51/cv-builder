@@ -149,6 +149,33 @@
 			"postalCode": "Código postal"
 		}
 	},
+	"EducationForm": {
+		"title": "Educación",
+		"description": "Añade tu formación, empezando con tu último título",
+		"fields": {
+			"university": "Universidad/Escuela",
+			"degree": "Grado",
+			"education": "Educación",
+			"fieldOfStudy": "Campo de estudio",
+			"finishDate": "Fecha de graduación",
+			"city": "Ubicación",
+			"description": "Descripción (Opcional)"
+		},
+		"button": "Añadir otro título"
+	},
+	"ExperienceForm": {
+		"title": "Experiencia",
+		"description": "Añade tu experiencia, empezando con tu última posición",
+		"fields": {
+			"jobTitle": "Cargo",
+			"company": "Empresa",
+			"startDate": "Fecha de inicio",
+			"endDate": "Fecha de fin",
+			"location": "Ubicación",
+			"description": "Descripción (Opcional)"
+		},
+		"button": "Añadir otra experiencia"
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contacto",
