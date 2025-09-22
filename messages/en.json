@@ -148,6 +148,20 @@
 			"postalCode": "Postal Code"
 		}
 	},
+	"EducationForm": {
+		"title": "Education",
+		"description": "Add your educational background, starting with your most recent qualification",
+		"fields": {
+			"university": "School/University",
+			"education": "Education",
+			"degree": "Degree",
+			"fieldOfStudy": "Field of Study",
+			"finishDate": "Graduation Date",
+			"city": "Location",
+			"description": "Description (Optional)"
+		},
+		"button": "Add Another Education"
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contact",

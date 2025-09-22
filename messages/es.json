@@ -149,6 +149,20 @@
 			"postalCode": "Código postal"
 		}
 	},
+	"EducationForm": {
+		"title": "Educación",
+		"description": "Añade tu formación, empezando con tu último título",
+		"fields": {
+			"university": "Universidad/Escuela",
+			"degree": "Grado",
+			"education": "Educación",
+			"fieldOfStudy": "Campo de estudio",
+			"finishDate": "Fecha de graduación",
+			"city": "Ubicación",
+			"description": "Descripción (Opcional)"
+		},
+		"button": "Añadir otro título"
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contacto",
