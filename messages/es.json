@@ -163,6 +163,19 @@
 		},
 		"button": "Añadir otro título"
 	},
+	"ExperienceForm": {
+		"title": "Experiencia",
+		"description": "Añade tu experiencia, empezando con tu última posición",
+		"fields": {
+			"jobTitle": "Cargo",
+			"company": "Empresa",
+			"startDate": "Fecha de inicio",
+			"endDate": "Fecha de fin",
+			"location": "Ubicación",
+			"description": "Descripción (Opcional)"
+		},
+		"button": "Añadir otra experiencia"
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contacto",

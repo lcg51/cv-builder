@@ -162,6 +162,19 @@
 		},
 		"button": "Add Another Education"
 	},
+	"ExperienceForm": {
+		"title": "Experience",
+		"description": "Add your professional experience, starting with your most recent position",
+		"fields": {
+			"jobTitle": "Job Title",
+			"company": "Company",
+			"startDate": "Start Date",
+			"endDate": "End Date",
+			"location": "Location",
+			"description": "Description (Optional)"
+		},
+		"button": "Add Another Experience"
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contact",

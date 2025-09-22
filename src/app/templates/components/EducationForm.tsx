@@ -21,11 +21,11 @@ export const EducationForm: React.FC<EducationFormProps> = props => {
 		fields: [
 			{
 				name: 'educationForms',
-				label: $t('fields.education'),
+				label: $t('title'),
 				type: 'text', // This is required but not used for array fields
 				isArray: true,
 				addButtonText: $t('button'),
-				itemTitle: (index: number) => `Education ${index + 1}`,
+				itemTitle: (index: number) => `${$t('title')} ${index + 1}`,
 				arrayItemSchema: {
 					university: {
 						name: 'university',
