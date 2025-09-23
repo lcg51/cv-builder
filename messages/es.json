@@ -176,6 +176,20 @@
 		},
 		"button": "Añadir otra experiencia"
 	},
+	"SkillsForm": {
+		"title": "Habilidades",
+		"description": "Añade tus habilidades y evalúa tu nivel de proficiencia para cada una",
+		"fields": {
+			"title": "Nombre de la habilidad",
+			"level": "Nivel de proficiencia"
+		},
+		"button": "Añadir otra habilidad",
+		"skillLevels": {
+			"beginner": "Principiante",
+			"intermediate": "Intermedio",
+			"expert": "Experto"
+		}
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contacto",
