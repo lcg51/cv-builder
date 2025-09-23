@@ -175,6 +175,20 @@
 		},
 		"button": "Add Another Experience"
 	},
+	"SkillsForm": {
+		"title": "Skills",
+		"description": "Add your key skills and rate your proficiency level for each",
+		"fields": {
+			"title": "Skill Name",
+			"level": "Proficiency Level"
+		},
+		"button": "Add Another Skill",
+		"skillLevels": {
+			"beginner": "Beginner",
+			"intermediate": "Intermediate",
+			"expert": "Expert"
+		}
+	},
 	"TemplateUpdate": {
 		"steps": {
 			"0": "Contact",

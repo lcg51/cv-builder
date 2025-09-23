@@ -27,6 +27,12 @@ export interface BaseFieldConfig {
 	validation?: z.ZodSchema<unknown>;
 	gridColumn?: 'full' | 'half';
 	helpText?: string;
+	// Slider-specific configuration
+	sliderConfig?: {
+		labels?: string[];
+		showValue?: boolean;
+		valueFormat?: (value: number) => string;
+	};
 }
 
 export interface ArrayFieldConfig extends BaseFieldConfig {
@@ -180,7 +186,12 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name }) =
 						{field.type === 'slider' &&
 							Array.isArray(formField.value) &&
 							formField.value.length > 0 &&
-							` (${formField.value[0] || field.min || 0}%)`}
+							field.sliderConfig?.showValue !== false &&
+							` (${
+								field.sliderConfig?.valueFormat
+									? field.sliderConfig.valueFormat(formField.value[0] || field.min || 0)
+									: `${formField.value[0] || field.min || 0}%`
+							})`}
 					</FormLabel>
 					<FormControl>
 						{field.type === 'slider' ? (
@@ -207,11 +218,11 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name }) =
 					{field.helpText && (
 						<div className="text-xs text-slate-500 dark:text-slate-400 mt-2">{field.helpText}</div>
 					)}
-					{field.type === 'slider' && (
+					{field.type === 'slider' && field.sliderConfig?.labels && (
 						<div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
-							<span>Beginner</span>
-							<span>Intermediate</span>
-							<span>Expert</span>
+							{field.sliderConfig.labels.map((label, index) => (
+								<span key={index}>{label}</span>
+							))}
 						</div>
 					)}
 					<FormMessage />
