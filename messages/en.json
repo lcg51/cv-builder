@@ -136,6 +136,29 @@
 		"searchPlaceholder": "Search templates...",
 		"defaultTemplateName": "Template"
 	},
+	"AboutForm": {
+		"title": "Professional Summary",
+		"description": "Write a brief summary that highlights your key achievements and career goals",
+		"fields": {
+			"aboutMe": {
+				"label": "Professional Summary",
+				"placeholder": "I am a passionate software engineer with 5+ years of experience in full-stack development. I specialize in building scalable web applications using modern technologies and frameworks. My goal is to create innovative solutions that drive business growth and enhance user experiences.",
+				"helpText": "Keep it concise and highlight your most relevant skills and achievements (2-3 sentences recommended)"
+			},
+			"github": {
+				"label": "GitHub Profile",
+				"placeholder": "https://github.com/yourusername",
+				"helpText": "Include your full GitHub profile URL to showcase your projects and contributions",
+				"validation": "Please enter a valid GitHub URL (must contain github.com) or leave empty"
+			},
+			"linkedin": {
+				"label": "LinkedIn Profile",
+				"placeholder": "https://linkedin.com/in/yourusername",
+				"helpText": "Include your full LinkedIn profile URL to connect with potential employers",
+				"validation": "Please enter a valid LinkedIn URL (must contain linkedin.com) or leave empty"
+			}
+		}
+	},
 	"ContactForm": {
 		"title": "Contact Information",
 		"description": "Tell us about yourself and how to reach you",
