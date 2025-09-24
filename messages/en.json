@@ -208,5 +208,22 @@
 			"title": "Live Preview",
 			"description": "Preview updates automatically"
 		}
+	},
+	"TemplateDownload": {
+		"title": "Download Your Resume",
+		"button": "Download PDF Resume",
+		"completionPercentage": "Completion",
+		"completedText": "All sections completed!",
+		"incompleteText": "Complete all sections to enable download",
+		"generatingPDF": "Generating PDF...",
+		"additionalInformation": {
+			"title": "What You'll Get",
+			"description": "Your resume will be generated as a high-quality PDF file that you can use for job applications, professional networking, and career advancement.",
+			"items": {
+				"0": "High-quality PDF",
+				"1": "Professional layout",
+				"2": "Print-ready format"
+			}
+		}
 	}
 }
