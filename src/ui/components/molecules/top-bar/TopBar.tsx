@@ -21,6 +21,7 @@ import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers'
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { uuidRegex } from '@/lib/utils';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export type TopBarProps = {
 	user?: UserProps | null;
@@ -29,6 +30,7 @@ export type TopBarProps = {
 export const TopBar = ({ user }: TopBarProps) => {
 	const pathname = usePathname();
 	const { push } = useRouter();
+	const $t = useTranslations('navigation');
 
 	const isTemplateDetailPage = pathname.includes('/templates') && uuidRegex.test(pathname);
 
@@ -47,7 +49,7 @@ export const TopBar = ({ user }: TopBarProps) => {
 		return (
 			<Link href="/login">
 				<Button variant="default" size="sm" className="flex items-center gap-2">
-					<span className="sm:inline">Sign In</span>
+					<span className="sm:inline">{$t('login')}</span>
 				</Button>
 			</Link>
 		);
@@ -90,7 +92,7 @@ export const TopBar = ({ user }: TopBarProps) => {
 								googleSignOut(pathname);
 							}}
 						>
-							Logout
+							{$t('logout')}
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

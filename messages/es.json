@@ -9,8 +9,6 @@
 		"submit": "Enviar"
 	},
 	"navigation": {
-		"home": "Inicio",
-		"templates": "Plantillas",
 		"login": "Iniciar sesión",
 		"logout": "Cerrar sesión"
 	},
@@ -137,6 +135,29 @@
 		"searchPlaceholder": "Buscar plantillas...",
 		"defaultTemplateName": "Plantilla"
 	},
+	"AboutForm": {
+		"title": "Resumen profesional",
+		"description": "Escribe un resumen breve que resalte tus logros clave y objetivos profesionales",
+		"fields": {
+			"aboutMe": {
+				"label": "Resumen profesional",
+				"placeholder": "Soy un ingeniero de software apasionado con 5+ años de experiencia en desarrollo full-stack. Me especializo en construir aplicaciones web escalables usando tecnologías y frameworks modernos. Mi objetivo es crear soluciones innovadoras que impulsen el crecimiento empresarial y mejorar la experiencia del usuario.",
+				"helpText": "Manténlo conciso y resalta tus habilidades y logros más relevantes (2-3 sentencias recomendadas)"
+			},
+			"github": {
+				"label": "Perfil de GitHub",
+				"placeholder": "https://github.com/yourusername",
+				"helpText": "Incluye tu URL completa de perfil de GitHub para mostrar tus proyectos y contribuciones",
+				"validation": "Por favor ingresa una URL de GitHub válida (debe contener github.com) o deja en blanco"
+			},
+			"linkedin": {
+				"label": "Perfil de LinkedIn",
+				"placeholder": "https://linkedin.com/in/yourusername",
+				"helpText": "Incluye tu URL completa de perfil de LinkedIn para conectar con posibles empleadores",
+				"validation": "Por favor ingresa una URL de LinkedIn válida (debe contener linkedin.com) o deja en blanco"
+			}
+		}
+	},
 	"ContactForm": {
 		"title": "Información de contacto",
 		"description": "Cuéntanos sobre ti y cómo contactarte",
@@ -176,6 +197,10 @@
 		},
 		"button": "Añadir otra experiencia"
 	},
+	"FinishForm": {
+		"title": "Listo para descargar! 🎉",
+		"description": "¡Felicidades! Tu currículum ha sido completado exitosamente. Haz clic en el botón siguiente para descargar tu currículum profesional en formato PDF que está listo para aplicaciones y avance en tu carrera."
+	},
 	"SkillsForm": {
 		"title": "Habilidades",
 		"description": "Añade tus habilidades y evalúa tu nivel de proficiencia para cada una",
@@ -208,6 +233,23 @@
 		"livePreview": {
 			"title": "Vista previa",
 			"description": "La vista previa se actualiza automáticamente"
+		}
+	},
+	"TemplateDownload": {
+		"title": "Descargar tu currículum",
+		"button": "Descargar currículum PDF",
+		"completionPercentage": "Completado",
+		"completedText": "Todos los secciones completadas!",
+		"incompleteText": "Completa todas las secciones para habilitar la descarga",
+		"generatingPDF": "Generando PDF...",
+		"additionalInformation": {
+			"title": "Lo que obtendrás",
+			"description": "Tu currículum se generará como un archivo PDF de alta calidad que puedes usar para aplicaciones laborales, networking profesional y avance en tu carrera.",
+			"items": {
+				"0": "PDF de alta calidad",
+				"1": "Diseño profesional",
+				"2": "Formato listo para imprimir"
+			}
 		}
 	}
 }

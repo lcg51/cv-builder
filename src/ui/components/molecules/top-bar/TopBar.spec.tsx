@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { TopBar } from './TopBar';
 import { UserProps } from '@/lib/models';
 import { googleSignOut } from '../../../../app/server-actions/session';
@@ -21,6 +22,11 @@ jest.mock('@/hooks/useBrowserBackNavigation', () => ({
 // Mock server actions
 jest.mock('../../../../app/server-actions/session', () => ({
 	googleSignOut: jest.fn()
+}));
+
+// Mock next-intl translations
+jest.mock('next-intl', () => ({
+	useTranslations: jest.fn()
 }));
 
 // Mock CSS imports
@@ -105,6 +111,13 @@ describe('TopBar Component', () => {
 			triggerNavigationEvent: mockTriggerNavigationEvent
 		});
 		(usePathname as jest.Mock).mockReturnValue('/');
+		(useTranslations as jest.Mock).mockReturnValue((key: string) => {
+			const translations: Record<string, string> = {
+				login: 'Sign In',
+				logout: 'Logout'
+			};
+			return translations[key] || key;
+		});
 	});
 
 	afterEach(() => {
