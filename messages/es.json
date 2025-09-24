@@ -9,8 +9,6 @@
 		"submit": "Enviar"
 	},
 	"navigation": {
-		"home": "Inicio",
-		"templates": "Plantillas",
 		"login": "Iniciar sesión",
 		"logout": "Cerrar sesión"
 	},
@@ -198,6 +196,10 @@
 			"description": "Descripción (Opcional)"
 		},
 		"button": "Añadir otra experiencia"
+	},
+	"FinishForm": {
+		"title": "Listo para descargar! 🎉",
+		"description": "¡Felicidades! Tu currículum ha sido completado exitosamente. Haz clic en el botón siguiente para descargar tu currículum profesional en formato PDF que está listo para aplicaciones y avance en tu carrera."
 	},
 	"SkillsForm": {
 		"title": "Habilidades",
