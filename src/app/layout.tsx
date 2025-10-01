@@ -7,10 +7,10 @@ import './globals.css';
 import React from 'react';
 import { TopBar } from '@/ui/components';
 import { auth } from '@/auth';
-import { UserProps } from '@/lib/models';
 import getHypertune from '@/hypertune';
 import { HypertuneProvider } from '../../generated/hypertune.react';
 import { NextIntlClientProvider } from 'next-intl';
+import { User } from '@/lib/db';
 
 export const metadata: Metadata = {
 	title: 'CV Builder',
@@ -49,7 +49,7 @@ export default async function RootLayout({
 							<IPProvider debugMode={process.env.NODE_ENV === 'development'}>
 								<FormValidationProvider>
 									<NavigationGuardProvider>
-										<TopBar user={(session?.user as unknown as UserProps) || null} />
+										<TopBar user={session?.user as User} />
 										{children}
 									</NavigationGuardProvider>
 								</FormValidationProvider>

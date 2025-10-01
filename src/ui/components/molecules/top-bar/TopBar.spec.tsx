@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { TopBar } from './TopBar';
-import { UserProps } from '@/lib/models';
 import { googleSignOut } from '../../../../app/server-actions/session';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
+import { User } from '@/lib/db/schema';
 
 // Mock Next.js navigation hooks
 jest.mock('next/navigation', () => ({
@@ -82,21 +82,19 @@ jest.mock('next/link', () => {
 });
 
 // Test data
-const mockUser: UserProps = {
+const mockUser: User = {
 	id: '1',
 	name: 'John Doe',
 	email: 'john.doe@example.com',
-	phone: '+1234567890',
-	role: 'user',
+	emailVerified: null,
 	image: 'https://lh3.googleusercontent.com/a/default-user'
 };
 
-const mockUserWithoutName: UserProps = {
+const mockUserWithoutName: User = {
 	id: '3',
 	name: '',
 	email: 'user@example.com',
-	phone: '+1234567892',
-	role: 'user',
+	emailVerified: null,
 	image: 'https://example.com/avatar.jpg'
 };
 
@@ -126,7 +124,7 @@ describe('TopBar Component', () => {
 
 	describe('Rendering', () => {
 		it('should render TopBar with logo when no user is provided', () => {
-			render(<TopBar user={null} />);
+			render(<TopBar user={undefined} />);
 
 			expect(screen.getByAltText('CV Builder Logo')).toBeInTheDocument();
 			expect(screen.getByText('Sign In')).toBeInTheDocument();
@@ -179,8 +177,8 @@ describe('TopBar Component', () => {
 		});
 
 		it('should show "U" for user with null name', () => {
-			const nullNameUser = { ...mockUser, name: null };
-			render(<TopBar user={nullNameUser as unknown as UserProps} />);
+			const nullNameUser = { ...mockUser, name: null } as User;
+			render(<TopBar user={nullNameUser} />);
 
 			expect(screen.getByTestId('avatar-fallback')).toHaveTextContent('U');
 		});

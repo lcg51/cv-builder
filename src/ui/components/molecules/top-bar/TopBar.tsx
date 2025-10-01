@@ -16,15 +16,15 @@ import {
 } from '@/ui/components/dropdown-menu';
 
 import { googleSignOut } from '../../../../app/server-actions/session';
-import { UserProps } from '@/lib/models';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { uuidRegex } from '@/lib/utils';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { User } from '@/lib/db/schema';
 
 export type TopBarProps = {
-	user?: UserProps | null;
+	user?: User;
 };
 
 export const TopBar = ({ user }: TopBarProps) => {
