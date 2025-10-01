@@ -1,9 +1,11 @@
 import NextAuth from 'next-auth';
 import { NextAuthConfig } from 'next-auth';
-// import GitHubProvider from "next-auth/providers/github";
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import GoogleProvider from 'next-auth/providers/google';
+import { db } from '@/lib/db';
 
 export const authOptions: NextAuthConfig = {
+	adapter: DrizzleAdapter(db),
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID,
@@ -16,13 +18,16 @@ export const authOptions: NextAuthConfig = {
 				}
 			}
 		})
-		// GitHubProvider({
-		//   clientId: process.env.GITHUB_ID ?? "",
-		//   clientSecret: process.env.GITHUB_SECRET ?? "",
-		// }),
-		// basePath: "/api/auth",
-		// secret: process.env.NEXTAUTH_SECRET,
-	]
+	],
+	callbacks: {
+		session: ({ session, user }) => ({
+			...session,
+			user: {
+				...session.user,
+				id: user.id
+			}
+		})
+	}
 };
 
 export const {
