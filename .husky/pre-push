@@ -1,2 +1,2 @@
 echo "[husky] pre-push"
-yarn test
+pnpm test

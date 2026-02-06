@@ -9,16 +9,16 @@ CV Builder App — a Next.js 15 application for creating professional resumes/CV
 ## Commands
 
 ```bash
-yarn dev                # Start dev server (Turbopack)
-yarn build              # Production build
-yarn lint               # ESLint check
-yarn fix                # Prettier + ESLint auto-fix
-yarn test               # Run all Jest tests
-yarn test -- --testPathPattern=ProgressBar   # Run a single test file by name
-yarn db:generate        # Generate Drizzle migrations from schema
-yarn db:migrate         # Run migrations
-yarn db:push            # Push schema directly to database
-yarn db:studio          # Open Drizzle Studio GUI
+pnpm dev                # Start dev server (Turbopack)
+pnpm build              # Production build
+pnpm lint               # ESLint check
+pnpm fix                # Prettier + ESLint auto-fix
+pnpm test               # Run all Jest tests
+pnpm test -- --testPathPattern=ProgressBar   # Run a single test file by name
+pnpm db:generate        # Generate Drizzle migrations from schema
+pnpm db:migrate         # Run migrations
+pnpm db:push            # Push schema directly to database
+pnpm db:studio          # Open Drizzle Studio GUI
 ```
 
 Pre-commit hook runs `lint-staged` (Prettier + ESLint) via Husky.
@@ -71,13 +71,13 @@ Hypertune SDK for feature flags/A/B testing (e.g., V2 templates). Generated type
 
 ### Template System
 
-4 templates defined in `src/templates/index.ts` with UUID-based IDs. Each template has `.hbs`, `.css`, and `.html` files. Template screenshots are generated via `yarn generate-all-screenshots`.
+4 templates defined in `src/templates/index.ts` with UUID-based IDs. Each template has `.hbs`, `.css`, and `.html` files. Template screenshots are generated via `pnpm generate-all-screenshots`.
 
 ## Key Conventions
 
 - Path alias: `@/*` maps to `./src/*`
 - ESLint: `no-unused-vars` is an error, `no-explicit-any` is a warning
-- Package manager: Yarn (see `resolutions` in package.json)
+- Package manager: pnpm (see `pnpm.overrides` in package.json)
 - TypeScript strict mode enabled
 - Tests use Jest + React Testing Library + jest-environment-jsdom; test files are colocated as `*.spec.tsx`
 - CSS modules are mocked with `identity-obj-proxy` in tests
