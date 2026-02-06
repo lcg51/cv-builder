@@ -23,9 +23,7 @@ MOCK_IP_LOCATION=london
 ### Step 2: Restart your development server
 
 ```bash
-npm run dev
-# or
-yarn dev
+pnpm dev
 ```
 
 ### Step 3: Test
