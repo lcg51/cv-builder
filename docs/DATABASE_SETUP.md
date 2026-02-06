@@ -24,8 +24,8 @@ brew install node@20
 ## Step 2: Install Dependencies
 
 ```bash
-yarn add drizzle-orm @auth/drizzle-adapter
-yarn add -D drizzle-kit
+pnpm add drizzle-orm @auth/drizzle-adapter
+pnpm add -D drizzle-kit
 ```
 
 ## Step 3: Environment Variables
@@ -71,20 +71,20 @@ vercel storage create postgres
 
 ```bash
 # Generate migration files
-yarn db:generate
+pnpm db:generate
 
 # Push schema to database
-yarn db:push
+pnpm db:push
 
 # Or run migrations (if you prefer migration files)
-yarn db:migrate
+pnpm db:migrate
 ```
 
 ## Step 6: Verify Setup
 
 ```bash
 # Open Drizzle Studio to view your database
-yarn db:studio
+pnpm db:studio
 ```
 
 ## Database Schema
@@ -167,16 +167,16 @@ const handleSave = async (formData: UserDataType) => {
 
 ```bash
 # Check database connection
-yarn db:studio
+pnpm db:studio
 
 # Reset database (careful!)
-yarn db:push --force
+pnpm db:push --force
 
 # Generate new migration
-yarn db:generate
+pnpm db:generate
 
 # View database schema
-yarn db:studio
+pnpm db:studio
 ```
 
 ## Next Steps

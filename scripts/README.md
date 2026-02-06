@@ -22,8 +22,8 @@ Converts existing HTML/CSS templates to Handlebars format with embedded styles.
 # Using npm script (recommended)
 npm run convert-to-handlebars template2
 
-# Using yarn
-yarn convert-to-handlebars template3
+# Using pnpm
+pnpm convert-to-handlebars template3
 
 # Direct execution with ts-node
 npx ts-node scripts/convert-to-handlebars.ts template1
