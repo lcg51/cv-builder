@@ -10,6 +10,7 @@ import { auth } from '@/auth';
 import getHypertune from '@/hypertune';
 import { HypertuneProvider } from '../../generated/hypertune.react';
 import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { User } from '@/lib/db';
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await auth();
+	const messages = await getMessages();
 
 	const hypertune = await getHypertune();
 
@@ -44,7 +46,7 @@ export default async function RootLayout({
 		>
 			<html lang="en" suppressHydrationWarning>
 				<body className="antialiased bg-white dark:bg-slate-900">
-					<NextIntlClientProvider>
+					<NextIntlClientProvider messages={messages}>
 						<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
 							<IPProvider debugMode={process.env.NODE_ENV === 'development'}>
 								<FormValidationProvider>
