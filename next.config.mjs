@@ -34,6 +34,14 @@ const nextConfig = {
 			}
 		];
 	},
+	rewrites: async () => {
+		return [
+			{
+				source: '/cms-api/:path*',
+				destination: `${process.env.NEXT_PUBLIC_CMS_API_URL || 'https://portfolio-cms-beige-eta.vercel.app'}/api/:path*`
+			}
+		];
+	},
 	turbopack: {
 		// Example: adding an alias and custom file extension
 		resolveAlias: {

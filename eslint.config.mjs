@@ -7,6 +7,11 @@ export default [
 	{ files: ['src/**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
 	{ languageOptions: { globals: globals.browser } },
 	{ ignores: ['node_modules', 'dist', 'build', 'src/components/**'] },
+	// Config files at root need Node.js globals
+	{
+		files: ['*.config.{js,mjs,cjs,ts}', 'scripts/**/*.{js,mjs,cjs,ts}'],
+		languageOptions: { globals: globals.node }
+	},
 	pluginJs.configs.recommended,
 	...tseslint.configs.recommended,
 	pluginReact.configs.flat.recommended,

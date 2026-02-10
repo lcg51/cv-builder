@@ -5,7 +5,7 @@ import { ConfirmPageSkeleton } from '../../components/ConfirmPageSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getTemplate, Template } from '@/templates';
+import { fetchTemplateById, Template } from '@/templates';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { useStoreHydration } from '@/hooks/useStoreHydration';
 import { useParams } from 'next/navigation';
@@ -58,14 +58,18 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 			return;
 		}
 
-		const foundTemplate = getTemplate(selectedTemplateId);
-
-		if (!foundTemplate) {
-			resetResumeProccess();
-			return;
-		}
-
-		setTemplate(foundTemplate);
+		let cancelled = false;
+		fetchTemplateById(selectedTemplateId).then(foundTemplate => {
+			if (cancelled) return;
+			if (!foundTemplate) {
+				resetResumeProccess();
+				return;
+			}
+			setTemplate(foundTemplate);
+		});
+		return () => {
+			cancelled = true;
+		};
 	}, [selectedTemplateId, templateIdFromUrl, isLoading, resetResumeProccess]);
 
 	useNavigationGuardProvider({
