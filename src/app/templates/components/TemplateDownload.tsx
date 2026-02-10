@@ -2,11 +2,13 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/ui/components/button';
-import { DownloadIcon, CheckIcon } from '@/ui/icons';
+import { DownloadIcon, CheckIcon, LockIcon, GoogleIcon } from '@/ui/icons';
 import { ProgressBar, TemplatePreviewer } from '@/ui/components';
 import { UserDataType } from '@/app/models/user';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
+import { googleSignIn } from '@/app/server-actions/session';
 
 export type TemplateDownloadProps = {
 	onDownloadPDF?: () => void;
@@ -16,6 +18,7 @@ export type TemplateDownloadProps = {
 	userResumeData: UserDataType;
 	compiledTemplate: (userData: UserDataType) => string;
 	styles: string;
+	isAuthenticated: boolean;
 };
 
 export const TemplateDownload = ({
@@ -24,17 +27,47 @@ export const TemplateDownload = ({
 	completionPercentage,
 	userResumeData,
 	compiledTemplate,
-	styles
+	styles,
+	isAuthenticated
 }: TemplateDownloadProps) => {
 	const { width } = useWindowSize();
 	const [isLargeScreen, setIsLargeScreen] = useState(false);
 	const $t = useTranslations('TemplateDownload');
+	const pathname = usePathname();
 
 	useEffect(() => {
 		setIsLargeScreen(width >= 1024);
 	}, [width]);
 
 	const DownloadButtonSection = useMemo(() => {
+		if (!isAuthenticated) {
+			return (
+				<div className="mt-4">
+					<div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center space-y-4">
+						<div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30">
+							<LockIcon className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+						</div>
+						<h4 className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+							{$t('signInRequired')}
+						</h4>
+						<p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+							{$t('signInDescription')}
+						</p>
+						<form action={() => googleSignIn(pathname)}>
+							<Button
+								type="submit"
+								variant="default"
+								className="inline-flex items-center gap-3 px-8 py-3 text-base font-semibold text-white shadow-lg hover:shadow-xl rounded-xl transition-all duration-300"
+							>
+								<GoogleIcon className="w-5 h-5" />
+								<span>{$t('signInButton')}</span>
+							</Button>
+						</form>
+					</div>
+				</div>
+			);
+		}
+
 		return (
 			<div className="sticky bottom-4 left-0 right-0 text-center space-y-6 mt-4">
 				<Button
@@ -61,7 +94,7 @@ export const TemplateDownload = ({
 				</Button>
 			</div>
 		);
-	}, [onDownloadPDF, isDownloading]);
+	}, [onDownloadPDF, isDownloading, isAuthenticated, pathname]);
 
 	const AdditionalInformationSection = useMemo(() => {
 		return (
