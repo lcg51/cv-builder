@@ -21,6 +21,12 @@ const nextConfig = {
 				hostname: 'glorious-fitness-badee061c9.media.strapiapp.com',
 				port: '',
 				pathname: '/**'
+			},
+			{
+				protocol: 'https',
+				hostname: 'portfolio-cms-beige-eta.vercel.app',
+				port: '',
+				pathname: '/api/media/**'
 			}
 		]
 	},
@@ -31,6 +37,14 @@ const nextConfig = {
 				source: '/home',
 				destination: '/',
 				permanent: true
+			}
+		];
+	},
+	rewrites: async () => {
+		return [
+			{
+				source: '/cms-api/:path*',
+				destination: `${process.env.NEXT_PUBLIC_CMS_API_URL || 'https://portfolio-cms-beige-eta.vercel.app'}/api/:path*`
 			}
 		];
 	},

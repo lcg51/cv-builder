@@ -1,13 +1,12 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import {
 	Template,
 	TemplateId,
-	getAllTemplates,
-	getHomePageTemplates,
-	getTemplatesByCategory,
+	fetchAllTemplates,
+	fetchTemplateById,
+	filterTemplatesByCategory,
 	searchTemplates,
-	loadTemplate,
-	getTemplate
+	loadTemplate
 } from '@/templates';
 
 type UseTemplatesProps = {
@@ -18,51 +17,34 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 	const [templates, setTemplates] = useState<Template[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const allTemplatesRef = useRef<Template[]>([]);
 
-	// Load all templates
+	// Load all templates from CMS
 	const loadAllTemplates = useCallback(async () => {
 		try {
 			setLoading(true);
 			setError(null);
-			const allTemplates = getAllTemplates();
+			const allTemplates = await fetchAllTemplates();
+			allTemplatesRef.current = allTemplates;
 			setTemplates(allTemplates);
 		} catch (err) {
 			setError('Failed to load templates');
 			console.error('Error loading templates:', err);
 		} finally {
-			await new Promise(resolve => setTimeout(resolve, 500));
 			setLoading(false);
 		}
 	}, []);
 
-	// Load templates by category
-	const loadTemplatesByCategory = useCallback(async (category: Template['category']) => {
-		try {
-			setLoading(true);
-			setError(null);
-			const categoryTemplates = getTemplatesByCategory(category);
-			setTemplates(categoryTemplates);
-		} catch (err) {
-			setError('Failed to load templates by category');
-			console.error('Error loading templates by category:', err);
-		} finally {
-			setLoading(false);
-		}
+	// Load templates by category (client-side filter)
+	const loadTemplatesByCategory = useCallback((category: Template['category']) => {
+		const filtered = filterTemplatesByCategory(allTemplatesRef.current, category);
+		setTemplates(filtered);
 	}, []);
 
-	// Search templates
-	const searchTemplatesByQuery = useCallback(async (query: string) => {
-		try {
-			setLoading(true);
-			setError(null);
-			const searchResults = searchTemplates(query);
-			setTemplates(searchResults);
-		} catch (err) {
-			setError('Failed to search templates');
-			console.error('Error searching templates:', err);
-		} finally {
-			setLoading(false);
-		}
+	// Search templates (client-side filter)
+	const searchTemplatesByQuery = useCallback((query: string) => {
+		const results = searchTemplates(allTemplatesRef.current, query);
+		setTemplates(results);
 	}, []);
 
 	// Load a specific template
@@ -70,7 +52,7 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		try {
 			setLoading(true);
 			setError(null);
-			const template = getTemplate(id);
+			const template = await fetchTemplateById(id);
 			if (template) {
 				setTemplates([template]);
 			} else {
@@ -100,15 +82,24 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		}
 	}, []);
 
-	const loadHomePageTemplates = useCallback(() => {
-		const homePageTemplates = getHomePageTemplates();
-		setTemplates(homePageTemplates);
+	const loadHomePageTemplates = useCallback(async () => {
+		try {
+			setLoading(true);
+			setError(null);
+			const allTemplates = await fetchAllTemplates();
+			allTemplatesRef.current = allTemplates;
+			setTemplates(allTemplates.slice(0, 3));
+		} catch (err) {
+			setError('Failed to load templates');
+			console.error('Error loading templates:', err);
+		} finally {
+			setLoading(false);
+		}
 	}, []);
 
-	// Reset to all templates
+	// Reset to all templates (from cached data)
 	const resetToAllTemplates = useCallback(() => {
-		const allTemplates = getAllTemplates();
-		setTemplates(allTemplates);
+		setTemplates(allTemplatesRef.current);
 	}, []);
 
 	// Clear error

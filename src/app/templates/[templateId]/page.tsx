@@ -6,7 +6,7 @@ import { TemplateUpdate } from '../components/TemplateUpdate';
 import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { useParams, useRouter } from 'next/navigation';
-import { getTemplate, Template } from '@/templates';
+import { fetchTemplateById, Template } from '@/templates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
 export default function CreateTemplate() {
@@ -23,15 +23,19 @@ export default function CreateTemplate() {
 			return;
 		}
 
-		const foundTemplate = getTemplate(templateID);
-
-		if (!foundTemplate) {
-			setTemplateError(`Template "${templateID}" not found`);
-			return;
-		}
-
-		setTemplate(foundTemplate);
-		setTemplateError(null);
+		let cancelled = false;
+		fetchTemplateById(templateID).then(foundTemplate => {
+			if (cancelled) return;
+			if (!foundTemplate) {
+				setTemplateError(`Template "${templateID}" not found`);
+				return;
+			}
+			setTemplate(foundTemplate);
+			setTemplateError(null);
+		});
+		return () => {
+			cancelled = true;
+		};
 	}, [templateID]);
 
 	useNavigationGuardProvider({

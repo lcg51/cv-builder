@@ -30,7 +30,7 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	const compileTemplateFromHandlebars = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			const result = await compileHandlebarsTemplate(selectedTemplate?.preview ?? '');
+			const result = await compileHandlebarsTemplate(selectedTemplate?.id ?? '');
 			setCompiledTemplate(() => result.template);
 			setStyles(result.css);
 		} catch (error) {
