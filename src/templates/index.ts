@@ -72,7 +72,16 @@ export type CMSTemplateDoc = {
 	layout: CMSTemplateLayoutBlock[];
 	customCSS: string;
 	renderedHTML: string;
-	thumbnail: { url: string } | null;
+	thumbnail: {
+		url: string;
+		width: number;
+		height: number;
+		sizes: {
+			thumbnail: { url: string | null };
+			small: { url: string | null };
+			medium: { url: string | null };
+		};
+	} | null;
 	globalConfig: {
 		primaryColor: string;
 		secondaryColor: string;
@@ -100,8 +109,15 @@ export type CMSTemplateListResponse = {
 
 // Use the Next.js rewrite proxy to avoid CORS issues on client-side fetches
 const CMS_API_BASE = '/cms-api';
+const CMS_ORIGIN = process.env.NEXT_PUBLIC_CMS_API_URL || 'https://portfolio-cms-beige-eta.vercel.app';
 
 // --- CMS mapper ---
+
+function buildThumbnailUrl(doc: CMSTemplateDoc): string {
+	const path = doc.thumbnail?.sizes?.small?.url ?? doc.thumbnail?.sizes?.medium?.url ?? doc.thumbnail?.url;
+	if (!path) return '';
+	return `${CMS_ORIGIN}${path}`;
+}
 
 function mapCMSDocToTemplate(doc: CMSTemplateDoc): Template {
 	return {
@@ -111,7 +127,7 @@ function mapCMSDocToTemplate(doc: CMSTemplateDoc): Template {
 		category: 'professional',
 		files: { handlebars: '', css: '', html: '' },
 		preview: doc.slug,
-		previewImage: doc.thumbnail?.url ?? '',
+		previewImage: buildThumbnailUrl(doc),
 		tags: [],
 		isActive: doc._status === 'published',
 		features: []

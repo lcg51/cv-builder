@@ -12,7 +12,7 @@ export const Template = ({
 	selectedTemplateId?: string;
 	onClickTemplate?: (id: string) => void;
 }) => {
-	const screenshotSrc = templateScreenshotsMap[template.preview];
+	const screenshotSrc = templateScreenshotsMap[template.previewImage];
 
 	return (
 		<Card
