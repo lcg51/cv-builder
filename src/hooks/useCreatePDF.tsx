@@ -1,16 +1,16 @@
 import { useCallback, useState, useEffect } from 'react';
 import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
-import { UserDataType } from '@/app/models/user';
+import { TemplateDataType } from '@/types/template';
 import { Template } from '@/templates';
 
 type CreatePdfProps = {
-	userResumeData: UserDataType;
+	userResumeData: TemplateDataType;
 	selectedTemplate: Template | null;
 	useHandlebars?: boolean;
 };
 
 export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
-	const [compiledTemplate, setCompiledTemplate] = useState<((userData: UserDataType) => string) | null>(null);
+	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
 	const [styles, setStyles] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);

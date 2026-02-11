@@ -1,5 +1,5 @@
 import Handlebars from 'handlebars';
-import { UserDataType } from '@/app/models/user';
+import { TemplateDataType } from '@/types/template';
 
 // Define proper types for Handlebars helpers
 type HandlebarsHelperOptions = {
@@ -55,7 +55,7 @@ Handlebars.registerHelper('join', function (this: HandlebarsContext, array: unkn
 /**
  * Process a Handlebars template with user data
  */
-export const processHandlebarsTemplate = (templateContent: string, userData: UserDataType): string => {
+export const processHandlebarsTemplate = (templateContent: string, userData: TemplateDataType): string => {
 	if (!templateContent || !userData) return '';
 
 	try {
@@ -77,7 +77,7 @@ export const processHandlebarsTemplate = (templateContent: string, userData: Use
  */
 export const processCompleteHandlebarsTemplate = async (
 	templateId: string,
-	userData: UserDataType
+	userData: TemplateDataType
 ): Promise<{ html: string; css: string }> => {
 	try {
 		// Import the template loading function
@@ -105,7 +105,9 @@ export const processCompleteHandlebarsTemplate = async (
  * Compile a Handlebars template from HTML content string
  * This is useful when you have the template content directly
  */
-export const compileHandlebarsTemplateFromContent = (templateContent: string): ((userData: UserDataType) => string) => {
+export const compileHandlebarsTemplateFromContent = (
+	templateContent: string
+): ((userData: TemplateDataType) => string) => {
 	if (!templateContent) {
 		throw new Error('Template content is required');
 	}
@@ -115,7 +117,7 @@ export const compileHandlebarsTemplateFromContent = (templateContent: string): (
 		const template = Handlebars.compile(templateContent);
 
 		// Return a function that can be reused with different user data
-		return (userData: UserDataType): string => {
+		return (userData: TemplateDataType): string => {
 			if (!userData) return '';
 			return template(userData);
 		};
@@ -133,7 +135,7 @@ export const compileHandlebarsTemplateFromContent = (templateContent: string): (
  */
 export const compileCompleteHandlebarsTemplate = async (
 	templateId: string
-): Promise<{ template: (userData: UserDataType) => string; css: string }> => {
+): Promise<{ template: (userData: TemplateDataType) => string; css: string }> => {
 	try {
 		// Import the template loading function
 		const { loadTemplate } = await import('@/templates');

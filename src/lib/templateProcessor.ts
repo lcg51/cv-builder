@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
-import { UserDataType } from '@/app/models/user';
+import { TemplateDataType } from '@/types/template';
 
-export const processTemplate = (templateHTML: string, userData: UserDataType): string => {
+export const processTemplate = (templateHTML: string, userData: TemplateDataType): string => {
 	if (!templateHTML || !userData) return '';
 
 	return templateHTML
@@ -53,7 +53,7 @@ export const processTemplate = (templateHTML: string, userData: UserDataType): s
  */
 export const compileHandlebarsTemplate = async (
 	templateId: string
-): Promise<{ template: (userData: UserDataType) => string; css: string }> => {
+): Promise<{ template: (userData: TemplateDataType) => string; css: string }> => {
 	try {
 		// Import the Handlebars processor
 		const { compileCompleteHandlebarsTemplate } = await import('@/lib/handlebarsProcessor');
@@ -74,7 +74,7 @@ export const compileHandlebarsTemplate = async (
  */
 export const compileHandlebarsTemplateFromContent = async (
 	templateContent: string
-): Promise<(userData: UserDataType) => string> => {
+): Promise<(userData: TemplateDataType) => string> => {
 	try {
 		// Import the Handlebars processor
 		const { compileHandlebarsTemplateFromContent: compileFromContent } = await import('@/lib/handlebarsProcessor');

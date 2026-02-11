@@ -19,10 +19,8 @@
 		"convert-to-handlebars:no-minify": "npx tsx scripts/convert-to-handlebars.ts --no-minify",
 		"generate-screenshot": "npx tsx scripts/generate-template-screenshot.ts",
 		"generate-all-screenshots": "npx tsx scripts/generate-all-template-screenshots.ts",
-		"db:generate": "drizzle-kit generate",
-		"db:migrate": "drizzle-kit migrate",
-		"db:push": "drizzle-kit push",
-		"db:studio": "drizzle-kit studio"
+		"sync-types": "mkdir -p src/types && curl $NEXT_PUBLIC_CMS_API_URL/api/types/template/typescript > src/types/template.ts",
+		"api:generate": "npm run sync-types"
 	},
 	"dependencies": {
 		"@flags-sdk/hypertune": "^0.2.0",

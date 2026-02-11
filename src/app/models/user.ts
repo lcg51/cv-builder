@@ -1,43 +1,8 @@
-export type SkillType = {
-	title: string;
-	level: number[];
-};
+// Re-export types from the API-generated template types
+export type { SkillType, WorkExperienceType, EducationType, TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/template';
 
-export type WorkExperienceType = {
-	company: string;
-	jobTitle: string;
-	startDate: Date;
-	endDate: Date;
-	location: string;
-	description: string;
-};
-
-export type EducationType = {
-	degree: string;
-	university: string;
-	fieldOfStudy: string;
-	finishDate: Date;
-	city: string;
-	description: string;
-};
-
-export type UserDataType = {
-	firstName: string;
-	lastName: string;
-	aboutMe: string;
-	role: string;
-	city: string;
-	postalCode: string;
-	phone: string;
-	email: string;
-	linkedin: string;
-	github: string;
-	education: Array<EducationType>;
-	workExperience: Array<WorkExperienceType>;
-	skills: Array<SkillType>;
-};
-
-export const defaultUserData: UserDataType = {
+export const defaultUserData: TemplateDataType = {
 	firstName: 'John',
 	lastName: 'Doe',
 	role: 'Software Engineer',
