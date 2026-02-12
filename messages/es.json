@@ -198,8 +198,13 @@
 		"button": "Añadir otra experiencia"
 	},
 	"FinishForm": {
-		"title": "Listo para descargar! 🎉",
-		"description": "¡Felicidades! Tu currículum ha sido completado exitosamente. Haz clic en el botón siguiente para descargar tu currículum profesional en formato PDF que está listo para aplicaciones y avance en tu carrera."
+		"title": "Foto de perfil",
+		"description": "Agrega una foto profesional a tu currículum. Este paso es opcional.",
+		"uploadButton": "Subir foto",
+		"removeButton": "Eliminar",
+		"uploading": "Subiendo...",
+		"uploadError": "Error al subir la imagen. Inténtalo de nuevo.",
+		"dragHint": "o arrastra y suelta una imagen aquí"
 	},
 	"SkillsForm": {
 		"title": "Habilidades",
@@ -236,6 +241,10 @@
 		}
 	},
 	"TemplateDownload": {
+		"successBanner": {
+			"title": "Listo para descargar! 🎉",
+			"description": "¡Felicidades! Tu currículum ha sido completado exitosamente. Descarga tu currículum profesional en formato PDF listo para aplicaciones y avance en tu carrera."
+		},
 		"title": "Descargar tu currículum",
 		"button": "Descargar currículum PDF",
 		"completionPercentage": "Completado",

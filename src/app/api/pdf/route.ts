@@ -39,8 +39,12 @@ export async function POST(req: Request) {
 		await page.setContent(
 			`<html>
 				<head>
-				<script src="https://cdn.tailwindcss.com"></script>
 				<style>
+					@page {
+						size: A4;
+						margin: 0;
+					}
+
 					html, body {
 						margin: 0;
 						padding: 0;
@@ -48,11 +52,23 @@ export async function POST(req: Request) {
 						height: 297mm;
 						overflow: hidden;
 					}
+
 					.cv {
-						display: flex;
-						width: 100%;
-                        height: 100%; /* Ensure it fills the A4 page */
+						width: 210mm;
+						height: 297mm;
+						display: block; /* NOT flex */
+						overflow: hidden;
 					}
+					.cv-header {
+						width: 100%;
+					}
+
+					.cv-body {
+						display: flex; 
+						width: 100%;
+						height: calc(297mm - var(--header-height, 95mm));
+					}
+
 					${styles}
 				</style>
 				</head>

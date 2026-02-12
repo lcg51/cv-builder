@@ -32,6 +32,7 @@ export type TemplateDataType = {
 	linkedin: string;
 	github: string;
 	aboutMe: string;
+	profileImage?: string;
 	education: EducationType[];
 	workExperience: WorkExperienceType[];
 	skills: SkillType[];
