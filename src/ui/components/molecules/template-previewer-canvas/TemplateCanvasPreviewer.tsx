@@ -1,13 +1,13 @@
 'use client';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { UserDataType } from '@/app/models/user';
+import { TemplateDataType } from '@/types/payload-types';
 import html2canvas from 'html2canvas';
 import './TemplateCanvasPreviewer.css';
 
 type TemplateProps = {
-	userData: UserDataType;
+	userData: TemplateDataType;
 	templateStyles: string;
-	compiledTemplate: ((userData: UserDataType) => string) | null;
+	compiledTemplate: ((userData: TemplateDataType) => string) | null;
 };
 
 export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate }: TemplateProps) => {

@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
-import { UserDataType } from '@/app/models/user';
+import { TemplateDataType } from '@/types/payload-types';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/ui/icons';
 import { Button } from '@/ui/components/button';
 import { useFormValidation } from '../../../../hooks/useFormValidation';
@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 
 export type StepsBarComponentProps = {
 	onFieldChange?: (key: string, value: unknown) => void;
-	initialValues?: UserDataType;
+	initialValues?: TemplateDataType;
 	formId?: string; // Make formId optional since some forms (like FinishForm) don't need validation
 };
 
@@ -25,7 +25,7 @@ export type StepsBarProps = {
 	activeStep?: number;
 	onNextStepCallback?: (stepIndex: number) => void;
 	onFieldChangeCallback: (key: string, value: unknown) => void;
-	initialValues?: UserDataType;
+	initialValues?: TemplateDataType;
 	$t: ReturnType<typeof useTranslations>;
 };
 

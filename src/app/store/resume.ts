@@ -1,5 +1,6 @@
 import { deserializeDates } from '@/lib/helpers';
-import { defaultUserData, UserDataType } from '../models/user';
+import { defaultUserData } from '../models/user';
+import { TemplateDataType } from '@/types/payload-types';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
@@ -11,11 +12,11 @@ export const NavigationStateEnum = {
 export type NavigationStateType = (typeof NavigationStateEnum)[keyof typeof NavigationStateEnum];
 
 type ResumeDataStoreType = {
-	userResumeData: UserDataType;
+	userResumeData: TemplateDataType;
 	navigationState: NavigationStateType;
 	resetResumeUserData: () => void;
 	setResumeUserDataValue: (key: string, value: string) => void;
-	updateResumeUserData: (data: Partial<UserDataType>) => void;
+	updateResumeUserData: (data: Partial<TemplateDataType>) => void;
 	activeStep: number;
 	setActiveStep: (step: number) => void;
 	selectedTemplate: string;
@@ -41,7 +42,7 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 				set((state: ResumeDataStoreType) => ({
 					userResumeData: { ...state.userResumeData, [key]: value }
 				})),
-			updateResumeUserData: (data: Partial<UserDataType>) =>
+			updateResumeUserData: (data: Partial<TemplateDataType>) =>
 				set((state: ResumeDataStoreType) => ({
 					userResumeData: { ...state.userResumeData, ...data }
 				})),

@@ -333,7 +333,6 @@ export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = ({
 	};
 
 	const renderArrayField = (field: ArrayFieldConfig) => {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const { fields, append, remove } = useFieldArray({
 			control: control as any,
 			name: field.name

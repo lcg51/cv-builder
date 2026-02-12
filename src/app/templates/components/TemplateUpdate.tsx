@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FinishForm } from './FinishForm';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
-import { UserDataType } from '@/app/models/user';
+import { TemplateDataType } from '@/types/payload-types';
 import { ContactForm } from './ContactForm';
 import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';
@@ -14,7 +14,7 @@ import { AboutForm } from './AboutForm';
 import { useTranslations } from 'next-intl';
 
 type TemplateUpdateProps = {
-	compiledTemplate: ((userData: UserDataType) => string) | null;
+	compiledTemplate: ((userData: TemplateDataType) => string) | null;
 	styles: string;
 	onTemplateDownload: () => void;
 };
@@ -43,7 +43,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 	// Handle Date object conversion when store is rehydrated
 	useEffect(() => {
 		if (needsDateConversion(userResumeData)) {
-			const convertedData = deserializeDates(userResumeData) as UserDataType;
+			const convertedData = deserializeDates(userResumeData) as TemplateDataType;
 			updateResumeUserData(convertedData);
 		}
 	}, [userResumeData, updateResumeUserData]);
