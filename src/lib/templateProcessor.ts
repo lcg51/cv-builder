@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 
 export const processTemplate = (templateHTML: string, userData: TemplateDataType): string => {
 	if (!templateHTML || !userData) return '';

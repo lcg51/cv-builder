@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
 import { useWindowSize } from '../../../../hooks/useWindowSize';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/ui/icons';
 import { Button } from '@/ui/components/button';
 import { useFormValidation } from '../../../../hooks/useFormValidation';

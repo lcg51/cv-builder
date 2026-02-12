@@ -1,6 +1,6 @@
 'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import './TemplatePreviewer.css';
 
 type TemplateProps = {

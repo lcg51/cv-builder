@@ -1,5 +1,5 @@
 import Handlebars from 'handlebars';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 
 // Define proper types for Handlebars helpers
 type HandlebarsHelperOptions = {

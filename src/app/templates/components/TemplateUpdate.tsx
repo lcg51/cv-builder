@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FinishForm } from './FinishForm';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { deserializeDates, needsDateConversion } from '@/lib/helpers';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import { ContactForm } from './ContactForm';
 import { ExperienceForm } from './ExperienceForm';
 import { EducationForm } from './EducationForm';

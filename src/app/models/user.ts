@@ -1,6 +1,6 @@
 // Re-export types from the API-generated template types
-export type { SkillType, WorkExperienceType, EducationType, TemplateDataType } from '@/types/template';
-import { TemplateDataType } from '@/types/template';
+export type { SkillType, WorkExperienceType, EducationType, TemplateDataType } from '@/types/payload-types';
+import { TemplateDataType } from '@/types/payload-types';
 
 export const defaultUserData: TemplateDataType = {
 	firstName: 'John',

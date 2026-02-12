@@ -1,6 +1,6 @@
 import { deserializeDates } from '@/lib/helpers';
 import { defaultUserData } from '../models/user';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 

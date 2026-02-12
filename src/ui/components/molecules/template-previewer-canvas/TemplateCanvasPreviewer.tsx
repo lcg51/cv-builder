@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import html2canvas from 'html2canvas';
 import './TemplateCanvasPreviewer.css';
 

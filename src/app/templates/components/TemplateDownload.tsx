@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/ui/components/button';
 import { DownloadIcon, CheckIcon, LockIcon, GoogleIcon } from '@/ui/icons';
 import { ProgressBar, TemplatePreviewer } from '@/ui/components';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';

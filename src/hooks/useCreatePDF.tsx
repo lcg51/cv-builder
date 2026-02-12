@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect } from 'react';
 import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
-import { TemplateDataType } from '@/types/template';
+import { TemplateDataType } from '@/types/payload-types';
 import { Template } from '@/templates';
 
 type CreatePdfProps = {
