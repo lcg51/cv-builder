@@ -26,7 +26,10 @@ import {
 	Circle,
 	Check,
 	Globe,
-	MapPin
+	MapPin,
+	Camera,
+	User,
+	Upload
 } from 'lucide-react';
 
 export {
@@ -57,5 +60,8 @@ export {
 	Circle,
 	Check,
 	Globe,
-	MapPin
+	MapPin,
+	Camera,
+	User,
+	Upload
 };

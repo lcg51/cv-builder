@@ -15,18 +15,6 @@ const nextConfig = {
 				hostname: 'localhost',
 				port: '1337',
 				pathname: '/uploads/**'
-			},
-			{
-				protocol: 'https',
-				hostname: 'glorious-fitness-badee061c9.media.strapiapp.com',
-				port: '',
-				pathname: '/**'
-			},
-			{
-				protocol: 'https',
-				hostname: 'portfolio-cms-beige-eta.vercel.app',
-				port: '',
-				pathname: '/api/media/**'
 			}
 		]
 	},

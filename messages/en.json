@@ -198,8 +198,13 @@
 		"button": "Add Another Experience"
 	},
 	"FinishForm": {
-		"title": "Ready to Download! 🎉",
-		"description": "Congratulations! Your resume has been completed successfully. Click the next button below to go to download your professional PDF resume that's ready for job applications and career advancement."
+		"title": "Profile Photo",
+		"description": "Add a professional photo to your resume. This step is optional.",
+		"uploadButton": "Upload Photo",
+		"removeButton": "Remove",
+		"uploading": "Uploading...",
+		"uploadError": "Failed to upload image. Please try again.",
+		"dragHint": "or drag and drop an image here"
 	},
 	"SkillsForm": {
 		"title": "Skills",
@@ -236,6 +241,10 @@
 		}
 	},
 	"TemplateDownload": {
+		"successBanner": {
+			"title": "Ready to Download! 🎉",
+			"description": "Congratulations! Your resume has been completed successfully. Download your professional PDF resume that's ready for job applications and career advancement."
+		},
 		"title": "Download Your Resume",
 		"button": "Download PDF Resume",
 		"completionPercentage": "Completion",

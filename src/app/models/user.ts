@@ -13,6 +13,7 @@ export const defaultUserData: TemplateDataType = {
 	linkedin: 'https://www.linkedin.com/in/johndoe',
 	github: 'https://www.github.com/johndoe',
 	aboutMe: 'I am a software engineer with a passion for building web applications.',
+	profileImage: '',
 	education: [
 		{
 			degree: 'Bachelor of Science in Computer Science',
