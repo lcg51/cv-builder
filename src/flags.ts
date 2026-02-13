@@ -1,26 +1,7 @@
-import { Identify } from 'flags';
-import { dedupe, flag } from 'flags/next';
-import { createHypertuneAdapter } from '@flags-sdk/hypertune';
-import {
-	createSource,
-	flagFallbacks,
-	vercelFlagDefinitions as flagDefinitions,
-	Context,
-	RootFlagValues
-} from '../generated/hypertune';
+import { flag } from 'flags/next';
+import { vercelAdapter } from '@flags-sdk/vercel';
 
-const identify: Identify<Context> = dedupe(async () => {
-	return {
-		environment: process.env.NODE_ENV,
-		user: { id: '1', name: 'Test User', email: 'hi@test.com' }
-	};
+export const areFilterTemplatesEnabled = flag({
+	key: 'areFilterTemplatesEnabled',
+	adapter: vercelAdapter()
 });
-
-const hypertuneAdapter = createHypertuneAdapter<RootFlagValues, Context>({
-	createSource,
-	flagFallbacks,
-	flagDefinitions,
-	identify
-});
-
-export const V2TemplatesEnabled = flag(hypertuneAdapter.declarations.isV2TemplatesEnabled);

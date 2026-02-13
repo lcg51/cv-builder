@@ -8,6 +8,7 @@ import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
 import { SearchFilters } from '@/ui/components';
 import { useTranslations } from 'next-intl';
+import { useFlags } from '@/hooks/useFlags';
 
 interface TemplateSelectionProps {
 	templates: TemplateType[];
@@ -24,6 +25,8 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 }) => {
 	const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
 	const [searchQuery, setSearchQuery] = useState<string>('');
+	const { flags } = useFlags();
+	const areFilterTemplatesEnabled = flags?.areFilterTemplatesEnabled;
 	const { push } = useRouter();
 	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
 	const tags = ['professional', 'creative', 'modern', 'minimal'] as TemplateCategory[];
@@ -131,13 +134,15 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 				</div>
 			</div>
 
-			<SearchFilters
-				searchQuery={searchQuery}
-				onSearch={handleSearch}
-				placeholderText={$t('searchPlaceholder')}
-				onSelectCategory={handleCategoryFilter}
-				tags={tags}
-			/>
+			{areFilterTemplatesEnabled && (
+				<SearchFilters
+					searchQuery={searchQuery}
+					onSearch={handleSearch}
+					placeholderText={$t('searchPlaceholder')}
+					onSelectCategory={handleCategoryFilter}
+					tags={tags}
+				/>
+			)}
 
 			{/* Scrollable Template Grid Section */}
 			<div className="min-h-[calc(100vh-300px)]">{templateGridSection}</div>

@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/ui/icons';
 import { useSectionsData } from './models/sections';
-import { useHypertune } from '../../generated/hypertune.react';
 import { HomeTemplates } from './components/HomeTemplates';
 import { useTranslations } from 'next-intl';
 
@@ -19,9 +18,6 @@ export default function Home() {
 		push('/templates');
 	}, []);
 
-	const hypertune = useHypertune();
-
-	const isTemplatesV2Enabled = hypertune.isV2TemplatesEnabled({ fallback: false });
 	const $t = useTranslations('HomePage');
 	const { features, steps, stats, benefits } = useSectionsData();
 
@@ -99,7 +95,7 @@ export default function Home() {
 						</p>
 					</div>
 
-					<HomeTemplates isTemplatesV2Enabled={isTemplatesV2Enabled} />
+					<HomeTemplates />
 
 					<div className="text-center mt-12">
 						<Button variant="outline" size="lg" onClick={redirectToTemplates}>

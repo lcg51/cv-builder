@@ -26,27 +26,6 @@ export interface Template {
 	features: string[];
 }
 
-export type TemplateV2Props = {
-	id: string;
-	name: string;
-	description: string;
-	category: TemplateCategory;
-	preview: string;
-	previewImage: string;
-	previewImageUrl: string;
-	tags: string[];
-	features: Feature[];
-	imagePreview?: {
-		url: string;
-		alternativeText: string;
-		previewUrl?: string;
-		width: number;
-		height: number;
-		formats: any;
-		name: string;
-	};
-};
-
 // Map template preview names to their screenshot images
 export const templateScreenshotsMap: Record<string, any> = {
 	template1: template1Screenshot,
