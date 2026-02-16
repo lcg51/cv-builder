@@ -53,58 +53,26 @@ Handlebars.registerHelper('join', function (this: HandlebarsContext, array: unkn
 });
 
 /**
- * Compile a Handlebars template from HTML content string
- * This is useful when you have the template content directly
+ * Load a template by ID from the CMS, compile its Handlebars HTML,
+ * and return the compiled template function alongside the CSS.
  */
-export const compileHandlebarsTemplateFromContent = (
-	templateContent: string
-): ((userData: TemplateDataType) => string) => {
-	if (!templateContent) {
-		throw new Error('Template content is required');
-	}
-
-	try {
-		// Compile the Handlebars template once
-		const template = Handlebars.compile(templateContent);
-
-		// Return a function that can be reused with different user data
-		return (userData: TemplateDataType): string => {
-			if (!userData) return '';
-			return template(userData);
-		};
-	} catch (error) {
-		console.error('Error compiling Handlebars template from content:', error);
-		throw new Error(
-			`Failed to compile template from content: ${error instanceof Error ? error.message : 'Unknown error'}`
-		);
-	}
-};
-
-/**
- * Compile a complete Handlebars template (with embedded CSS) once
- * Returns an object with the compiled template function and CSS
- */
-export const compileCompleteHandlebarsTemplate = async (
+export const compileHandlebarsTemplate = async (
 	templateId: string
 ): Promise<{ template: (userData: TemplateDataType) => string; css: string }> => {
-	try {
-		// Import the template loading function
-		const { loadTemplate } = await import('@/templates');
+	const { loadTemplate } = await import('@/templates');
+	const { html, css } = await loadTemplate(templateId);
 
-		// Load template content
-		const templateContent = await loadTemplate(templateId as string);
-
-		// Compile Handlebars template once
-		const template = compileHandlebarsTemplateFromContent(templateContent.html);
-
-		return {
-			template,
-			css: templateContent.css
-		};
-	} catch (error) {
-		console.error(`Error compiling Handlebars template ${templateId}:`, error);
-		throw new Error(
-			`Failed to compile template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
-		);
+	if (!html) {
+		throw new Error(`Template ${templateId} has no HTML content`);
 	}
+
+	const compiled = Handlebars.compile(html);
+
+	return {
+		template: (userData: TemplateDataType): string => {
+			if (!userData) return '';
+			return compiled(userData);
+		},
+		css
+	};
 };
