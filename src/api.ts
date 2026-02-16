@@ -2,6 +2,8 @@ const CMS_API_BASE = '/cms-api';
 
 class PayloadAPI {
 	private token: string | null = null;
+	private cache = new Map<string, { data: unknown; timestamp: number }>();
+	private readonly cacheTTL = 5 * 60 * 1000; // 5 minutes
 
 	private getHeaders(extra?: Record<string, string>): Record<string, string> {
 		const headers: Record<string, string> = { 'Content-Type': 'application/json', ...extra };
@@ -28,13 +30,20 @@ class PayloadAPI {
 	}
 
 	async get<T>(endpoint: string): Promise<T> {
+		const cached = this.cache.get(endpoint);
+		if (cached && Date.now() - cached.timestamp < this.cacheTTL) {
+			return cached.data as T;
+		}
+
 		const response = await fetch(`${CMS_API_BASE}${endpoint}`, {
 			headers: this.getHeaders()
 		});
 		if (!response.ok) {
 			throw new Error(`GET ${endpoint} failed: ${response.status}`);
 		}
-		return response.json();
+		const data = await response.json();
+		this.cache.set(endpoint, { data, timestamp: Date.now() });
+		return data;
 	}
 
 	async post<T>(endpoint: string, body: unknown): Promise<T> {
