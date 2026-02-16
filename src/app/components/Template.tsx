@@ -1,5 +1,5 @@
 import { Card } from '@/ui/components/card';
-import { type Template as TemplateType, templateScreenshotsMap } from '@/templates';
+import { type Template as TemplateType } from '@/templates';
 import { CheckIcon, EyeIcon, StarIcon } from '@/ui/icons';
 import Image from 'next/image';
 
@@ -12,8 +12,6 @@ export const Template = ({
 	selectedTemplateId?: string;
 	onClickTemplate?: (id: string) => void;
 }) => {
-	const screenshotSrc = templateScreenshotsMap[template.previewImage];
-
 	return (
 		<Card
 			key={template.id}
@@ -26,15 +24,7 @@ export const Template = ({
 			<div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800">
 				{/* Fixed aspect ratio container (16:9 ratio) */}
 				<div className="relative w-full aspect-[4/3] md:aspect-[3/4] xl:aspect-[3/4]">
-					{screenshotSrc ? (
-						<Image
-							src={screenshotSrc}
-							alt={`${template.name} preview`}
-							fill
-							className="object-contain transition-transform duration-300 group-hover:scale-110"
-							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-						/>
-					) : template.previewImage ? (
+					{template.previewImage ? (
 						<Image
 							src={template.previewImage}
 							alt={`${template.name} preview`}

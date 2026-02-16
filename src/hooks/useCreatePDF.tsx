@@ -2,14 +2,13 @@ import { useCallback, useState, useEffect } from 'react';
 import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
 import { TemplateDataType } from '@/types/payload-types';
 import { Template } from '@/templates';
+import { cmsApi } from '@/api';
 
 type CreatePdfProps = {
 	userResumeData: TemplateDataType;
 	selectedTemplate: Template | null;
 	useHandlebars?: boolean;
 };
-
-const CMS_API_BASE = '/cms-api';
 
 export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
 	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
@@ -58,40 +57,15 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	const downloadPDF = useCallback(async () => {
 		setIsDownloading(true);
 		try {
-			let processedHtml: string;
-
 			if (!compiledTemplate) {
 				throw new Error('No template available for processing');
 			}
 
-			if (useHandlebars) {
-				processedHtml = compiledTemplate(userResumeData);
-			} else {
-				// const { processTemplate } = await import('@/lib/templateProcessor');
-				processedHtml = compiledTemplate(userResumeData);
-			}
+			const processedHtml = compiledTemplate(userResumeData);
 
-			const loginRes = await fetch(`${CMS_API_BASE}/users/login`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					email: process.env.NEXT_PUBLIC_CMS_API_EMAIL,
-					password: process.env.NEXT_PUBLIC_CMS_API_PASSWORD
-				})
-			});
-			const { token } = await loginRes.json();
+			await cmsApi.login();
+			const blob = await cmsApi.postRaw('/pdf', { html: processedHtml, styles });
 
-			const response = await fetch(`${CMS_API_BASE}/pdf`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json', Authorization: `JWT ${token}` },
-				body: JSON.stringify({ html: processedHtml, styles: styles })
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to generate PDF');
-			}
-
-			const blob = await response.blob();
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
@@ -102,7 +76,7 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 		} finally {
 			setIsDownloading(false);
 		}
-	}, [styles, userResumeData, useHandlebars, compiledTemplate]);
+	}, [styles, userResumeData, compiledTemplate]);
 
 	return {
 		styles,
