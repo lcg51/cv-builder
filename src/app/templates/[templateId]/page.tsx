@@ -45,8 +45,7 @@ export default function CreateTemplate() {
 
 	const { styles, compiledTemplate, downloadPDF, isDownloading, isLoading } = useCreatePDF({
 		userResumeData,
-		selectedTemplate: template,
-		useHandlebars: true
+		selectedTemplate: template
 	});
 
 	const onTemplateDownload = useCallback(() => {

@@ -67,24 +67,3 @@ export const compileHandlebarsTemplate = async (
 		);
 	}
 };
-
-/**
- * Compile a Handlebars template from HTML content string
- * This is useful when you have the template content directly
- */
-export const compileHandlebarsTemplateFromContent = async (
-	templateContent: string
-): Promise<(userData: TemplateDataType) => string> => {
-	try {
-		// Import the Handlebars processor
-		const { compileHandlebarsTemplateFromContent: compileFromContent } = await import('@/lib/handlebarsProcessor');
-
-		// Compile the Handlebars template from content
-		return compileFromContent(templateContent);
-	} catch (error) {
-		console.error('Error compiling Handlebars template from content:', error);
-		throw new Error(
-			`Failed to compile Handlebars template from content: ${error instanceof Error ? error.message : 'Unknown error'}`
-		);
-	}
-};

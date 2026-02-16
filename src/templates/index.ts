@@ -1,4 +1,4 @@
-import { template1Screenshot, template2Screenshot, template3Screenshot, template4Screenshot } from '@/assets';
+import { cmsApi } from '@/api';
 
 export type TemplateCategory = 'professional' | 'creative' | 'modern' | 'minimal';
 
@@ -25,14 +25,6 @@ export interface Template {
 	isActive: boolean;
 	features: string[];
 }
-
-// Map template preview names to their screenshot images
-export const templateScreenshotsMap: Record<string, any> = {
-	template1: template1Screenshot,
-	template2: template2Screenshot,
-	template3: template3Screenshot,
-	template4: template4Screenshot
-};
 
 // --- CMS API types ---
 
@@ -86,8 +78,6 @@ export type CMSTemplateListResponse = {
 	nextPage: number | null;
 };
 
-// Use the Next.js rewrite proxy to avoid CORS issues on client-side fetches
-const CMS_API_BASE = '/cms-api';
 const CMS_ORIGIN = process.env.NEXT_PUBLIC_CMS_API_URL || 'https://portfolio-cms-beige-eta.vercel.app';
 
 // --- CMS mapper ---
@@ -114,21 +104,14 @@ function mapCMSDocToTemplate(doc: CMSTemplateDoc): Template {
 }
 
 // --- CMS API functions ---
-
 export async function fetchAllTemplates(): Promise<Template[]> {
-	const response = await fetch(`${CMS_API_BASE}/templates`);
-	if (!response.ok) {
-		throw new Error(`Failed to fetch templates: ${response.status}`);
-	}
-	const data: CMSTemplateListResponse = await response.json();
+	const data = await cmsApi.get<CMSTemplateListResponse>('/templates');
 	return data.docs.map(mapCMSDocToTemplate).filter(t => t.isActive);
 }
 
 export async function fetchTemplateById(id: string): Promise<Template | undefined> {
 	try {
-		const response = await fetch(`${CMS_API_BASE}/templates/${id}`);
-		if (!response.ok) return undefined;
-		const doc: CMSTemplateDoc = await response.json();
+		const doc = await cmsApi.get<CMSTemplateDoc>(`/templates/${id}`);
 		return mapCMSDocToTemplate(doc);
 	} catch {
 		return undefined;
@@ -138,11 +121,7 @@ export async function fetchTemplateById(id: string): Promise<Template | undefine
 export type TemplateId = string;
 
 export async function loadTemplate(templateId: string): Promise<{ html: string; css: string }> {
-	const response = await fetch(`${CMS_API_BASE}/templates/${templateId}`);
-	if (!response.ok) {
-		throw new Error(`Failed to load template ${templateId}`);
-	}
-	const doc: CMSTemplateDoc = await response.json();
+	const doc = await cmsApi.get<CMSTemplateDoc>(`/templates/${templateId}`);
 
 	if (!doc.layout || doc.layout.length === 0) {
 		throw new Error(`Template ${templateId} has no layout blocks`);

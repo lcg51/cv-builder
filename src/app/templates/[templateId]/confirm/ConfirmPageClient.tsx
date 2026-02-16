@@ -79,8 +79,7 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 
 	const { downloadPDF, isDownloading, styles, compiledTemplate } = useCreatePDF({
 		userResumeData,
-		selectedTemplate: template,
-		useHandlebars: true
+		selectedTemplate: template
 	});
 
 	const NavigationStateComponent = useMemo(() => {

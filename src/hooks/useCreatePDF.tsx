@@ -1,31 +1,19 @@
 import { useCallback, useState, useEffect } from 'react';
-import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
+import { compileHandlebarsTemplate } from '@/lib/templateProcessor';
 import { TemplateDataType } from '@/types/payload-types';
 import { Template } from '@/templates';
+import { cmsApi } from '@/api';
 
 type CreatePdfProps = {
 	userResumeData: TemplateDataType;
 	selectedTemplate: Template | null;
-	useHandlebars?: boolean;
 };
 
-export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
+export const useCreatePDF = ({ userResumeData, selectedTemplate }: CreatePdfProps) => {
 	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
 	const [styles, setStyles] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);
-
-	const compileTemplateFromHTML = useCallback(async () => {
-		setIsLoading(true);
-		try {
-			const template = await compileHandlebarsTemplateFromContent(selectedTemplate?.preview ?? '');
-			setCompiledTemplate(() => template);
-		} catch (error) {
-			console.error('Error compiling template:', error);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [selectedTemplate]);
 
 	const compileTemplateFromHandlebars = useCallback(async () => {
 		setIsLoading(true);
@@ -43,10 +31,9 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	// Compile Handlebars template once when template changes
 	useEffect(() => {
 		if (!selectedTemplate) return;
-		if (!useHandlebars) compileTemplateFromHTML();
 
 		compileTemplateFromHandlebars();
-	}, [selectedTemplate, useHandlebars, compileTemplateFromHandlebars, compileTemplateFromHTML]);
+	}, [selectedTemplate, compileTemplateFromHandlebars]);
 
 	const refreshTemplates = useCallback(async () => {
 		setStyles('');
@@ -56,29 +43,15 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	const downloadPDF = useCallback(async () => {
 		setIsDownloading(true);
 		try {
-			let processedHtml: string;
-
 			if (!compiledTemplate) {
 				throw new Error('No template available for processing');
 			}
 
-			if (useHandlebars) {
-				processedHtml = compiledTemplate(userResumeData);
-			} else {
-				// const { processTemplate } = await import('@/lib/templateProcessor');
-				processedHtml = compiledTemplate(userResumeData);
-			}
+			const processedHtml = compiledTemplate(userResumeData);
 
-			const response = await fetch(`/api/pdf`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ html: processedHtml, styles: styles })
-			});
+			await cmsApi.login();
+			const blob = await cmsApi.postRaw('/pdf', { html: processedHtml, styles });
 
-			if (!response.ok) {
-				throw new Error('Failed to generate PDF');
-			}
-			const blob = await response.blob();
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = url;
@@ -89,7 +62,7 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 		} finally {
 			setIsDownloading(false);
 		}
-	}, [styles, userResumeData, useHandlebars, compiledTemplate]);
+	}, [styles, userResumeData, compiledTemplate]);
 
 	return {
 		styles,
