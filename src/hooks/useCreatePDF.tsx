@@ -9,6 +9,8 @@ type CreatePdfProps = {
 	useHandlebars?: boolean;
 };
 
+const CMS_API_BASE = '/cms-api';
+
 export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
 	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
 	const [styles, setStyles] = useState<string>('');
@@ -69,15 +71,26 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 				processedHtml = compiledTemplate(userResumeData);
 			}
 
-			const response = await fetch(`/api/pdf`, {
+			const loginRes = await fetch(`${CMS_API_BASE}/users/login`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					email: process.env.NEXT_PUBLIC_CMS_API_EMAIL,
+					password: process.env.NEXT_PUBLIC_CMS_API_PASSWORD
+				})
+			});
+			const { token } = await loginRes.json();
+
+			const response = await fetch(`${CMS_API_BASE}/pdf`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', Authorization: `JWT ${token}` },
 				body: JSON.stringify({ html: processedHtml, styles: styles })
 			});
 
 			if (!response.ok) {
 				throw new Error('Failed to generate PDF');
 			}
+
 			const blob = await response.blob();
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement('a');
