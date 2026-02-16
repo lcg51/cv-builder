@@ -53,55 +53,6 @@ Handlebars.registerHelper('join', function (this: HandlebarsContext, array: unkn
 });
 
 /**
- * Process a Handlebars template with user data
- */
-export const processHandlebarsTemplate = (templateContent: string, userData: TemplateDataType): string => {
-	if (!templateContent || !userData) return '';
-
-	try {
-		// Compile the Handlebars template
-		const template = Handlebars.compile(templateContent);
-
-		// Process the template with user data
-		const result = template(userData);
-
-		return result;
-	} catch (error) {
-		console.error('Error processing Handlebars template:', error);
-		throw new Error(`Failed to process template: ${error instanceof Error ? error.message : 'Unknown error'}`);
-	}
-};
-
-/**
- * Process a complete Handlebars template (with embedded CSS) with user data
- */
-export const processCompleteHandlebarsTemplate = async (
-	templateId: string,
-	userData: TemplateDataType
-): Promise<{ html: string; css: string }> => {
-	try {
-		// Import the template loading function
-		const { loadTemplate } = await import('@/templates');
-
-		// Load template content
-		const templateContent = await loadTemplate(templateId as any);
-
-		// Process Handlebars template with user data
-		const processedHTML = processHandlebarsTemplate(templateContent.html, userData);
-
-		return {
-			html: processedHTML,
-			css: templateContent.css
-		};
-	} catch (error) {
-		console.error(`Error processing Handlebars template ${templateId}:`, error);
-		throw new Error(
-			`Failed to process template ${templateId}: ${error instanceof Error ? error.message : 'Unknown error'}`
-		);
-	}
-};
-
-/**
  * Compile a Handlebars template from HTML content string
  * This is useful when you have the template content directly
  */

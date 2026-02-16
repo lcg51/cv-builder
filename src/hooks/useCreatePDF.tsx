@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import { compileHandlebarsTemplate, compileHandlebarsTemplateFromContent } from '@/lib/templateProcessor';
+import { compileHandlebarsTemplate } from '@/lib/templateProcessor';
 import { TemplateDataType } from '@/types/payload-types';
 import { Template } from '@/templates';
 import { cmsApi } from '@/api';
@@ -7,26 +7,13 @@ import { cmsApi } from '@/api';
 type CreatePdfProps = {
 	userResumeData: TemplateDataType;
 	selectedTemplate: Template | null;
-	useHandlebars?: boolean;
 };
 
-export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars = true }: CreatePdfProps) => {
+export const useCreatePDF = ({ userResumeData, selectedTemplate }: CreatePdfProps) => {
 	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
 	const [styles, setStyles] = useState<string>('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDownloading, setIsDownloading] = useState(false);
-
-	const compileTemplateFromHTML = useCallback(async () => {
-		setIsLoading(true);
-		try {
-			const template = await compileHandlebarsTemplateFromContent(selectedTemplate?.preview ?? '');
-			setCompiledTemplate(() => template);
-		} catch (error) {
-			console.error('Error compiling template:', error);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [selectedTemplate]);
 
 	const compileTemplateFromHandlebars = useCallback(async () => {
 		setIsLoading(true);
@@ -44,10 +31,9 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate, useHandlebars =
 	// Compile Handlebars template once when template changes
 	useEffect(() => {
 		if (!selectedTemplate) return;
-		if (!useHandlebars) compileTemplateFromHTML();
 
 		compileTemplateFromHandlebars();
-	}, [selectedTemplate, useHandlebars, compileTemplateFromHandlebars, compileTemplateFromHTML]);
+	}, [selectedTemplate, compileTemplateFromHandlebars]);
 
 	const refreshTemplates = useCallback(async () => {
 		setStyles('');

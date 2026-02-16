@@ -5,8 +5,7 @@ import {
 	fetchAllTemplates,
 	fetchTemplateById,
 	filterTemplatesByCategory,
-	searchTemplates,
-	loadTemplate
+	searchTemplates
 } from '@/templates';
 
 type UseTemplatesProps = {
@@ -66,22 +65,6 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		}
 	}, []);
 
-	// Load template content (HTML + CSS)
-	const loadTemplateContent = useCallback(async (id: TemplateId) => {
-		try {
-			setLoading(true);
-			setError(null);
-			const content = await loadTemplate(id);
-			return content;
-		} catch (err) {
-			setError(`Failed to load template content for ${id}`);
-			console.error(`Error loading template content for ${id}:`, err);
-			throw err;
-		} finally {
-			setLoading(false);
-		}
-	}, []);
-
 	const loadHomePageTemplates = useCallback(async () => {
 		try {
 			setLoading(true);
@@ -125,7 +108,6 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		loadHomePageTemplates,
 		searchTemplatesByQuery,
 		loadSpecificTemplate,
-		loadTemplateContent,
 		resetToAllTemplates,
 		clearError
 	};
