@@ -2,9 +2,9 @@
 import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
+import { useTemplates } from '@/hooks/useTemplates';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchTemplateById, Template } from '@/templates';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { useStoreHydration } from '@/hooks/useStoreHydration';
 import { useParams } from 'next/navigation';
@@ -40,35 +40,20 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		return Math.round((completed / total) * 100);
 	};
 
-	const [template, setTemplate] = useState<Template | null>(null);
-
 	const resetResumeProccess = useCallback(() => {
 		replace('/templates');
 		resetResumeUserData();
 	}, [replace, resetResumeUserData]);
 
-	useEffect(() => {
-		if (isLoading) {
-			return;
-		}
+	// Validate that the store's selectedTemplate matches the URL before fetching
+	const validatedTemplateId =
+		!isLoading && selectedTemplateId && selectedTemplateId === templateIdFromUrl ? selectedTemplateId : undefined;
 
+	useEffect(() => {
+		if (isLoading) return;
 		if (!selectedTemplateId || selectedTemplateId !== templateIdFromUrl) {
 			resetResumeProccess();
-			return;
 		}
-
-		let cancelled = false;
-		fetchTemplateById(selectedTemplateId).then(foundTemplate => {
-			if (cancelled) return;
-			if (!foundTemplate) {
-				resetResumeProccess();
-				return;
-			}
-			setTemplate(foundTemplate);
-		});
-		return () => {
-			cancelled = true;
-		};
 	}, [selectedTemplateId, templateIdFromUrl, isLoading, resetResumeProccess]);
 
 	useNavigationGuardProvider({
@@ -76,12 +61,17 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		onConfirmExit: resetResumeUserData
 	});
 
-	const { downloadPDF, isDownloading, styles, compiledTemplate } = useCreatePDF({
-		userResumeData,
-		selectedTemplate: template
+	const { styles, compiledTemplate, isCompiling, selectedTemplate } = useTemplates({
+		templateId: validatedTemplateId
 	});
 
-	const templateIsLoading = !template || isLoading;
+	const { downloadPDF, isDownloading } = useCreatePDF({
+		userResumeData,
+		compiledTemplate,
+		styles
+	});
+
+	const templateIsLoading = !selectedTemplate || isLoading || isCompiling;
 
 	const NavigationStateComponent = useMemo(() => {
 		return (
@@ -96,7 +86,7 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 				isLoading={templateIsLoading}
 			/>
 		);
-	}, [template, templateIsLoading, styles, downloadPDF, isDownloading, userResumeData, isAuthenticated]);
+	}, [selectedTemplate, templateIsLoading, styles, downloadPDF, isDownloading, userResumeData, isAuthenticated]);
 
 	return (
 		<div

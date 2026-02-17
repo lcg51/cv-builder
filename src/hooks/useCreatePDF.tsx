@@ -1,44 +1,15 @@
-import { useCallback, useState, useEffect } from 'react';
-import { compileHandlebarsTemplate } from '@/lib/handlebarsProcessor';
+import { useCallback, useState } from 'react';
 import { TemplateDataType } from '@/types/payload-types';
-import { Template } from '@/templates';
 import { cmsApi } from '@/api';
 
 type CreatePdfProps = {
 	userResumeData: TemplateDataType;
-	selectedTemplate: Template | null;
+	compiledTemplate: ((userData: TemplateDataType) => string) | null;
+	styles: string;
 };
 
-export const useCreatePDF = ({ userResumeData, selectedTemplate }: CreatePdfProps) => {
-	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
-	const [styles, setStyles] = useState<string>('');
-	const [isLoading, setIsLoading] = useState(false);
+export const useCreatePDF = ({ userResumeData, compiledTemplate, styles }: CreatePdfProps) => {
 	const [isDownloading, setIsDownloading] = useState(false);
-
-	const compileTemplateFromHandlebars = useCallback(async () => {
-		setIsLoading(true);
-		try {
-			const result = await compileHandlebarsTemplate(selectedTemplate?.id ?? '');
-			setCompiledTemplate(() => result.template);
-			setStyles(result.css);
-		} catch (error) {
-			console.error('Error compiling template:', error);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [selectedTemplate]);
-
-	// Compile Handlebars template once when template changes
-	useEffect(() => {
-		if (!selectedTemplate) return;
-
-		compileTemplateFromHandlebars();
-	}, [selectedTemplate, compileTemplateFromHandlebars]);
-
-	const refreshTemplates = useCallback(async () => {
-		setStyles('');
-		setCompiledTemplate(null);
-	}, [selectedTemplate]);
 
 	const downloadPDF = useCallback(async () => {
 		setIsDownloading(true);
@@ -65,11 +36,7 @@ export const useCreatePDF = ({ userResumeData, selectedTemplate }: CreatePdfProp
 	}, [styles, userResumeData, compiledTemplate]);
 
 	return {
-		styles,
-		isLoading,
-		isDownloading,
-		refreshTemplates,
 		downloadPDF,
-		compiledTemplate
+		isDownloading
 	};
 };
