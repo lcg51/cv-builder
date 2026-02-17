@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
-import { TemplateUpdateSkeleton } from '../components/TemplateUpdateSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchTemplateById, Template } from '@/templates';
@@ -52,11 +51,9 @@ export default function CreateTemplate() {
 		push(`/templates/${template?.id}/confirm`);
 	}, [push, template]);
 
-	const NavigationStateComponent = useMemo(() => {
-		if (isLoading || (!template && !templateError)) {
-			return <TemplateUpdateSkeleton />;
-		}
+	const templateIsLoading = isLoading || (!template && !templateError);
 
+	const NavigationStateComponent = useMemo(() => {
 		if (templateError) {
 			return (
 				<DisplayErrorMessage
@@ -73,9 +70,10 @@ export default function CreateTemplate() {
 				styles={styles}
 				compiledTemplate={compiledTemplate}
 				onTemplateDownload={onTemplateDownload}
+				isLoading={templateIsLoading}
 			/>
 		);
-	}, [template, isLoading, styles, onTemplateDownload, downloadPDF, isDownloading, templateError]);
+	}, [template, templateIsLoading, styles, onTemplateDownload, downloadPDF, isDownloading, templateError]);
 
 	return (
 		<div

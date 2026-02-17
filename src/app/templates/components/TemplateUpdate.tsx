@@ -12,14 +12,16 @@ import { EducationForm } from './EducationForm';
 import { SkillsForm } from './SkillsForm';
 import { AboutForm } from './AboutForm';
 import { useTranslations } from 'next-intl';
+import { Skeleton } from '@/ui/components/skeleton';
 
 type TemplateUpdateProps = {
 	compiledTemplate: ((userData: TemplateDataType) => string) | null;
 	styles: string;
 	onTemplateDownload: () => void;
+	isLoading?: boolean;
 };
 
-export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }: TemplateUpdateProps) => {
+export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload, isLoading }: TemplateUpdateProps) => {
 	const [showMobilePreview, setShowMobilePreview] = useState<boolean>(false);
 	const userResumeData = resumeDataStore((state: ResumeDataStoreType) => state.userResumeData);
 	const updateResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.updateResumeUserData);
@@ -81,6 +83,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 							onFieldChangeCallback={updateUserValue}
 							initialValues={userResumeData}
 							$t={$t}
+							isLoading={isLoading}
 						/>
 					</div>
 				</div>
@@ -110,6 +113,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 								userData={userResumeData}
 								templateStyles={styles}
 								compiledTemplate={compiledTemplate}
+								isLoading={isLoading}
 							/>
 						</div>
 						{/* Controls */}
@@ -123,11 +127,15 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 						</div>
 					</div>
 				</div>
+			</div>
 
-				{/* Mobile Preview Button */}
-				<div
-					className={`block lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'hidden' : 'block lg:hidden'}`}
-				>
+			{/* Mobile Preview Button */}
+			<div
+				className={`block lg:hidden fixed bottom-6 right-6 z-50 ${showMobilePreview ? 'hidden' : 'block lg:hidden'}`}
+			>
+				{isLoading ? (
+					<Skeleton className="w-16 h-16 rounded-full" />
+				) : (
 					<button
 						onClick={toggleMobilePreview}
 						className="bg-primary hover:bg-primary/90 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
@@ -135,7 +143,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload }:
 					>
 						<EyeIcon className="w-6 h-6 text-black" />
 					</button>
-				</div>
+				)}
 			</div>
 		</div>
 	);

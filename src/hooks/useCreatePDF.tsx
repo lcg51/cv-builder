@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import { compileHandlebarsTemplate } from '@/lib/templateProcessor';
+import { compileHandlebarsTemplate } from '@/lib/handlebarsProcessor';
 import { TemplateDataType } from '@/types/payload-types';
 import { Template } from '@/templates';
 import { cmsApi } from '@/api';
