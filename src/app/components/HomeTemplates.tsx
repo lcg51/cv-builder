@@ -1,6 +1,14 @@
 'use client';
-import { HomeTemplatesV1 } from '@/app/components/HomeTemplatesV1';
+import { Template } from './Template';
+import { useTemplates } from '@/hooks/useTemplates';
 
 export const HomeTemplates = () => {
-	return <HomeTemplatesV1 />;
+	const { templates } = useTemplates({ isHomePage: true });
+	return (
+		<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+			{templates.map((template, index) => (
+				<Template key={index} template={template} />
+			))}
+		</div>
+	);
 };
