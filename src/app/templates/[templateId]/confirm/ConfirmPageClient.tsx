@@ -1,7 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
-import { ConfirmPageSkeleton } from '../../components/ConfirmPageSkeleton';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -82,11 +81,9 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		selectedTemplate: template
 	});
 
-	const NavigationStateComponent = useMemo(() => {
-		if (!template || isLoading) {
-			return <ConfirmPageSkeleton />;
-		}
+	const templateIsLoading = !template || isLoading;
 
+	const NavigationStateComponent = useMemo(() => {
 		return (
 			<TemplateDownload
 				completionPercentage={calculateCompletion()}
@@ -96,9 +93,10 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 				compiledTemplate={compiledTemplate ?? (() => '')}
 				styles={styles}
 				isAuthenticated={isAuthenticated}
+				isLoading={templateIsLoading}
 			/>
 		);
-	}, [template, isLoading, styles, downloadPDF, isDownloading, userResumeData, isAuthenticated]);
+	}, [template, templateIsLoading, styles, downloadPDF, isDownloading, userResumeData, isAuthenticated]);
 
 	return (
 		<div

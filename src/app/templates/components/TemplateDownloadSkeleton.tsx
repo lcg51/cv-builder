@@ -1,20 +1,13 @@
-'use client';
 import React from 'react';
 import { Skeleton } from '@/ui/components/skeleton';
 
-export const ConfirmPageSkeleton: React.FC = () => {
+export const TemplateDownloadSkeleton: React.FC = () => {
 	return (
-		<div className="max-w-4xl mx-auto space-y-8 p-4">
-			{/* Header Section Skeleton */}
-			<div className="text-center space-y-4">
-				<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700">
-					<Skeleton className="w-8 h-8 rounded" />
-				</div>
-				<div>
-					<Skeleton className="h-9 w-80 mx-auto mb-3" />
-				</div>
+		<>
+			{/* Banner Section Skeleton */}
+			<div className="sticky bottom-0 left-0 right-0 md:relative text-center space-y-6">
+				<Skeleton className="h-32 w-full mx-auto rounded-xl" />
 			</div>
-
 			{/* Progress Indicator Skeleton */}
 			<div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6">
 				<div className="flex items-center justify-between mb-4">
@@ -50,6 +43,6 @@ export const ConfirmPageSkeleton: React.FC = () => {
 			<div className="sticky bottom-0 left-0 right-0 md:relative text-center space-y-6">
 				<Skeleton className="h-14 w-64 mx-auto rounded-xl" />
 			</div>
-		</div>
+		</>
 	);
 };
