@@ -2,14 +2,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TemplateDataType } from '@/types/payload-types';
 import './TemplatePreviewer.css';
+import { TemplatePreviewerSkeleton } from './TemplatePreviewerSkeleton';
 
 type TemplateProps = {
 	userData: TemplateDataType;
 	templateStyles: string;
 	compiledTemplate: ((userData: TemplateDataType) => string) | null;
+	isLoading?: boolean;
 };
 
-export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate }: TemplateProps) => {
+export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, isLoading }: TemplateProps) => {
 	const [processedHtml, setProcessedHtml] = useState('');
 	const [scopedStyles, setScopedStyles] = useState('');
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -91,6 +93,10 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate }
 
 		setScopedStyles(scopedCSS);
 	}, [templateStyles]);
+
+	if (isLoading) {
+		return <TemplatePreviewerSkeleton />;
+	}
 
 	return (
 		<div className="flex flex-col h-full">

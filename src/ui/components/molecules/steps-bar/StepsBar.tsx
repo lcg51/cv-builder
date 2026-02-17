@@ -6,6 +6,7 @@ import { ChevronLeftIcon, ChevronRightIcon, CheckIcon, ArrowRightIcon } from '@/
 import { Button } from '@/ui/components/button';
 import { useFormValidation } from '../../../../hooks/useFormValidation';
 import { useTranslations } from 'next-intl';
+import { StepsBarSkeleton } from './StepsBarSkeleton';
 
 export type StepsBarComponentProps = {
 	onFieldChange?: (key: string, value: unknown) => void;
@@ -27,6 +28,7 @@ export type StepsBarProps = {
 	onFieldChangeCallback: (key: string, value: unknown) => void;
 	initialValues?: TemplateDataType;
 	$t: ReturnType<typeof useTranslations>;
+	isLoading?: boolean;
 };
 
 export const StepsBar = ({
@@ -35,7 +37,8 @@ export const StepsBar = ({
 	onNextStepCallback,
 	onFieldChangeCallback,
 	initialValues,
-	$t
+	$t,
+	isLoading
 }: StepsBarProps) => {
 	const [selectedIndex, setSelectedIndex] = useState<number>(activeStep);
 	const [stepItems, setStepItems] = useState<StepsBarItemsProps[]>(items);
@@ -216,6 +219,10 @@ export const StepsBar = ({
 			);
 		});
 	}, [stepItems, selectedIndex, isTabletResolution, onClickStepItem]);
+
+	if (isLoading) {
+		return <StepsBarSkeleton />;
+	}
 
 	return (
 		<div className="flex flex-col w-full h-full xl:flex-1">
