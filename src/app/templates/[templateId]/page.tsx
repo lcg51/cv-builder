@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
-import { useTemplates } from '@/hooks/useTemplates';
+import { useSelectedTemplate } from '@/hooks/useSelectedTemplate';
 import { useParams, useRouter } from 'next/navigation';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
@@ -18,7 +18,7 @@ export default function CreateTemplate() {
 		onConfirmExit: resetResumeUserData
 	});
 
-	const { styles, compiledTemplate, isCompiling, selectedTemplate, templateError } = useTemplates({
+	const { styles, compiledTemplate, isCompiling, selectedTemplate, templateError } = useSelectedTemplate({
 		templateId: templateID
 	});
 

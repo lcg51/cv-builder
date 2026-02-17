@@ -7,28 +7,16 @@ import {
 	filterTemplatesByCategory,
 	searchTemplates
 } from '@/templates';
-import { compileHandlebarsTemplate } from '@/lib/handlebarsProcessor';
-import { TemplateDataType } from '@/types/payload-types';
 
 type UseTemplatesProps = {
 	isHomePage?: boolean;
-	templateId?: string;
 };
 
-export function useTemplates({ isHomePage = false, templateId }: UseTemplatesProps = {}) {
+export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 	const [templates, setTemplates] = useState<Template[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const allTemplatesRef = useRef<Template[]>([]);
-
-	// Selected template state (fetched by templateId)
-	const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
-	const [templateError, setTemplateError] = useState<string | null>(null);
-
-	// Template compilation state
-	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
-	const [styles, setStyles] = useState<string>('');
-	const [isCompiling, setIsCompiling] = useState(false);
 
 	// Load all templates from CMS
 	const loadAllTemplates = useCallback(async () => {
@@ -111,52 +99,6 @@ export function useTemplates({ isHomePage = false, templateId }: UseTemplatesPro
 		loadAllTemplates();
 	}, [loadAllTemplates, loadHomePageTemplates, isHomePage]);
 
-	// Fetch a single template by ID
-	useEffect(() => {
-		if (!templateId) return;
-
-		let cancelled = false;
-		setSelectedTemplate(null);
-		setTemplateError(null);
-
-		fetchTemplateById(templateId).then(foundTemplate => {
-			if (cancelled) return;
-			if (!foundTemplate) {
-				setTemplateError(`Template "${templateId}" not found`);
-				return;
-			}
-			setSelectedTemplate(foundTemplate);
-		});
-
-		return () => {
-			cancelled = true;
-		};
-	}, [templateId]);
-
-	// Compile Handlebars template when selectedTemplate changes
-	const compileTemplateFromHandlebars = useCallback(async () => {
-		setIsCompiling(true);
-		try {
-			const result = await compileHandlebarsTemplate(selectedTemplate?.id ?? '');
-			setCompiledTemplate(() => result.template);
-			setStyles(result.css);
-		} catch (err) {
-			console.error('Error compiling template:', err);
-		} finally {
-			setIsCompiling(false);
-		}
-	}, [selectedTemplate]);
-
-	useEffect(() => {
-		if (!selectedTemplate) return;
-		compileTemplateFromHandlebars();
-	}, [selectedTemplate, compileTemplateFromHandlebars]);
-
-	const refreshTemplates = useCallback(() => {
-		setStyles('');
-		setCompiledTemplate(null);
-	}, []);
-
 	return {
 		templates,
 		loading,
@@ -167,12 +109,6 @@ export function useTemplates({ isHomePage = false, templateId }: UseTemplatesPro
 		searchTemplatesByQuery,
 		loadSpecificTemplate,
 		resetToAllTemplates,
-		clearError,
-		selectedTemplate,
-		templateError,
-		compiledTemplate,
-		styles,
-		isCompiling,
-		refreshTemplates
+		clearError
 	};
 }

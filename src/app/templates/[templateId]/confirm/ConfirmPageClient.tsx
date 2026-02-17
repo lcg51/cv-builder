@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
-import { useTemplates } from '@/hooks/useTemplates';
+import { useSelectedTemplate } from '@/hooks/useSelectedTemplate';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
@@ -61,7 +61,7 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		onConfirmExit: resetResumeUserData
 	});
 
-	const { styles, compiledTemplate, isCompiling, selectedTemplate } = useTemplates({
+	const { styles, compiledTemplate, isCompiling, selectedTemplate } = useSelectedTemplate({
 		templateId: validatedTemplateId
 	});
 
