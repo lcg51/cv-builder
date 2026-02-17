@@ -29,10 +29,12 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 	const areFilterTemplatesEnabled = flags?.areFilterTemplatesEnabled;
 	const { push } = useRouter();
 	const setSelectedTemplate = resumeDataStore((state: ResumeDataStoreType) => state.setSelectedTemplate);
+	const resetResumeUserData = resumeDataStore((state: ResumeDataStoreType) => state.resetResumeUserData);
 	const tags = ['professional', 'creative', 'modern', 'minimal'] as TemplateCategory[];
 	const $t = useTranslations('TemplatesPage');
 
 	const handleProceedToTemplate = useCallback(() => {
+		resetResumeUserData();
 		setSelectedTemplate(selectedTemplateId);
 		push(`/templates/${selectedTemplateId}`);
 	}, [push, selectedTemplateId]);
