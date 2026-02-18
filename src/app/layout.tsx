@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { NavigationGuardProvider } from './providers/NavigationGuardProvider';
+import { ModalProvider } from './providers/ModalProvider';
 import { IPProvider } from './providers/IPProvider';
 import { FormValidationProvider } from '../hooks/useFormValidation';
 import './globals.css';
@@ -37,8 +38,10 @@ export default async function RootLayout({
 						<IPProvider debugMode={process.env.NODE_ENV === 'development'}>
 							<FormValidationProvider>
 								<NavigationGuardProvider>
-									<TopBar user={session?.user as User} />
-									{children}
+									<ModalProvider>
+										<TopBar user={session?.user as User} />
+										{children}
+									</ModalProvider>
 								</NavigationGuardProvider>
 							</FormValidationProvider>
 						</IPProvider>
