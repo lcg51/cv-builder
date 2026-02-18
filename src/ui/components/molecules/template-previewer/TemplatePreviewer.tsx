@@ -1,7 +1,6 @@
 'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TemplateDataType } from '@/types/payload-types';
-import './TemplatePreviewer.css';
 import { TemplatePreviewerSkeleton } from './TemplatePreviewerSkeleton';
 
 type TemplateProps = {
@@ -12,9 +11,9 @@ type TemplateProps = {
 };
 
 export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, isLoading }: TemplateProps) => {
-	const [processedHtml, setProcessedHtml] = useState('');
-	const [scopedStyles, setScopedStyles] = useState('');
 	const containerRef = useRef<HTMLDivElement>(null);
+	const shadowHostRef = useRef<HTMLDivElement>(null);
+	const shadowRootRef = useRef<ShadowRoot | null>(null);
 	const [scale, setScale] = useState(1);
 
 	const calculateOptimalScale = useCallback(() => {
@@ -51,48 +50,57 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 		const scaleY = (effectiveHeight - 32) / standardHeight; // 32px for padding
 
 		// Use the smaller scale to ensure the entire template fits
-		// Add minimum scale threshold to prevent extremely small scales
 		const optimalScale = Math.max(Math.min(scaleX, scaleY, 1), minScale);
 
 		setScale(optimalScale);
 	}, [containerRef]);
 
+	// Attach shadow root and update content in a single effect
 	useEffect(() => {
-		if (compiledTemplate) {
-			setProcessedHtml(compiledTemplate(userData));
-			calculateOptimalScale();
+		if (!shadowHostRef.current || !compiledTemplate) return;
+
+		// Attach shadow root if not already attached
+		if (!shadowRootRef.current) {
+			shadowRootRef.current = shadowHostRef.current.attachShadow({ mode: 'closed' });
 		}
+
+		const html = compiledTemplate(userData);
+		calculateOptimalScale();
+
+		shadowRootRef.current.innerHTML = `
+			<style>
+				:host {
+					all: initial;
+					display: block;
+					user-select: none;
+					-webkit-user-select: none;
+					pointer-events: none;
+				}
+				* { box-sizing: border-box; }
+				.cv-wrapper {
+					transform: scale(${scale});
+					transform-origin: top left;
+					width: ${100 / scale}%;
+				}
+				${templateStyles}
+			</style>
+			<div class="cv-wrapper">${html}</div>
+		`;
+	}, [userData, compiledTemplate, templateStyles, scale, calculateOptimalScale]);
+
+	// Disable right-click context menu on the preview
+	useEffect(() => {
+		const host = shadowHostRef.current;
+		if (!host) return;
+		const preventContextMenu = (e: Event) => e.preventDefault();
+		host.addEventListener('contextmenu', preventContextMenu);
+		return () => host.removeEventListener('contextmenu', preventContextMenu);
+	}, []);
+
+	useEffect(() => {
 		window.addEventListener('resize', calculateOptimalScale);
 		return () => window.removeEventListener('resize', calculateOptimalScale);
-	}, [userData, compiledTemplate]);
-
-	useEffect(() => {
-		if (!templateStyles) return;
-
-		// Scope the CSS by prefixing all selectors with the template wrapper class
-		const scopedCSS = templateStyles
-			// Add the wrapper class prefix to all CSS rules
-			.replace(/([^{}]+){/g, (match, selector) => {
-				// Skip @media queries and other at-rules
-				if (selector.trim().startsWith('@')) {
-					return match;
-				}
-				// Add the wrapper class prefix to selectors
-				return `.template-preview-scope ${selector.trim()}{`;
-			})
-			// Handle nested @media queries
-			.replace(/@media([^{]+){/g, '@media$1{')
-			// Add the wrapper class prefix inside @media queries
-			.replace(/(@media[^{]+{)([^}]+)}/g, (match, mediaQuery, content) => {
-				const scopedContent = content.replace(/([^{}]+){/g, (m: string, s: string) => {
-					if (s.trim().startsWith('@')) return m;
-					return `.template-preview-scope ${s.trim()}{`;
-				});
-				return `${mediaQuery}${scopedContent}}`;
-			});
-
-		setScopedStyles(scopedCSS);
-	}, [templateStyles]);
+	}, [calculateOptimalScale]);
 
 	if (isLoading) {
 		return <TemplatePreviewerSkeleton />;
@@ -102,18 +110,8 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 		<div className="flex flex-col h-full">
 			{/* Preview Content */}
 			<div className="bg-slate-100 dark:bg-slate-900 p-4 xl:flex-1 overflow-y-auto min-h-0" ref={containerRef}>
-				<div className="max-w-[8.5in] mx-auto bg-white shadow-lg template-preview-scope" id="cv-preview">
-					<style dangerouslySetInnerHTML={{ __html: scopedStyles }} />
-					<div
-						className="cv-wrapper"
-						dangerouslySetInnerHTML={{ __html: processedHtml }}
-						style={{
-							transform: `scale(${scale})`,
-							transformOrigin: 'top left',
-							width: `${100 / scale}%`,
-							height: `${100 / scale}%`
-						}}
-					/>
+				<div className="max-w-[8.5in] mx-auto shadow-lg" id="cv-preview">
+					<div ref={shadowHostRef} />
 				</div>
 			</div>
 		</div>
