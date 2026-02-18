@@ -93,7 +93,7 @@ export const TemplateUpdate = ({ compiledTemplate, styles, onTemplateDownload, i
 					className={`h-full ${showMobilePreview ? 'block' : 'hidden'} lg:flex w-full lg:w-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 inline-flex flex-col`}
 				>
 					<div className="flex flex-col w-full h-full xl:h-full">
-						<div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex-shrink-0">
+						<div className="p-4 border-b dark:border-slate-700 dark:bg-slate-900 flex-shrink-0">
 							<div className="flex items-center justify-between">
 								<h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-2">
 									<EyeIcon />

@@ -1,57 +1,32 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
-import { useCreatePDF } from '@/hooks/useCreatePDF';
+import { useSelectedTemplate } from '@/hooks/useSelectedTemplate';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchTemplateById, Template } from '@/templates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
 export default function CreateTemplate() {
 	const params = useParams();
 	const { push } = useRouter();
 	const templateID = params.templateId as string;
-	const { userResumeData, resetResumeUserData } = resumeDataStore((state: ResumeDataStoreType) => state);
-	const [template, setTemplate] = useState<Template | null>(null);
-	const [templateError, setTemplateError] = useState<string | null>(null);
-
-	useEffect(() => {
-		if (!templateID) {
-			setTemplateError('No template specified');
-			return;
-		}
-
-		let cancelled = false;
-		fetchTemplateById(templateID).then(foundTemplate => {
-			if (cancelled) return;
-			if (!foundTemplate) {
-				setTemplateError(`Template "${templateID}" not found`);
-				return;
-			}
-			setTemplate(foundTemplate);
-			setTemplateError(null);
-		});
-		return () => {
-			cancelled = true;
-		};
-	}, [templateID]);
+	const { resetResumeUserData } = resumeDataStore((state: ResumeDataStoreType) => state);
 
 	useNavigationGuardProvider({
 		hasUnsavedChanges: true,
 		onConfirmExit: resetResumeUserData
 	});
 
-	const { styles, compiledTemplate, downloadPDF, isDownloading, isLoading } = useCreatePDF({
-		userResumeData,
-		selectedTemplate: template
+	const { styles, compiledTemplate, isCompiling, selectedTemplate, templateError } = useSelectedTemplate({
+		templateId: templateID
 	});
 
 	const onTemplateDownload = useCallback(() => {
-		push(`/templates/${template?.id}/confirm`);
-	}, [push, template]);
+		push(`/templates/${selectedTemplate?.id}/confirm`);
+	}, [push, selectedTemplate]);
 
-	const templateIsLoading = isLoading || (!template && !templateError);
+	const templateIsLoading = isCompiling || (!selectedTemplate && !templateError);
 
 	const NavigationStateComponent = useMemo(() => {
 		if (templateError) {
@@ -73,7 +48,7 @@ export default function CreateTemplate() {
 				isLoading={templateIsLoading}
 			/>
 		);
-	}, [template, templateIsLoading, styles, onTemplateDownload, downloadPDF, isDownloading, templateError]);
+	}, [selectedTemplate, templateIsLoading, styles, onTemplateDownload, compiledTemplate, templateError]);
 
 	return (
 		<div

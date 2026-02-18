@@ -17,6 +17,7 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const allTemplatesRef = useRef<Template[]>([]);
+	const homeTemplatesRef = useRef<Template[]>([]);
 
 	// Load all templates from CMS
 	const loadAllTemplates = useCallback(async () => {
@@ -69,9 +70,9 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		try {
 			setLoading(true);
 			setError(null);
-			const allTemplates = await fetchAllTemplates();
-			allTemplatesRef.current = allTemplates;
-			setTemplates(allTemplates.slice(0, 3));
+			const homeTemplates = await fetchAllTemplates(3);
+			homeTemplatesRef.current = homeTemplates;
+			setTemplates(homeTemplates);
 		} catch (err) {
 			setError('Failed to load templates');
 			console.error('Error loading templates:', err);
@@ -82,8 +83,8 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 
 	// Reset to all templates (from cached data)
 	const resetToAllTemplates = useCallback(() => {
-		setTemplates(allTemplatesRef.current);
-	}, []);
+		setTemplates(isHomePage ? homeTemplatesRef.current : allTemplatesRef.current);
+	}, [isHomePage]);
 
 	// Clear error
 	const clearError = useCallback(() => {
