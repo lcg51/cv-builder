@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useCallback, useRef, useSyncExternalStore } from 'react';
-import { Dialog, DialogContent } from '@/ui/components/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/ui/components/dialog';
 import { ModalService, ModalInput } from '@/services/modal.service';
 
 interface ModalContextType {
@@ -45,6 +45,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
 			{topModal && (
 				<Dialog open onOpenChange={handleOpenChange}>
 					<DialogContent
+						className="sm:max-w-md bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
 						data-testid={topModal.testID}
 						onInteractOutside={e => {
 							if (topModal.isClosable === false) e.preventDefault();
@@ -53,6 +54,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
 							if (topModal.isClosable === false) e.preventDefault();
 						}}
 					>
+						<DialogTitle className="sr-only">Dialog</DialogTitle>
 						{topModal.renderComponent?.({ close: () => service.removeModal(topModal.id) })}
 					</DialogContent>
 				</Dialog>

@@ -4,10 +4,12 @@ import { TemplateDownload } from '../../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
 import { useSelectedTemplate } from '@/hooks/useSelectedTemplate';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
-import { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { useStoreHydration } from '@/hooks/useStoreHydration';
+import { useModal } from '@/hooks/useModal';
 import { useParams } from 'next/navigation';
+import { PdfSuccessModal } from '../../components/PdfSuccessModal';
 
 type ConfirmPageClientProps = {
 	isAuthenticated: boolean;
@@ -71,13 +73,34 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		styles
 	});
 
+	const { addModal } = useModal();
+
+	const handleDownloadPDF = useCallback(async () => {
+		const success = await downloadPDF();
+		if (success) {
+			addModal({
+				isClosable: true,
+				testID: 'pdf-success-modal',
+				renderComponent: ({ close }) => (
+					<PdfSuccessModal
+						onConfirm={() => {
+							close();
+							resetResumeUserData();
+							replace('/');
+						}}
+					/>
+				)
+			});
+		}
+	}, [downloadPDF, addModal, resetResumeUserData, replace]);
+
 	const templateIsLoading = !selectedTemplate || isLoading || isCompiling;
 
 	const NavigationStateComponent = useMemo(() => {
 		return (
 			<TemplateDownload
 				completionPercentage={calculateCompletion()}
-				onDownloadPDF={downloadPDF}
+				onDownloadPDF={handleDownloadPDF}
 				isDownloading={isDownloading}
 				userResumeData={userResumeData}
 				compiledTemplate={compiledTemplate ?? (() => '')}
@@ -86,7 +109,15 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 				isLoading={templateIsLoading}
 			/>
 		);
-	}, [selectedTemplate, templateIsLoading, styles, downloadPDF, isDownloading, userResumeData, isAuthenticated]);
+	}, [
+		selectedTemplate,
+		templateIsLoading,
+		styles,
+		handleDownloadPDF,
+		isDownloading,
+		userResumeData,
+		isAuthenticated
+	]);
 
 	return (
 		<div

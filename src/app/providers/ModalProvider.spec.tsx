@@ -44,38 +44,36 @@ jest.mock('@/ui/components/dialog', () => ({
 		<div data-testid={props['data-testid'] ?? 'dialog-content'} data-props={JSON.stringify(props)}>
 			{children}
 		</div>
+	),
+	DialogTitle: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+		<span className={className}>{children}</span>
 	)
 }));
 
-// Test helper component that exposes the useModal hook
-function TestConsumer({ onReady }: { onReady: (api: ReturnType<typeof useModal>) => void }) {
-	const api = useModal();
-	React.useEffect(() => {
-		onReady(api);
-	}, [api, onReady]);
+// Captures the modal API via a ref-like pattern (synchronous, no useEffect timing issues)
+let capturedApi: ReturnType<typeof useModal> | null = null;
+
+function TestConsumer() {
+	capturedApi = useModal();
 	return null;
 }
 
-// Helper to render provider and capture the modal API
 function renderWithProvider() {
-	let modalApi: ReturnType<typeof useModal>;
-
-	const onReady = jest.fn((api: ReturnType<typeof useModal>) => {
-		modalApi = api;
-	});
+	capturedApi = null;
 
 	const result = render(
 		<ModalProvider>
 			<div data-testid="children">App Content</div>
-			<TestConsumer onReady={onReady} />
+			<TestConsumer />
 		</ModalProvider>
 	);
 
-	return { ...result, getApi: () => modalApi! };
+	return { ...result, getApi: () => capturedApi! };
 }
 
 beforeEach(() => {
 	uuidCounter = 0;
+	capturedApi = null;
 });
 
 describe('ModalProvider', () => {
@@ -282,7 +280,7 @@ describe('ModalProvider', () => {
 
 	describe('useModal hook', () => {
 		it('should throw when used outside ModalProvider', () => {
-			const spy = jest.spyOn(console, 'error').mockImplementation();
+			jest.spyOn(console, 'error').mockImplementation();
 
 			function Orphan() {
 				useModal();
@@ -290,8 +288,6 @@ describe('ModalProvider', () => {
 			}
 
 			expect(() => render(<Orphan />)).toThrow('useModal must be used within a ModalProvider');
-
-			spy.mockRestore();
 		});
 	});
 });

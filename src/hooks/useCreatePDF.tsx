@@ -11,7 +11,7 @@ type CreatePdfProps = {
 export const useCreatePDF = ({ userResumeData, compiledTemplate, styles }: CreatePdfProps) => {
 	const [isDownloading, setIsDownloading] = useState(false);
 
-	const downloadPDF = useCallback(async () => {
+	const downloadPDF = useCallback(async (): Promise<boolean> => {
 		setIsDownloading(true);
 		try {
 			if (!compiledTemplate) {
@@ -28,8 +28,10 @@ export const useCreatePDF = ({ userResumeData, compiledTemplate, styles }: Creat
 			link.href = url;
 			link.download = `${userResumeData.firstName} ${userResumeData.lastName} - ${new Date().toLocaleDateString()}.pdf`;
 			link.click();
+			return true;
 		} catch (error) {
 			console.error('Error downloading PDF:', error);
+			return false;
 		} finally {
 			setIsDownloading(false);
 		}

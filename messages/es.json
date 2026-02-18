@@ -240,6 +240,11 @@
 			"description": "La vista previa se actualiza automáticamente"
 		}
 	},
+	"PdfSuccessModal": {
+		"title": "PDF descargado exitosamente!",
+		"description": "Tu currículum ha sido descargado y está listo para usar. ¡Buena suerte con tus aplicaciones!",
+		"button": "Ir a las plantillas"
+	},
 	"TemplateDownload": {
 		"successBanner": {
 			"title": "Listo para descargar! 🎉",
