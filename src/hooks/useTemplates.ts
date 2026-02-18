@@ -70,7 +70,7 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		try {
 			setLoading(true);
 			setError(null);
-			const homeTemplates = await fetchAllTemplates(3);
+			const homeTemplates = await fetchAllTemplates({ limit: 3 });
 			homeTemplatesRef.current = homeTemplates;
 			setTemplates(homeTemplates);
 		} catch (err) {

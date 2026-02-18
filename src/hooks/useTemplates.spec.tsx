@@ -78,7 +78,7 @@ describe('useTemplates', () => {
 				expect(result.current.loading).toBe(false);
 			});
 
-			expect(templates.fetchAllTemplates).toHaveBeenCalledWith(3);
+			expect(templates.fetchAllTemplates).toHaveBeenCalledWith({ limit: 3 });
 			expect(result.current.templates).toEqual(manyTemplates);
 		});
 
