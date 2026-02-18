@@ -68,7 +68,7 @@ describe('useTemplates', () => {
 			expect(result.current.error).toBeNull();
 		});
 
-		it('should load only first 3 templates when isHomePage is true', async () => {
+		it('should request only 3 templates when isHomePage is true', async () => {
 			const manyTemplates = [...allTemplates, { ...mockTemplateA, id: '3' }, { ...mockTemplateB, id: '4' }];
 			templates.fetchAllTemplates.mockResolvedValue(manyTemplates);
 
@@ -78,7 +78,8 @@ describe('useTemplates', () => {
 				expect(result.current.loading).toBe(false);
 			});
 
-			expect(result.current.templates).toHaveLength(3);
+			expect(templates.fetchAllTemplates).toHaveBeenCalledWith(3);
+			expect(result.current.templates).toEqual(manyTemplates);
 		});
 
 		it('should set error when fetchAllTemplates fails', async () => {
