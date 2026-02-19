@@ -240,6 +240,11 @@
 			"description": "Preview updates automatically"
 		}
 	},
+	"PdfSuccessModal": {
+		"title": "PDF Downloaded Successfully!",
+		"description": "Your resume has been downloaded and is ready to use. Good luck with your applications!",
+		"button": "Go to Templates"
+	},
 	"TemplateDownload": {
 		"successBanner": {
 			"title": "Ready to Download! 🎉",

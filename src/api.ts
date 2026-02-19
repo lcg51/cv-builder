@@ -29,20 +29,23 @@ class PayloadAPI {
 		this.token = data.token;
 	}
 
-	async get<T>(endpoint: string): Promise<T> {
-		const cached = this.cache.get(endpoint);
+	async get<T>(endpoint: string, params?: Record<string, string | number>): Promise<T> {
+		const query = params ? `?${new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)]))}` : '';
+		const url = `${endpoint}${query}`;
+
+		const cached = this.cache.get(url);
 		if (cached && Date.now() - cached.timestamp < this.cacheTTL) {
 			return cached.data as T;
 		}
 
-		const response = await fetch(`${CMS_API_BASE}${endpoint}`, {
+		const response = await fetch(`${CMS_API_BASE}${url}`, {
 			headers: this.getHeaders()
 		});
 		if (!response.ok) {
-			throw new Error(`GET ${endpoint} failed: ${response.status}`);
+			throw new Error(`GET ${url} failed: ${response.status}`);
 		}
 		const data = await response.json();
-		this.cache.set(endpoint, { data, timestamp: Date.now() });
+		this.cache.set(url, { data, timestamp: Date.now() });
 		return data;
 	}
 

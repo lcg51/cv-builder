@@ -104,9 +104,8 @@ function mapCMSDocToTemplate(doc: CMSTemplateDoc): Template {
 }
 
 // --- CMS API functions ---
-export async function fetchAllTemplates(limit?: number): Promise<Template[]> {
-	const query = typeof limit === 'number' ? `?limit=${limit}` : '';
-	const data = await cmsApi.get<CMSTemplateListResponse>(`/templates${query}`);
+export async function fetchAllTemplates(params?: Record<string, string | number>): Promise<Template[]> {
+	const data = await cmsApi.get<CMSTemplateListResponse>('/templates', params);
 	return data.docs.map(mapCMSDocToTemplate).filter(t => t.isActive);
 }
 
