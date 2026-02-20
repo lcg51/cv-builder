@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { TopBar } from './TopBar';
 import { googleSignOut } from '../../../../app/server-actions/session';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
-import { User } from '@/lib/db/schema';
+import { User } from '@/app/models/auth';
 
 // Mock Next.js navigation hooks
 jest.mock('next/navigation', () => ({

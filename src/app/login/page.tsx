@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import LoginForm from './components/LoginForm';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/ui/components/card';
+import { Card, CardContent, CardHeader, CardDescription } from '@/ui/components/card';
 import { notebookBG, notebookBGJPG } from '../../assets';
 import { Message, OptimizedImage } from '@/ui/components';
 import { getTranslations } from 'next-intl/server';
@@ -31,25 +31,17 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 			<div className="relative z-10 w-full flex justify-center min-h-[calc(100vh-3.5rem)] xl:min-h-[calc(100vh-3.75rem)]">
 				<div className="flex items-center justify-center p-8">
 					<div className="w-full max-w-md">
-						{/* Header */}
-						<div className="text-center mb-8">
-							<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-2">
-								{$t('title')}
-							</h1>
-							<p className="text-slate-600 dark:text-slate-400 text-lg">{$t('description')}</p>
-						</div>
-
 						{/* Login Card */}
 						<Card className="w-full shadow-2xl border-white/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
-							<CardHeader className="text-center pb-6">
-								<CardTitle className="text-2xl font-bold text-muted dark:text-slate-200">
-									{$t('signIn')}
-								</CardTitle>
-								<CardDescription className="text-slate-600 dark:text-slate-400">
-									{$t('access')}
+							<CardHeader className="text-center pb-2">
+								<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-1">
+									{$t('title')}
+								</h1>
+								<CardDescription className="text-slate-600 dark:text-slate-400 text-base">
+									{$t('description')}
 								</CardDescription>
 							</CardHeader>
-							<CardContent className="pb-8">
+							<CardContent className="pt-4 pb-8">
 								<LoginForm searchParams={searchParams} />
 							</CardContent>
 						</Card>

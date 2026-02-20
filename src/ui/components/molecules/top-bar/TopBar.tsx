@@ -21,7 +21,7 @@ import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { uuidRegex } from '@/lib/utils';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { User } from '@/lib/db/schema';
+import { User } from '@/app/models/auth';
 
 export type TopBarProps = {
 	user?: User;

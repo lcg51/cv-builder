@@ -114,12 +114,16 @@
 	},
 	"LoginPage": {
 		"title": "Bienvenido de nuevo",
-		"description": "Inicia sesión para continuar creando tu currículum profesional",
-		"signIn": "Iniciar sesión",
-		"access": "Accede a tu cuenta para crear y gestionar tus currículums",
+		"description": "Accede a tu cuenta y continúa donde lo dejaste",
 		"continueWithGoogle": "Continuar con Google",
-		"secureAuthentication": "Autenticación segura",
-		"benefits": "Inicia sesión para acceder a tus currículums guardados y continuar donde lo dejaste",
+		"or": "o",
+		"email": "Correo electrónico",
+		"emailPlaceholder": "tu@ejemplo.com",
+		"password": "Contraseña",
+		"passwordPlaceholder": "Ingresa tu contraseña",
+		"signInWithEmail": "Iniciar sesión con correo",
+		"invalidCredentials": "Correo o contraseña inválidos",
+		"signingIn": "Iniciando sesión...",
 		"termsOfServiceAndPolicy": "Al iniciar sesión, aceptas nuestros <termsOfService>Términos de servicio</termsOfService> y <privacyPolicy>Política de privacidad</privacyPolicy>"
 	},
 	"TemplatesPage": {

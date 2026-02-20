@@ -10,7 +10,7 @@ import { TopBar } from '@/ui/components';
 import { auth } from '@/auth';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { User } from '@/lib/db';
+import { User } from '@/app/models/auth';
 
 export const metadata: Metadata = {
 	title: 'CV Builder',

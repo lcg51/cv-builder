@@ -114,12 +114,16 @@
 	},
 	"LoginPage": {
 		"title": "Welcome Back",
-		"description": "Sign in to continue building your professional resume",
-		"signIn": "Sign In",
-		"access": "Access your account to create and manage your resumes",
+		"description": "Access your account and continue where you left off",
 		"continueWithGoogle": "Continue with Google",
-		"secureAuthentication": "Secure authentication",
-		"benefits": "Sign in to access your saved resumes and continue where you left off",
+		"or": "or",
+		"email": "Email",
+		"emailPlaceholder": "you@example.com",
+		"password": "Password",
+		"passwordPlaceholder": "Enter your password",
+		"signInWithEmail": "Sign in with email",
+		"invalidCredentials": "Invalid email or password",
+		"signingIn": "Signing in...",
 		"termsOfServiceAndPolicy": "By signing in, you agree to our <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
 	},
 	"TemplatesPage": {
