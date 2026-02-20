@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import { NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { payloadLogin, payloadCreateUser, payloadFindUserByEmail } from '@/lib/payload-auth';
+import { payloadLogin, payloadCreateUser, payloadFindUserByEmail } from '@/app/server-actions/auth';
 
 export const authOptions: NextAuthConfig = {
 	session: { strategy: 'jwt' },

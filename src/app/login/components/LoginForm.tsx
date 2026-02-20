@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/ui/components/button';
 import { Input } from '@/ui/components/input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/ui/components/tabs';
-import { googleSignIn, credentialsSignIn, credentialsSignUp } from '../../server-actions/session';
+import { googleSignIn, credentialsSignIn, credentialsSignUp } from '../../server-actions/auth';
 import { FormMessage, Message } from '@/ui/components';
 import { useTranslations } from 'next-intl';
 import { GoogleIcon } from '@/ui/icons';

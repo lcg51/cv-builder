@@ -15,7 +15,7 @@ import {
 	DropdownMenuTrigger
 } from '@/ui/components/dropdown-menu';
 
-import { googleSignOut } from '../../../../app/server-actions/session';
+import { googleSignOut } from '../../../../app/server-actions/auth';
 import { getFirstTwoCapitalLetters, getGoogleProfileImage } from '@/lib/helpers';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { uuidRegex } from '@/lib/utils';

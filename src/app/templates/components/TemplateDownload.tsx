@@ -7,7 +7,7 @@ import { ProgressBar, TemplatePreviewer } from '@/ui/components';
 import { TemplateDataType } from '@/types/payload-types';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
-import { googleSignIn } from '@/app/server-actions/session';
+import { googleSignIn } from '@/app/server-actions/auth';
 import { TemplateDownloadSkeleton } from './TemplateDownloadSkeleton';
 
 export type TemplateDownloadProps = {

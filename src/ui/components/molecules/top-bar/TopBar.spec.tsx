@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { TopBar } from './TopBar';
-import { googleSignOut } from '../../../../app/server-actions/session';
+import { googleSignOut } from '../../../../app/server-actions/auth';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { User } from '@/app/models/auth';
 
@@ -20,7 +20,7 @@ jest.mock('@/hooks/useBrowserBackNavigation', () => ({
 }));
 
 // Mock server actions
-jest.mock('../../../../app/server-actions/session', () => ({
+jest.mock('../../../../app/server-actions/auth', () => ({
 	googleSignOut: jest.fn()
 }));
 
