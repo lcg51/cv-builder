@@ -39,7 +39,6 @@
 		"@sparticuz/chromium": "^138.0.2",
 		"@vercel/edge-config": "^1.4.0",
 		"@vercel/flags-core": "^1.0.1",
-		"@vercel/postgres": "^0.10.0",
 		"ai": "^3.3.39",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
@@ -72,7 +71,6 @@
 		"zustand": "^5.0.3"
 	},
 	"devDependencies": {
-		"@auth/drizzle-adapter": "^1.10.0",
 		"@babel/preset-env": "^7.26.9",
 		"@babel/preset-react": "^7.26.3",
 		"@babel/preset-typescript": "^7.26.0",
@@ -86,8 +84,6 @@
 		"@types/node": "^20",
 		"@types/react": "19.1.10",
 		"@types/react-dom": "19.1.7",
-		"drizzle-kit": "^0.31.5",
-		"drizzle-orm": "^0.44.5",
 		"eslint": "^9.39.2",
 		"eslint-config-next": "15.4.6",
 		"eslint-plugin-react": "^7.37.1",

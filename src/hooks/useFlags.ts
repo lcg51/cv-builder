@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 type Flags = {
 	areFilterTemplatesEnabled: boolean;
+	isEmailSignInEnabled: boolean;
 };
 
 export function useFlags() {
@@ -14,7 +15,7 @@ export function useFlags() {
 		fetch('/api/flags')
 			.then(res => res.json())
 			.then(setFlags)
-			.catch(() => setFlags({ areFilterTemplatesEnabled: false }))
+			.catch(() => setFlags({ areFilterTemplatesEnabled: false, isEmailSignInEnabled: false }))
 			.finally(() => setLoading(false));
 	}, []);
 
