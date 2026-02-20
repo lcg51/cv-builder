@@ -115,16 +115,24 @@
 	"LoginPage": {
 		"title": "Welcome Back",
 		"description": "Access your account and continue where you left off",
+		"titleSignUp": "Create your account",
+		"descriptionSignUp": "Start building your professional resume",
+		"signIn": "Sign In",
+		"signUp": "Sign Up",
 		"continueWithGoogle": "Continue with Google",
 		"or": "or",
 		"email": "Email",
 		"emailPlaceholder": "you@example.com",
 		"password": "Password",
 		"passwordPlaceholder": "Enter your password",
+		"namePlaceholder": "Your full name",
 		"signInWithEmail": "Sign in with email",
 		"invalidCredentials": "Invalid email or password",
 		"signingIn": "Signing in...",
-		"termsOfServiceAndPolicy": "By signing in, you agree to our <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
+		"createAccount": "Create account",
+		"creatingAccount": "Creating account...",
+		"registrationFailed": "Could not create account. Please try again.",
+		"termsOfServiceAndPolicy": "By continuing, you agree to our <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
 	},
 	"TemplatesPage": {
 		"title": "Choose Your Template",

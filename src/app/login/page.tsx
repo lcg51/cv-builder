@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import LoginForm from './components/LoginForm';
-import { Card, CardContent, CardHeader, CardDescription } from '@/ui/components/card';
+import { Card, CardContent } from '@/ui/components/card';
 import { notebookBG, notebookBGJPG } from '../../assets';
 import { Message, OptimizedImage } from '@/ui/components';
 import { getTranslations } from 'next-intl/server';
@@ -33,15 +33,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
 					<div className="w-full max-w-md">
 						{/* Login Card */}
 						<Card className="w-full shadow-2xl border-white/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md">
-							<CardHeader className="text-center pb-2">
-								<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-1">
-									{$t('title')}
-								</h1>
-								<CardDescription className="text-slate-600 dark:text-slate-400 text-base">
-									{$t('description')}
-								</CardDescription>
-							</CardHeader>
-							<CardContent className="pt-4 pb-8">
+							<CardContent className="pt-8 pb-8">
 								<LoginForm searchParams={searchParams} />
 							</CardContent>
 						</Card>

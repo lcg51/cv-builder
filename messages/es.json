@@ -115,16 +115,24 @@
 	"LoginPage": {
 		"title": "Bienvenido de nuevo",
 		"description": "Accede a tu cuenta y continúa donde lo dejaste",
+		"titleSignUp": "Crea tu cuenta",
+		"descriptionSignUp": "Comienza a crear tu currículum profesional",
+		"signIn": "Iniciar sesión",
+		"signUp": "Registrarse",
 		"continueWithGoogle": "Continuar con Google",
 		"or": "o",
 		"email": "Correo electrónico",
 		"emailPlaceholder": "tu@ejemplo.com",
 		"password": "Contraseña",
 		"passwordPlaceholder": "Ingresa tu contraseña",
+		"namePlaceholder": "Tu nombre completo",
 		"signInWithEmail": "Iniciar sesión con correo",
 		"invalidCredentials": "Correo o contraseña inválidos",
 		"signingIn": "Iniciando sesión...",
-		"termsOfServiceAndPolicy": "Al iniciar sesión, aceptas nuestros <termsOfService>Términos de servicio</termsOfService> y <privacyPolicy>Política de privacidad</privacyPolicy>"
+		"createAccount": "Crear cuenta",
+		"creatingAccount": "Creando cuenta...",
+		"registrationFailed": "No se pudo crear la cuenta. Inténtalo de nuevo.",
+		"termsOfServiceAndPolicy": "Al continuar, aceptas nuestros <termsOfService>Términos de servicio</termsOfService> y <privacyPolicy>Política de privacidad</privacyPolicy>"
 	},
 	"TemplatesPage": {
 		"title": "Elige tu plantilla",
