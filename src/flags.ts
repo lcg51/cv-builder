@@ -5,3 +5,8 @@ export const areFilterTemplatesEnabled = flag({
 	key: 'areFilterTemplatesEnabled',
 	adapter: vercelAdapter()
 });
+
+export const isEmailAuthEnabled = flag({
+	key: 'isEmailAuthEnabled',
+	adapter: vercelAdapter()
+});
