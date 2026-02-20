@@ -1,15 +1,14 @@
 import Handlebars from 'handlebars';
-import { TemplateDataType } from '@/types/payload-types';
 
 // Define proper types for Handlebars helpers
 type HandlebarsHelperOptions = {
-	fn: (context: any) => string;
-	inverse: (context: any) => string;
-	hash: Record<string, any>;
-	data?: any;
+	fn: (context: Record<string, unknown>) => string;
+	inverse: (context: Record<string, unknown>) => string;
+	hash: Record<string, unknown>;
+	data?: Record<string, unknown>;
 };
 
-type HandlebarsContext = Record<string, any>;
+type HandlebarsContext = Record<string, unknown>;
 
 // Register custom Handlebars helpers
 Handlebars.registerHelper('formatDate', function (this: HandlebarsContext, date: Date, format: string) {
@@ -53,26 +52,22 @@ Handlebars.registerHelper('join', function (this: HandlebarsContext, array: unkn
 });
 
 /**
- * Load a template by ID from the CMS, compile its Handlebars HTML,
- * and return the compiled template function alongside the CSS.
+ * Compiles a Handlebars template from any HTML/CSS source into a typed render function.
+ * The loader callback decouples fetching from compilation, making this reusable for any data shape.
  */
-export const compileHandlebarsTemplate = async (
-	templateId: string
-): Promise<{ template: (userData: TemplateDataType) => string; css: string }> => {
-	const { loadTemplate } = await import('@/templates');
-	const { html, css } = await loadTemplate(templateId);
+export const compileHandlebarsTemplate = async <T>(
+	loader: () => Promise<{ html: string; css: string }>
+): Promise<{ template: (data: T) => string; css: string }> => {
+	const { html, css } = await loader();
 
 	if (!html) {
-		throw new Error(`Template ${templateId} has no HTML content`);
+		throw new Error('Template has no HTML content');
 	}
 
-	const compiled = Handlebars.compile(html);
+	const compiled = Handlebars.compile<T>(html);
 
 	return {
-		template: (userData: TemplateDataType): string => {
-			if (!userData) return '';
-			return compiled(userData);
-		},
+		template: (data: T): string => compiled(data),
 		css
 	};
 };

@@ -135,7 +135,7 @@ describe('useSelectedTemplate', () => {
 			});
 
 			expect(templates.fetchTemplateById).toHaveBeenCalledWith('1');
-			expect(handlebarsProcessor.compileHandlebarsTemplate).toHaveBeenCalledWith('1');
+			expect(handlebarsProcessor.compileHandlebarsTemplate).toHaveBeenCalledWith(expect.any(Function));
 			expect(result.current.styles).toBe('.body { color: red; }');
 			expect(result.current.compiledTemplate).toBe(mockCompiledFn);
 		});
@@ -162,7 +162,7 @@ describe('useSelectedTemplate', () => {
 				expect(result.current.compiledTemplate).toBe(newCompiledFn);
 			});
 
-			expect(handlebarsProcessor.compileHandlebarsTemplate).toHaveBeenLastCalledWith('2');
+			expect(handlebarsProcessor.compileHandlebarsTemplate).toHaveBeenLastCalledWith(expect.any(Function));
 			expect(result.current.styles).toBe('.creative { font-size: 16px; }');
 		});
 
