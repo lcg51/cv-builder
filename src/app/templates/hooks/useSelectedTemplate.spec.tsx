@@ -1,9 +1,9 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useSelectedTemplate } from './useSelectedTemplate';
-import { Template } from '@/templates';
+import { TemplateDataType } from '@/app/templates/templates.service';
 
-const mockTemplateA: Template = {
+const mockTemplateA: TemplateDataType = {
 	id: '1',
 	name: 'Professional',
 	description: 'A professional template',
@@ -16,7 +16,7 @@ const mockTemplateA: Template = {
 	features: []
 };
 
-const mockTemplateB: Template = {
+const mockTemplateB: TemplateDataType = {
 	id: '2',
 	name: 'Creative',
 	description: 'A creative template',
@@ -31,7 +31,7 @@ const mockTemplateB: Template = {
 
 const mockCompiledFn = jest.fn(data => `<html>${data.firstName}</html>`);
 
-jest.mock('@/templates', () => ({
+jest.mock('@/app/templates/templates.service', () => ({
 	fetchTemplateById: jest.fn()
 }));
 
@@ -40,7 +40,7 @@ jest.mock('@/lib/handlebarsProcessor', () => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const templates = require('@/templates');
+const templates = require('@/app/templates/templates.service');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const handlebarsProcessor = require('@/lib/handlebarsProcessor');
 

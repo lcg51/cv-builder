@@ -1,17 +1,15 @@
 import { Card } from '@/ui/components/card';
-import { type Template as TemplateType } from '@/templates';
+import { type TemplateDataType } from '@/app/templates/templates.service';
 import { CheckIcon, EyeIcon, StarIcon } from '@/ui/icons';
 import Image from 'next/image';
 
-export const Template = ({
-	template,
-	selectedTemplateId = '',
-	onClickTemplate
-}: {
-	template: TemplateType;
+type TemplateProps = {
+	template: TemplateDataType;
 	selectedTemplateId?: string;
 	onClickTemplate?: (id: string) => void;
-}) => {
+};
+
+export const Template = ({ template, selectedTemplateId = '', onClickTemplate }: TemplateProps) => {
 	return (
 		<Card
 			key={template.id}

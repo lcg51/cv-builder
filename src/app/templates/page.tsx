@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { TemplateSkeleton } from './components/TemplateSkeleton';
 import { TemplateSelection } from './components/TemplateSelection';
-import { useTemplates } from '@/hooks/useTemplates';
+import { useTemplates } from '@/app/templates/hooks/useTemplates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 import { RefreshCwIcon } from '@/ui/icons';
 

@@ -2,8 +2,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/ui/components/button';
 import { SearchIcon, FilterIcon, ArrowRight } from '@/ui/icons';
-import { type Template as TemplateType, type TemplateCategory } from '@/templates';
-import { Template } from '../../components/Template';
+import { type TemplateDataType, type TemplateCategory } from '@/app/templates/templates.service';
+import { Template } from './Template';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
 import { SearchFilters } from '@/ui/components';
@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useFlags } from '@/hooks/useFlags';
 
 interface TemplateSelectionProps {
-	templates: TemplateType[];
+	templates: TemplateDataType[];
 	searchTemplatesByQuery: (query: string) => void;
 	resetToAllTemplates: () => void;
 	loadTemplatesByCategory: (category: TemplateCategory) => void;

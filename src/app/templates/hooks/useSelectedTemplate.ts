@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { fetchTemplateById, Template } from '@/templates';
+import { fetchTemplateById, Template } from '@/app/templates/templates.service';
 import { compileHandlebarsTemplate } from '@/lib/handlebarsProcessor';
 import { TemplateDataType } from '@/types/payload-types';
 
