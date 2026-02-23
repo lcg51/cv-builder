@@ -36,7 +36,8 @@ export const authOptions: NextAuthConfig = {
 					id: result.user.id,
 					email: result.user.email,
 					name: result.user.name ?? null,
-					image: null
+					image: null,
+					cmsToken: result.token
 				};
 			}
 		})
@@ -69,6 +70,7 @@ export const authOptions: NextAuthConfig = {
 				token.email = user.email;
 				token.image = user.image;
 				token.provider = account?.provider;
+				token.cmsToken = user.cmsToken;
 			}
 			return token;
 		},
@@ -76,6 +78,7 @@ export const authOptions: NextAuthConfig = {
 		async session({ session, token }) {
 			return {
 				...session,
+				cmsToken: token.cmsToken,
 				user: {
 					...session.user,
 					id: token.id as string,

@@ -13,20 +13,8 @@ class PayloadAPI {
 		return headers;
 	}
 
-	async login(): Promise<void> {
-		const response = await fetch(`${CMS_API_BASE}/users/login`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				email: process.env.NEXT_PUBLIC_CMS_API_EMAIL,
-				password: process.env.NEXT_PUBLIC_CMS_API_PASSWORD
-			})
-		});
-		if (!response.ok) {
-			throw new Error(`CMS login failed: ${response.status}`);
-		}
-		const data = await response.json();
-		this.token = data.token;
+	setToken(token: string): void {
+		this.token = token;
 	}
 
 	async get<T>(endpoint: string, params?: Record<string, string | number>): Promise<T> {
