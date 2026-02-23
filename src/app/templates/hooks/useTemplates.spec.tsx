@@ -1,9 +1,9 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useTemplates } from './useTemplates';
-import { Template } from '@/templates';
+import type { TemplateDataType } from '@/app/templates/templates.service';
 
-const mockTemplateA: Template = {
+const mockTemplateA: TemplateDataType = {
 	id: '1',
 	name: 'Professional',
 	description: 'A professional template',
@@ -16,7 +16,7 @@ const mockTemplateA: Template = {
 	features: []
 };
 
-const mockTemplateB: Template = {
+const mockTemplateB: TemplateDataType = {
 	id: '2',
 	name: 'Creative',
 	description: 'A creative template',
@@ -31,15 +31,15 @@ const mockTemplateB: Template = {
 
 const allTemplates = [mockTemplateA, mockTemplateB];
 
-jest.mock('@/templates', () => ({
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const templates = require('@/app/templates/templates.service');
+
+jest.mock('@/app/templates/templates.service', () => ({
 	fetchAllTemplates: jest.fn(),
 	fetchTemplateById: jest.fn(),
 	filterTemplatesByCategory: jest.fn(),
 	searchTemplates: jest.fn()
 }));
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const templates = require('@/templates');
 
 afterEach(() => {
 	jest.restoreAllMocks();

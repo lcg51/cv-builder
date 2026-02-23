@@ -4,9 +4,11 @@ import tseslint from 'typescript-eslint';
 import pluginReact from 'eslint-plugin-react';
 
 export default [
-	{ files: ['src/**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
-	{ languageOptions: { globals: globals.browser } },
-	{ ignores: ['node_modules', 'dist', 'build', 'src/components/**'] },
+	{ ignores: ['node_modules', 'dist', 'build'] },
+	{
+		files: ['src/**/*.{js,mjs,cjs,ts,jsx,tsx}'],
+		languageOptions: { globals: globals.browser }
+	},
 	// Config files at root need Node.js globals
 	{
 		files: ['*.config.{js,mjs,cjs,ts}', 'scripts/**/*.{js,mjs,cjs,ts}'],

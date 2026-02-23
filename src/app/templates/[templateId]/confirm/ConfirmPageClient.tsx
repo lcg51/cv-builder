@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { TemplateDownload } from '../../components/TemplateDownload';
 import { useCreatePDF } from '@/hooks/useCreatePDF';
-import { useSelectedTemplate } from '@/hooks/useSelectedTemplate';
+import { useSelectedTemplate } from '@/app/templates/hooks/useSelectedTemplate';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';

@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
-import { useSelectedTemplate } from '@/hooks/useSelectedTemplate';
+import { useSelectedTemplate } from '@/app/templates/hooks/useSelectedTemplate';
 import { useParams, useRouter } from 'next/navigation';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 

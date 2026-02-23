@@ -9,7 +9,7 @@ export type Feature = {
 	documentId: string;
 };
 
-export interface Template {
+export interface TemplateDataType {
 	id: string;
 	name: string;
 	description: string;
@@ -88,7 +88,7 @@ function buildThumbnailUrl(doc: CMSTemplateDoc): string {
 	return `${CMS_ORIGIN}${path}`;
 }
 
-function mapCMSDocToTemplate(doc: CMSTemplateDoc): Template {
+function mapCMSDocToTemplate(doc: CMSTemplateDoc): TemplateDataType {
 	return {
 		id: String(doc.id),
 		name: doc.name,
@@ -104,12 +104,12 @@ function mapCMSDocToTemplate(doc: CMSTemplateDoc): Template {
 }
 
 // --- CMS API functions ---
-export async function fetchAllTemplates(params?: Record<string, string | number>): Promise<Template[]> {
+export async function fetchAllTemplates(params?: Record<string, string | number>): Promise<TemplateDataType[]> {
 	const data = await cmsApi.get<CMSTemplateListResponse>('/templates', params);
 	return data.docs.map(mapCMSDocToTemplate).filter(t => t.isActive);
 }
 
-export async function fetchTemplateById(id: string): Promise<Template | undefined> {
+export async function fetchTemplateById(id: string): Promise<TemplateDataType | undefined> {
 	try {
 		const doc = await cmsApi.get<CMSTemplateDoc>(`/templates/${id}`);
 		return mapCMSDocToTemplate(doc);
@@ -117,8 +117,6 @@ export async function fetchTemplateById(id: string): Promise<Template | undefine
 		return undefined;
 	}
 }
-
-export type TemplateId = string;
 
 export async function loadTemplate(templateId: string): Promise<{ html: string; css: string }> {
 	const doc = await cmsApi.get<CMSTemplateDoc>(`/templates/${templateId}`);
@@ -135,11 +133,14 @@ export async function loadTemplate(templateId: string): Promise<{ html: string; 
 
 // --- Client-side filter utilities (operate on a provided array) ---
 
-export function filterTemplatesByCategory(templates: Template[], category: TemplateCategory): Template[] {
+export function filterTemplatesByCategory(
+	templates: TemplateDataType[],
+	category: TemplateCategory
+): TemplateDataType[] {
 	return templates.filter(template => template.category === category);
 }
 
-export function searchTemplates(templates: Template[], query: string): Template[] {
+export function searchTemplates(templates: TemplateDataType[], query: string): TemplateDataType[] {
 	const lowercaseQuery = query.toLowerCase();
 	return templates.filter(
 		template =>

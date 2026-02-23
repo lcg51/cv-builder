@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { CheckCircle, ArrowRight, Sparkles, Clock, Shield } from '@/ui/icons';
 import { useSectionsData } from './models/sections';
-import { HomeTemplates } from './components/HomeTemplates';
+import { HomeTemplates } from './templates/components/HomeTemplates';
 import { useTranslations } from 'next-intl';
 
 export default function Home() {

@@ -1,6 +1,6 @@
 'use client';
 import { Template } from './Template';
-import { useTemplates } from '@/hooks/useTemplates';
+import { useTemplates } from '@/app/templates/hooks/useTemplates';
 
 export const HomeTemplates = () => {
 	const { templates } = useTemplates({ isHomePage: true });

@@ -1,23 +1,22 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import {
-	Template,
-	TemplateId,
+	TemplateDataType,
 	fetchAllTemplates,
 	fetchTemplateById,
 	filterTemplatesByCategory,
 	searchTemplates
-} from '@/templates';
+} from '@/app/templates/templates.service';
 
 type UseTemplatesProps = {
 	isHomePage?: boolean;
 };
 
 export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
-	const [templates, setTemplates] = useState<Template[]>([]);
+	const [templates, setTemplates] = useState<TemplateDataType[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const allTemplatesRef = useRef<Template[]>([]);
-	const homeTemplatesRef = useRef<Template[]>([]);
+	const allTemplatesRef = useRef<TemplateDataType[]>([]);
+	const homeTemplatesRef = useRef<TemplateDataType[]>([]);
 
 	// Load all templates from CMS
 	const loadAllTemplates = useCallback(async () => {
@@ -36,7 +35,7 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 	}, []);
 
 	// Load templates by category (client-side filter)
-	const loadTemplatesByCategory = useCallback((category: Template['category']) => {
+	const loadTemplatesByCategory = useCallback((category: TemplateDataType['category']) => {
 		const filtered = filterTemplatesByCategory(allTemplatesRef.current, category);
 		setTemplates(filtered);
 	}, []);
@@ -48,7 +47,7 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 	}, []);
 
 	// Load a specific template
-	const loadSpecificTemplate = useCallback(async (id: TemplateId) => {
+	const loadSpecificTemplate = useCallback(async (id: string) => {
 		try {
 			setLoading(true);
 			setError(null);

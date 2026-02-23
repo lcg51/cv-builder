@@ -1,14 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import { fetchTemplateById, Template } from '@/templates';
+import {
+	fetchTemplateById,
+	type TemplateDataType as TemplateDataTypeService,
+	loadTemplate
+} from '@/app/templates/templates.service';
 import { compileHandlebarsTemplate } from '@/lib/handlebarsProcessor';
-import { TemplateDataType } from '@/types/payload-types';
+import type { TemplateDataType } from '@/types/payload-types';
 
 type UseSelectedTemplateProps = {
 	templateId?: string;
 };
 
 export function useSelectedTemplate({ templateId }: UseSelectedTemplateProps = {}) {
-	const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+	const [selectedTemplate, setSelectedTemplate] = useState<TemplateDataTypeService | null>(null);
 	const [templateError, setTemplateError] = useState<string | null>(null);
 	const [compiledTemplate, setCompiledTemplate] = useState<((userData: TemplateDataType) => string) | null>(null);
 	const [styles, setStyles] = useState('');
@@ -45,7 +49,9 @@ export function useSelectedTemplate({ templateId }: UseSelectedTemplateProps = {
 	const compileTemplateFromHandlebars = useCallback(async () => {
 		setIsCompiling(true);
 		try {
-			const result = await compileHandlebarsTemplate(selectedTemplate?.id ?? '');
+			const result = await compileHandlebarsTemplate<TemplateDataType>(() =>
+				loadTemplate(selectedTemplate?.id ?? '')
+			);
 			setCompiledTemplate(() => result.template);
 			setStyles(result.css);
 		} catch (err) {
