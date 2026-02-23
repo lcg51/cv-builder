@@ -19,8 +19,6 @@ export const useCreatePDF = ({ userResumeData, compiledTemplate, styles }: Creat
 			}
 
 			const processedHtml = compiledTemplate(userResumeData);
-
-			await cmsApi.login();
 			const blob = await cmsApi.postRaw('/pdf', { html: processedHtml, styles });
 
 			const url = URL.createObjectURL(blob);
