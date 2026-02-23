@@ -1,4 +1,10 @@
 {
+	"NotFoundPage": {
+		"code": "404",
+		"title": "Página no encontrada",
+		"description": "La página que buscas no existe. Pudo haber sido movida, eliminada, o ingresaste una URL incorrecta.",
+		"goHome": "Ir al inicio"
+	},
 	"common": {
 		"loading": "Cargando...",
 		"error": "Ocurrió un error",
