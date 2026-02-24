@@ -174,11 +174,7 @@ export const CheckCircleIcon: React.FC<IconProps> = ({
 	</svg>
 );
 
-export const GoogleIcon: React.FC<IconProps> = ({
-	className = 'w-5 h-5 dark:text-slate-400',
-	size,
-	color = 'currentColor'
-}) => (
+export const GoogleIcon: React.FC<IconProps> = ({ className = 'w-5 h-5', size, color = 'currentColor' }) => (
 	<svg className={className} width={size} height={size} fill="none" stroke={color} viewBox="0 0 24 24">
 		<path
 			fill="currentColor"

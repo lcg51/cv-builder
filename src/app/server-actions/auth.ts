@@ -2,6 +2,7 @@
 import { signIn, signOut } from '@/auth';
 
 const CMS_BASE_URL = process.env.NEXT_PUBLIC_CMS_API_URL ?? '/cms-api';
+const USER_API_URL = `${CMS_BASE_URL}/api/app-users`;
 
 // --- Types ---
 
@@ -19,7 +20,7 @@ type LoginResponse = {
 // --- CMS API ---
 
 export async function payloadLogin(email: string, password: string): Promise<LoginResponse | null> {
-	const res = await fetch(`${CMS_BASE_URL}/api/app-users/login`, {
+	const res = await fetch(`${USER_API_URL}/login`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ email, password })
@@ -33,7 +34,7 @@ export async function payloadCreateUser(data: {
 	password: string;
 	name: string;
 }): Promise<AppUser | null> {
-	const res = await fetch(`${CMS_BASE_URL}/api/app-users`, {
+	const res = await fetch(`${USER_API_URL}`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(data)
@@ -44,7 +45,7 @@ export async function payloadCreateUser(data: {
 }
 
 export async function payloadFindUserByEmail(email: string): Promise<AppUser | null> {
-	const res = await fetch(`${CMS_BASE_URL}/app-users?where[email][equals]=${encodeURIComponent(email)}`, {
+	const res = await fetch(`${USER_API_URL}?where[email][equals]=${encodeURIComponent(email)}`, {
 		headers: { 'Content-Type': 'application/json' }
 	});
 	if (!res.ok) return null;
@@ -53,7 +54,7 @@ export async function payloadFindUserByEmail(email: string): Promise<AppUser | n
 }
 
 export async function payloadGetMe(token: string): Promise<AppUser | null> {
-	const res = await fetch(`${CMS_BASE_URL}/api/app-users/me`, {
+	const res = await fetch(`${USER_API_URL}/me`, {
 		headers: {
 			'Content-Type': 'application/json',
 			Authorization: `JWT ${token}`
@@ -65,7 +66,7 @@ export async function payloadGetMe(token: string): Promise<AppUser | null> {
 }
 
 export async function payloadLogout(token: string): Promise<boolean> {
-	const res = await fetch(`${CMS_BASE_URL}/api/app-users/logout`, {
+	const res = await fetch(`${USER_API_URL}/logout`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
