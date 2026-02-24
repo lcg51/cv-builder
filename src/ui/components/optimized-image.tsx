@@ -1,10 +1,11 @@
 'use client';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import { useState } from 'react';
 
 interface OptimizedImageProps {
-	webpSrc: string | any;
-	jpgSrc: string | any;
+	webpSrc: string | StaticImport;
+	jpgSrc: string | StaticImport;
 	alt: string;
 	width?: number;
 	height?: number;

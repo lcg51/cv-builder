@@ -7,6 +7,7 @@ import { TopBar } from './TopBar';
 import { googleSignOut } from '../../../../app/server-actions/auth';
 import { useBrowserBackNavigation } from '@/hooks/useBrowserBackNavigation';
 import { User } from '@/app/models/auth';
+import type { ButtonProps } from '@/ui/components/button';
 
 // Mock Next.js navigation hooks
 jest.mock('next/navigation', () => ({
@@ -34,7 +35,7 @@ jest.mock('../TopBar.css', () => ({}));
 
 // Mock UI components
 jest.mock('@/ui/components/button', () => ({
-	Button: ({ children, onClick, className, variant, size, ...props }: any) => (
+	Button: ({ children, onClick, className, variant, size, ...props }: ButtonProps) => (
 		<button onClick={onClick} className={className} data-variant={variant} data-size={size} {...props}>
 			{children}
 		</button>
@@ -42,29 +43,33 @@ jest.mock('@/ui/components/button', () => ({
 }));
 
 jest.mock('@/ui/components/avatar', () => ({
-	Avatar: ({ children }: any) => <div data-testid="avatar">{children}</div>,
-	AvatarImage: ({ src, alt, onError }: any) => (
-		<img src={src} alt={alt} onError={onError} data-testid="avatar-image" />
+	Avatar: ({ children }: React.PropsWithChildren) => <div data-testid="avatar">{children}</div>,
+	AvatarImage: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+		// eslint-disable-next-line react/prop-types -- mock component; props validated via TypeScript
+		<img src={props.src} alt={props.alt} onError={props.onError} data-testid="avatar-image" />
 	),
-	AvatarFallback: ({ children }: any) => <div data-testid="avatar-fallback">{children}</div>
+	AvatarFallback: ({ children }: React.PropsWithChildren) => <div data-testid="avatar-fallback">{children}</div>
 }));
 
 jest.mock('@/ui/components/dropdown-menu', () => ({
-	DropdownMenu: ({ children }: any) => <div data-testid="dropdown-menu">{children}</div>,
-	DropdownMenuContent: ({ children, align }: any) => (
+	DropdownMenu: ({ children }: React.PropsWithChildren) => <div data-testid="dropdown-menu">{children}</div>,
+	DropdownMenuContent: ({ children, align }: React.PropsWithChildren<{ align?: string }>) => (
 		<div data-testid="dropdown-content" data-align={align}>
 			{children}
 		</div>
 	),
-	DropdownMenuItem: ({ children, onClick }: any) => (
+	DropdownMenuItem: ({
+		children,
+		onClick
+	}: React.PropsWithChildren<{ onClick?: React.MouseEventHandler<HTMLButtonElement> }>) => (
 		<button onClick={onClick} data-testid="dropdown-item">
 			{children}
 		</button>
 	),
-	DropdownMenuLabel: ({ children }: any) => <div data-testid="dropdown-label">{children}</div>,
+	DropdownMenuLabel: ({ children }: React.PropsWithChildren) => <div data-testid="dropdown-label">{children}</div>,
 	DropdownMenuSeparator: () => <div data-testid="dropdown-separator" />,
-	DropdownMenuTrigger: ({ children, asChild }: any) => (
-		<div data-testid="dropdown-trigger" data-as-child={asChild}>
+	DropdownMenuTrigger: ({ children, asChild }: React.PropsWithChildren<{ asChild?: boolean }>) => (
+		<div data-testid="dropdown-trigger" data-as-child={String(asChild)}>
 			{children}
 		</div>
 	)
@@ -72,7 +77,7 @@ jest.mock('@/ui/components/dropdown-menu', () => ({
 
 // Mock Link component
 jest.mock('next/link', () => {
-	const MockLink = ({ children, href }: any) => (
+	const MockLink = ({ children, href }: React.PropsWithChildren<{ href: string }>) => (
 		<a href={href} data-testid="link">
 			{children}
 		</a>
