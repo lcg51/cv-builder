@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, ReactNode } from 'react';
-import { useForm, useFieldArray, Control } from 'react-hook-form';
+import { useForm, useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
@@ -257,12 +257,13 @@ export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = ({
 
 			// Convert date strings to Date objects for array items if needed
 			if (Array.isArray(sourceData)) {
-				defaultValues[field.name] = sourceData.map((item: any) => {
+				defaultValues[field.name] = sourceData.map((item: Record<string, unknown>) => {
 					const convertedItem = { ...item };
 					// Convert date fields to Date objects
 					Object.entries(field.arrayItemSchema).forEach(([key, itemField]) => {
 						if (itemField.type === 'date' && convertedItem[key]) {
-							convertedItem[key] = new Date(convertedItem[key]);
+							const val = convertedItem[key];
+							convertedItem[key] = val instanceof Date ? val : new Date(val as string | number);
 						}
 					});
 					return convertedItem;
@@ -302,12 +303,10 @@ export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = ({
 
 	useEffect(() => {
 		const subscription = watch(values => {
-			console.log('DynamicFormAdapter - watch values:', values);
 			if (config.formKey) {
 				// For forms with formKey (array forms), extract the actual array data
 				const arrayField = config.fields.find(field => field.isArray);
 				if (arrayField && values[arrayField.name]) {
-					console.log(`Sending ${config.formKey} data:`, values[arrayField.name]);
 					onFieldChange?.(config.formKey, values[arrayField.name]);
 				} else {
 					// For non-array forms with formKey, send all form data
@@ -333,9 +332,11 @@ export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = ({
 	};
 
 	const renderArrayField = (field: ArrayFieldConfig) => {
-		const { fields, append, remove } = useFieldArray({
-			control: control as any,
-			name: field.name
+		// useFieldArray requires a form type with array paths; we assert for this dynamic array field only.
+		type FormWithArray = Record<string, Record<string, unknown>[]>;
+		const { fields, append, remove } = useFieldArray<FormWithArray>({
+			control: control as Control<FormWithArray>,
+			name: field.name as FieldArrayPath<FormWithArray>
 		});
 
 		const addNewItem = () => {
@@ -344,7 +345,7 @@ export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = ({
 				newItem[key] =
 					itemField.type === 'slider' ? [itemField.min || 50] : itemField.type === 'date' ? new Date() : '';
 			});
-			append(newItem);
+			append(newItem as Record<string, unknown>);
 		};
 
 		return (

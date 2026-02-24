@@ -11,6 +11,7 @@ import { auth } from '@/auth';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { User } from '@/app/models/auth';
+import { CmsTokenSync } from './providers/CmsTokenSync';
 
 export const metadata: Metadata = {
 	title: 'CV Builder',
@@ -39,6 +40,7 @@ export default async function RootLayout({
 							<FormValidationProvider>
 								<NavigationGuardProvider>
 									<ModalProvider>
+										<CmsTokenSync token={session?.cmsToken} />
 										<TopBar user={session?.user as User} />
 										{children}
 									</ModalProvider>

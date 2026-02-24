@@ -255,7 +255,7 @@ describe('ProgressBar Component', () => {
 		});
 
 		it('should handle undefined completion percentage gracefully', () => {
-			const props = createProgressBarProps({ completionPercentage: undefined as any });
+			const props = createProgressBarProps({ completionPercentage: undefined });
 			render(<ProgressBar {...props} />);
 
 			// Should handle undefined gracefully
