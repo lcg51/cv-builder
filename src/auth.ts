@@ -49,7 +49,7 @@ export const authOptions: NextAuthConfig = {
 				try {
 					const existing = await payloadFindUserByEmail(user.email);
 					if (!existing) {
-						const generatedPassword = `google_${account.providerAccountId}_${crypto.randomUUID()}`;
+						const generatedPassword = `google_${process.env.AUTH_SECRET}_${account.providerAccountId}`;
 						await payloadCreateUser({
 							email: user.email,
 							password: generatedPassword,
@@ -72,6 +72,15 @@ export const authOptions: NextAuthConfig = {
 				token.provider = account?.provider;
 				token.cmsToken = user.cmsToken;
 			}
+
+			// For Google sign-in, call payloadLogin to obtain the CMS token.
+			// account is only present on the initial sign-in, not on token refreshes.
+			if (account?.provider === 'google' && user?.email) {
+				const generatedPassword = `google_${process.env.AUTH_SECRET}_${account.providerAccountId}`;
+				const result = await payloadLogin(user.email, generatedPassword);
+				if (result) token.cmsToken = result.token;
+			}
+
 			return token;
 		},
 
