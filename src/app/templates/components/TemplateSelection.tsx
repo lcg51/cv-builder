@@ -167,6 +167,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 							<Button
 								onClick={handleProceedToTemplate}
 								disabled={!selectedTemplateId}
+								isLoading={isLoading}
 								size="lg"
 								className="px-8 py-3 text-lg"
 							>
