@@ -1,6 +1,5 @@
 'use client';
 import { useMemo } from 'react';
-import { TemplateSkeleton } from './components/TemplateSkeleton';
 import { TemplateSelection } from './components/TemplateSelection';
 import { useTemplates } from '@/app/templates/hooks/useTemplates';
 import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
@@ -23,9 +22,6 @@ export default function Templates() {
 	};
 
 	const NavigationStateComponent = useMemo(() => {
-		if (isLoading) {
-			return <TemplateSkeleton />;
-		}
 		if (error) {
 			return (
 				<DisplayErrorMessage
@@ -40,17 +36,16 @@ export default function Templates() {
 		return (
 			<TemplateSelection
 				templates={templates}
+				isLoading={isLoading}
 				searchTemplatesByQuery={searchTemplatesByQuery}
 				resetToAllTemplates={resetToAllTemplates}
 				loadTemplatesByCategory={loadTemplatesByCategory}
 			/>
 		);
-	}, [isLoading, templates, searchTemplatesByQuery, resetToAllTemplates, loadTemplatesByCategory]);
+	}, [isLoading, error, templates, searchTemplatesByQuery, resetToAllTemplates, loadTemplatesByCategory]);
 
 	return (
-		<div
-			className={`w-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 lg:min-h-[calc(100vh-60px)] xl:min-h-[calc(100vh-60px)]`}
-		>
+		<div className="w-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 lg:min-h-[calc(100vh-60px)] xl:min-h-[calc(100vh-60px)]">
 			{NavigationStateComponent}
 		</div>
 	);

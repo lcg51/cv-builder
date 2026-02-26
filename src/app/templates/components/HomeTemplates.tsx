@@ -1,5 +1,5 @@
 'use client';
-import { Template } from './Template';
+import { TemplateCard } from './TemplateCard';
 import { useTemplates } from '@/app/templates/hooks/useTemplates';
 
 export const HomeTemplates = () => {
@@ -7,7 +7,7 @@ export const HomeTemplates = () => {
 	return (
 		<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
 			{templates.map((template, index) => (
-				<Template key={index} template={template} />
+				<TemplateCard key={index} template={template} />
 			))}
 		</div>
 	);

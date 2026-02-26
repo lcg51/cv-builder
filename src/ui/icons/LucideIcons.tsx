@@ -1,6 +1,7 @@
 import {
 	CheckCircle,
 	ArrowRight,
+	Loader2,
 	Sparkles,
 	Clock,
 	Shield,
@@ -33,6 +34,7 @@ import {
 } from 'lucide-react';
 
 export {
+	Loader2,
 	RefreshCwIcon,
 	HomeIcon,
 	CheckCircle,

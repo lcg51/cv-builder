@@ -15,3 +15,4 @@ export * from './molecules/template-previewer/TemplatePreviewer';
 export * from './molecules/template-previewer/TemplatePreviewerSkeleton';
 export * from './molecules/top-bar/TopBar';
 export * from './molecules/modal-disclaimer/ModalDisclaimer';
+export * from './withSkeleton';
