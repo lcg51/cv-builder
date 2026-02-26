@@ -3,15 +3,18 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/ui/components/button';
 import { SearchIcon, FilterIcon, ArrowRight } from '@/ui/icons';
 import { type TemplateDataType, type TemplateCategory } from '@/app/templates/templates.service';
-import { Template } from './Template';
+import { TemplateWithSkeleton } from './TemplateWithSkeleton';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useRouter } from 'next/navigation';
 import { SearchFilters } from '@/ui/components';
 import { useTranslations } from 'next-intl';
 import { useFlags } from '@/hooks/useFlags';
 
+const SKELETON_COUNT = 6;
+
 interface TemplateSelectionProps {
 	templates: TemplateDataType[];
+	isLoading?: boolean;
 	searchTemplatesByQuery: (query: string) => void;
 	resetToAllTemplates: () => void;
 	loadTemplatesByCategory: (category: TemplateCategory) => void;
@@ -19,6 +22,7 @@ interface TemplateSelectionProps {
 
 export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 	templates,
+	isLoading = false,
 	searchTemplatesByQuery,
 	resetToAllTemplates,
 	loadTemplatesByCategory
@@ -79,11 +83,16 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 		return (
 			<div className="container mx-auto p-4 lg:p-0">
 				<div className="w-full max-w-5xl mx-auto">
-					{/* Template Grid */}
-					{templates.length > 0 ? (
+					{isLoading ? (
+						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4 pt-4">
+							{Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+								<TemplateWithSkeleton key={index} isLoading />
+							))}
+						</div>
+					) : templates.length > 0 ? (
 						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4 pt-4">
 							{templates.map(template => (
-								<Template
+								<TemplateWithSkeleton
 									key={template.id}
 									template={template}
 									selectedTemplateId={selectedTemplateId}
@@ -117,7 +126,7 @@ export const TemplateSelection: React.FC<TemplateSelectionProps> = ({
 				</div>
 			</div>
 		);
-	}, [templates, selectedTemplateId, setSelectedTemplateId, noTemplateMatchText, resetFilters]);
+	}, [isLoading, templates, selectedTemplateId, setSelectedTemplateId, noTemplateMatchText, resetFilters]);
 
 	return (
 		<div className="template-selection-container flex flex-col min-h-screen">
