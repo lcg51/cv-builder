@@ -85,11 +85,6 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		setTemplates(isHomePage ? homeTemplatesRef.current : allTemplatesRef.current);
 	}, [isHomePage]);
 
-	// Clear error
-	const clearError = useCallback(() => {
-		setError(null);
-	}, []);
-
 	// Load all templates on mount
 	useEffect(() => {
 		if (isHomePage) {
@@ -108,7 +103,6 @@ export function useTemplates({ isHomePage = false }: UseTemplatesProps = {}) {
 		loadHomePageTemplates,
 		searchTemplatesByQuery,
 		loadSpecificTemplate,
-		resetToAllTemplates,
-		clearError
+		resetToAllTemplates
 	};
 }
