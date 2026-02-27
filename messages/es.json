@@ -1,4 +1,10 @@
 {
+	"ErrorPage": {
+		"title": "Algo salió mal",
+		"description": "Ocurrió un error inesperado de nuestra parte. Esto no es tu culpa — intenta de nuevo o regresa al inicio.",
+		"retry": "Intentar de nuevo",
+		"goHome": "Ir al inicio"
+	},
 	"NotFoundPage": {
 		"code": "404",
 		"title": "Página no encontrada",

@@ -1,4 +1,10 @@
 {
+	"ErrorPage": {
+		"title": "Something Went Wrong",
+		"description": "An unexpected error occurred on our end. This is not your fault — try again or head back home.",
+		"retry": "Try Again",
+		"goHome": "Go Home"
+	},
 	"NotFoundPage": {
 		"code": "404",
 		"title": "Page not found",

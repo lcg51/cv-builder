@@ -1,11 +1,10 @@
 'use client';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { resumeDataStore, ResumeDataStoreType } from '@/app/store/resume';
 import { useNavigationGuardProvider } from '@/hooks/useNavigationGuardProvider';
 import { TemplateUpdate } from '../components/TemplateUpdate';
 import { useSelectedTemplate } from '@/app/templates/hooks/useSelectedTemplate';
 import { useParams, useRouter } from 'next/navigation';
-import { DisplayErrorMessage } from '@/app/components/DisplayErrorMessage';
 
 export default function CreateTemplate() {
 	const params = useParams();
@@ -22,38 +21,28 @@ export default function CreateTemplate() {
 		templateId: templateID
 	});
 
+	if (templateError) throw new Error(templateError);
+
 	const onTemplateDownload = useCallback(() => {
 		push(`/templates/${selectedTemplate?.id}/confirm`);
 	}, [push, selectedTemplate]);
 
-	const templateIsLoading = isCompiling || (!selectedTemplate && !templateError);
+	const templateIsLoading = isCompiling || !selectedTemplate;
 
-	const NavigationStateComponent = useMemo(() => {
-		if (templateError) {
-			return (
-				<DisplayErrorMessage
-					errorMsg={templateError}
-					onClickCallback={() => push('/templates')}
-					errorTitle="Template Not Found"
-					errorButtonText="Choose a Template"
-				/>
-			);
-		}
-
-		return (
+	const NavigationStateComponent = useMemo(
+		() => (
 			<TemplateUpdate
 				styles={styles}
 				compiledTemplate={compiledTemplate}
 				onTemplateDownload={onTemplateDownload}
 				isLoading={templateIsLoading}
 			/>
-		);
-	}, [selectedTemplate, templateIsLoading, styles, onTemplateDownload, compiledTemplate, templateError]);
+		),
+		[selectedTemplate, templateIsLoading, styles, onTemplateDownload, compiledTemplate]
+	);
 
 	return (
-		<div
-			className={`bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 md:min-h-[calc(100vh-60px)]`}
-		>
+		<div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 md:min-h-[calc(100vh-60px)]">
 			{NavigationStateComponent}
 		</div>
 	);
