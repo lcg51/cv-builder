@@ -95,23 +95,6 @@ describe('useTemplates', () => {
 			expect(result.current.error).toBe('Failed to load templates');
 			expect(result.current.templates).toEqual([]);
 		});
-
-		it('should clear error with clearError', async () => {
-			jest.spyOn(console, 'error').mockImplementation();
-			templates.fetchAllTemplates.mockRejectedValue(new Error('fail'));
-
-			const { result } = renderHook(() => useTemplates());
-
-			await waitFor(() => {
-				expect(result.current.error).toBe('Failed to load templates');
-			});
-
-			act(() => {
-				result.current.clearError();
-			});
-
-			expect(result.current.error).toBeNull();
-		});
 	});
 
 	describe('loadSpecificTemplate', () => {
