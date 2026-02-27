@@ -40,3 +40,8 @@ next-env.d.ts
 
 
 .env
+
+# Claude Code, Cursor & AI agent config (local dev tooling, not for the repo)
+.claude/
+.agents/
+.cursor/
