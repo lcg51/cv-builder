@@ -1,23 +1,13 @@
 'use client';
 
-import React, { useEffect, useMemo, ReactNode } from 'react';
-import { useForm, useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
+import { useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
 import { Input, Textarea, MonthYearPicker, Slider } from '@/ui/components';
 import { PlusIcon, Trash } from '@/ui/icons';
-import { useTranslations } from 'next-intl';
-import { useFormValidation } from '@/hooks/useFormValidation';
 import { type StepsBarComponentProps } from '@/ui/components';
-import {
-	type BaseFieldConfig,
-	type ArrayFieldConfig,
-	type SimpleFieldConfig,
-	type FieldConfig,
-	type SchemaTranslator,
-	createZodSchema,
-	buildDefaultValues
-} from '@/lib/dynamicFormSchema';
+import { type BaseFieldConfig, type ArrayFieldConfig, type SimpleFieldConfig } from '@/lib/dynamicFormSchema';
+import { useDynamicForm, type FormHeader, type DynamicFormConfig } from '../hooks/useDynamicForm';
 
 export type {
 	FieldType,
@@ -26,73 +16,11 @@ export type {
 	SimpleFieldConfig,
 	FieldConfig
 } from '@/lib/dynamicFormSchema';
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
-
-export interface FormHeader {
-	title: string;
-	description: string;
-	icon: ReactNode;
-}
-
-export interface DynamicFormConfig {
-	header: FormHeader;
-	fields: FieldConfig[];
-	formKey?: string;
-	containerClassName?: string;
-}
+export type { FormHeader, DynamicFormConfig } from '../hooks/useDynamicForm';
 
 interface DynamicFormAdapterProps extends StepsBarComponentProps {
 	config: DynamicFormConfig;
 }
-
-// ---------------------------------------------------------------------------
-// useDynamicForm — stateful form logic
-// ---------------------------------------------------------------------------
-
-function useDynamicForm({ config, initialValues, onFieldChange, formId }: DynamicFormAdapterProps) {
-	const $t = useTranslations('validation') as unknown as SchemaTranslator;
-	const schema = useMemo(() => createZodSchema(config.fields, $t), [config.fields, $t]);
-	const defaultValues = useMemo(() => buildDefaultValues(config.fields, config.formKey, initialValues), []);
-
-	if (process.env.NODE_ENV === 'development' && config.formKey) {
-		console.log(`[DynamicFormAdapter] ${config.formKey} - Initial values:`, initialValues);
-	}
-
-	const form = useForm<Record<string, unknown>>({ resolver: zodResolver(schema), defaultValues });
-	const { control, watch, trigger } = form;
-	const { registerForm, unregisterForm } = useFormValidation();
-
-	useEffect(() => {
-		if (!formId) return;
-		registerForm(formId, () => trigger());
-		return () => unregisterForm(formId);
-	}, [formId, registerForm, unregisterForm, trigger]);
-
-	useEffect(() => {
-		const subscription = watch(values => {
-			if (config.formKey) {
-				const arrayField = config.fields.find(f => f.isArray);
-				if (arrayField && values[arrayField.name]) {
-					onFieldChange?.(config.formKey, values[arrayField.name]);
-				} else {
-					onFieldChange?.(config.formKey, values);
-				}
-			} else {
-				Object.entries(values).forEach(([key, value]) => onFieldChange?.(key, value));
-			}
-		});
-		return () => subscription.unsubscribe();
-	}, [watch, onFieldChange, config]);
-
-	return { form, control };
-}
-
-// ---------------------------------------------------------------------------
-// FieldRenderer — renders a single form control
-// ---------------------------------------------------------------------------
 
 interface FieldRendererProps {
 	field: BaseFieldConfig;
@@ -181,19 +109,11 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name }) =
 	);
 };
 
-// ---------------------------------------------------------------------------
-// SimpleField — grid wrapper around FieldRenderer for non-array fields
-// ---------------------------------------------------------------------------
-
 const SimpleField = ({ field, control }: { field: SimpleFieldConfig; control: Control<Record<string, unknown>> }) => (
 	<div className={field.gridColumn === 'full' ? 'col-span-full' : 'col-span-1'}>
 		<FieldRenderer field={field} control={control} name={field.name} />
 	</div>
 );
-
-// ---------------------------------------------------------------------------
-// ArrayFieldSection — owns useFieldArray (must be a real component)
-// ---------------------------------------------------------------------------
 
 const ArrayFieldSection = ({
 	field,
@@ -265,10 +185,6 @@ const ArrayFieldSection = ({
 	);
 };
 
-// ---------------------------------------------------------------------------
-// DynamicFormHeader — renders the form section header
-// ---------------------------------------------------------------------------
-
 const DynamicFormHeader = ({ title, description, icon }: FormHeader) => (
 	<div className="mb-6">
 		<div className="flex items-center gap-3 mb-3">
@@ -282,10 +198,6 @@ const DynamicFormHeader = ({ title, description, icon }: FormHeader) => (
 		</div>
 	</div>
 );
-
-// ---------------------------------------------------------------------------
-// DynamicFormAdapter — thin orchestrator
-// ---------------------------------------------------------------------------
 
 export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = props => {
 	const { config } = props;
