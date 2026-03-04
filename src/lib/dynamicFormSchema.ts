@@ -41,20 +41,36 @@ export interface SimpleFieldConfig extends BaseFieldConfig {
 
 export type FieldConfig = SimpleFieldConfig | ArrayFieldConfig;
 
-export function createFieldSchema(field: BaseFieldConfig): z.ZodSchema<unknown> {
+/**
+ * A plain translator function injected by callers (e.g. from useTranslations('validation')).
+ * Keeping this framework-agnostic lets the lib stay React-free.
+ */
+export type SchemaTranslator = (key: string, values?: Record<string, string | number>) => string;
+
+export function createFieldSchema(field: BaseFieldConfig, t?: SchemaTranslator): z.ZodSchema<unknown> {
 	if (field.validation) return field.validation;
+
+	const msg = {
+		invalidEmail: t ? t('invalidEmail') : 'Invalid email address.',
+		invalidUrl: t ? t('invalidUrl') : 'Please enter a valid URL.',
+		dateRequired: t ? t('dateRequired') : 'Date is required.',
+		minLength: (min: number) =>
+			t ? t('minLength', { label: field.label, min }) : `${field.label} must be at least ${min} characters.`,
+		maxLength: (max: number) =>
+			t ? t('maxLength', { label: field.label, max }) : `${field.label} must be no more than ${max} characters.`
+	};
 
 	let schema: z.ZodSchema<unknown>;
 
 	switch (field.type) {
 		case 'email':
-			schema = z.string().email({ message: 'Invalid email address.' });
+			schema = z.string().email({ message: msg.invalidEmail });
 			break;
 		case 'url':
-			schema = z.string().url({ message: 'Please enter a valid URL.' });
+			schema = z.string().url({ message: msg.invalidUrl });
 			break;
 		case 'date':
-			schema = z.date({ required_error: 'Date is required.' });
+			schema = z.date({ required_error: msg.dateRequired });
 			break;
 		case 'slider':
 			schema = z.array(
@@ -73,14 +89,10 @@ export function createFieldSchema(field: BaseFieldConfig): z.ZodSchema<unknown> 
 
 	if (field.type === 'text' || field.type === 'textarea' || field.type === 'tel') {
 		if (field.minLength) {
-			schema = (schema as z.ZodString).min(field.minLength, {
-				message: `${field.label} must be at least ${field.minLength} characters.`
-			});
+			schema = (schema as z.ZodString).min(field.minLength, { message: msg.minLength(field.minLength) });
 		}
 		if (field.maxLength) {
-			schema = (schema as z.ZodString).max(field.maxLength, {
-				message: `${field.label} must be no more than ${field.maxLength} characters.`
-			});
+			schema = (schema as z.ZodString).max(field.maxLength, { message: msg.maxLength(field.maxLength) });
 		}
 	}
 
@@ -91,18 +103,18 @@ export function createFieldSchema(field: BaseFieldConfig): z.ZodSchema<unknown> 
 	return schema;
 }
 
-export function createZodSchema(fields: FieldConfig[]): z.ZodSchema<Record<string, unknown>> {
+export function createZodSchema(fields: FieldConfig[], t?: SchemaTranslator): z.ZodSchema<Record<string, unknown>> {
 	const schemaObject: Record<string, z.ZodSchema<unknown>> = {};
 
 	fields.forEach(field => {
 		if (field.isArray) {
 			const itemSchemaObject: Record<string, z.ZodSchema<unknown>> = {};
 			Object.entries(field.arrayItemSchema).forEach(([key, itemField]) => {
-				itemSchemaObject[key] = createFieldSchema(itemField);
+				itemSchemaObject[key] = createFieldSchema(itemField, t);
 			});
 			schemaObject[field.name] = z.array(z.object(itemSchemaObject));
 		} else {
-			schemaObject[field.name] = createFieldSchema(field);
+			schemaObject[field.name] = createFieldSchema(field, t);
 		}
 	});
 
