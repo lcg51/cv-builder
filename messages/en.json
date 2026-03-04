@@ -32,6 +32,13 @@
 		"phone": "Phone",
 		"address": "Address"
 	},
+	"validation": {
+		"invalidEmail": "Invalid email address.",
+		"invalidUrl": "Please enter a valid URL.",
+		"dateRequired": "Date is required.",
+		"minLength": "{label} must be at least {min} characters.",
+		"maxLength": "{label} must be no more than {max} characters."
+	},
 	"HomePage": {
 		"heroSection": {
 			"badge": "AI-Powered CV Builder",

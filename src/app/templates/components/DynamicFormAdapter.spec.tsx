@@ -8,6 +8,25 @@ import { useFormValidation } from '@/hooks/useFormValidation';
 
 // ─── Mocks ───────────────────────────────────────────────────────────────────
 
+jest.mock('next-intl', () => ({
+	useTranslations: () => (key: string, values?: Record<string, string | number>) => {
+		switch (key) {
+			case 'invalidEmail':
+				return 'Invalid email address.';
+			case 'invalidUrl':
+				return 'Please enter a valid URL.';
+			case 'dateRequired':
+				return 'Date is required.';
+			case 'minLength':
+				return `${values?.label} must be at least ${values?.min} characters.`;
+			case 'maxLength':
+				return `${values?.label} must be no more than ${values?.max} characters.`;
+			default:
+				return key;
+		}
+	}
+}));
+
 jest.mock('@/hooks/useFormValidation');
 const mockUseFormValidation = useFormValidation as jest.MockedFunction<typeof useFormValidation>;
 

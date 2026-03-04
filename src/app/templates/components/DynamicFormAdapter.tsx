@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
 import { Input, Textarea, MonthYearPicker, Slider } from '@/ui/components';
 import { PlusIcon, Trash } from '@/ui/icons';
+import { useTranslations } from 'next-intl';
 import { useFormValidation } from '@/hooks/useFormValidation';
 import { type StepsBarComponentProps } from '@/ui/components';
 import {
@@ -13,6 +14,7 @@ import {
 	type ArrayFieldConfig,
 	type SimpleFieldConfig,
 	type FieldConfig,
+	type SchemaTranslator,
 	createZodSchema,
 	buildDefaultValues
 } from '@/lib/dynamicFormSchema';
@@ -51,7 +53,8 @@ interface DynamicFormAdapterProps extends StepsBarComponentProps {
 // ---------------------------------------------------------------------------
 
 function useDynamicForm({ config, initialValues, onFieldChange, formId }: DynamicFormAdapterProps) {
-	const schema = useMemo(() => createZodSchema(config.fields), [config.fields]);
+	const $t = useTranslations('validation') as unknown as SchemaTranslator;
+	const schema = useMemo(() => createZodSchema(config.fields, $t), [config.fields, $t]);
 	const defaultValues = useMemo(() => buildDefaultValues(config.fields, config.formKey, initialValues), []);
 
 	if (process.env.NODE_ENV === 'development' && config.formKey) {
