@@ -32,6 +32,13 @@
 		"phone": "Teléfono",
 		"address": "Dirección"
 	},
+	"validation": {
+		"invalidEmail": "Dirección de correo electrónico inválida.",
+		"invalidUrl": "Por favor ingresa una URL válida.",
+		"dateRequired": "La fecha es obligatoria.",
+		"minLength": "{label} debe tener al menos {min} caracteres.",
+		"maxLength": "{label} debe tener máximo {max} caracteres."
+	},
 	"HomePage": {
 		"heroSection": {
 			"badge": "Constructor de CV AI-Powered",
