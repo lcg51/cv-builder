@@ -33,58 +33,6 @@ const mockUseFormValidation = useFormValidation as jest.MockedFunction<typeof us
 // Simple stand-ins for complex UI primitives to avoid Radix DOM API issues.
 // Note: jest.mock factories cannot reference out-of-scope variables, so we
 // use require() inside to access React.
-jest.mock('@/ui/components', () => {
-	// eslint-disable-next-line @typescript-eslint/no-require-imports
-	const React = require('react');
-	return {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Input: React.forwardRef(function MockInput({ type, ...rest }: any, ref: any) {
-			return <input ref={ref} type={type || 'text'} {...rest} />;
-		}),
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Textarea: React.forwardRef(function MockTextarea(props: any, ref: any) {
-			return <textarea ref={ref} {...props} />;
-		}),
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		MonthYearPicker: React.forwardRef(function MockMonthYearPicker({ value, onChange, ...rest }: any, ref: any) {
-			return (
-				<input
-					ref={ref}
-					data-testid="month-year-picker"
-					type="text"
-					defaultValue={value instanceof Date ? value.toISOString() : ''}
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					onChange={(e: any) => onChange?.(new Date(e.target.value))}
-					{...rest}
-				/>
-			);
-		}),
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		Slider: function MockSlider({ value, onValueChange, min = 0, max = 100, step = 1, ...rest }: any) {
-			return (
-				<input
-					data-testid="slider"
-					type="range"
-					value={value?.[0] ?? 50}
-					min={min}
-					max={max}
-					step={step}
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					onChange={(e: any) => onValueChange?.([Number(e.target.value)])}
-					{...rest}
-				/>
-			);
-		}
-	};
-});
-
-jest.mock('@/ui/icons', () => ({
-	// eslint-disable-next-line @typescript-eslint/no-require-imports
-	PlusIcon: () => require('react').createElement('span', null, '+'),
-	Trash: ({ className }: { className?: string }) =>
-		// eslint-disable-next-line @typescript-eslint/no-require-imports
-		require('react').createElement('span', { 'data-testid': 'trash-icon', className })
-}));
 
 // ─── Factories ───────────────────────────────────────────────────────────────
 
@@ -199,15 +147,16 @@ describe('DynamicFormAdapter', () => {
 				fields: [{ name: 'proficiency', label: 'Proficiency', type: 'slider', min: 0, max: 100 }]
 			});
 			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
-			expect(screen.getByTestId('slider')).toBeInTheDocument();
+			expect(screen.getByRole('slider')).toBeInTheDocument();
 		});
 
 		it('renders a date field using MonthYearPicker', () => {
 			const config = makeConfig({
 				fields: [{ name: 'startDate', label: 'Start Date', type: 'date' }]
 			});
-			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
-			expect(screen.getByTestId('month-year-picker')).toBeInTheDocument();
+			const { container } = render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+			// Radix Popover trigger gets aria-haspopup="dialog"; uniquely identifies the MonthYearPicker
+			expect(container.querySelector('[aria-haspopup="dialog"]')).toBeInTheDocument();
 		});
 
 		it('renders help text when provided', () => {
@@ -337,12 +286,13 @@ describe('DynamicFormAdapter', () => {
 		it('removes an item when the trash button is clicked', async () => {
 			const user = userEvent.setup();
 			const config = makeConfig({ fields: [arrayField] });
-			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+			const { container } = render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
 
 			await user.click(screen.getByText('Add Experience'));
 			expect(screen.getByText('Experience 1')).toBeInTheDocument();
 
-			await user.click(screen.getByTestId('trash-icon'));
+			const trashButton = container.querySelector('.lucide-trash')!.closest('button')!;
+			await user.click(trashButton);
 			expect(screen.queryByText('Experience 1')).not.toBeInTheDocument();
 		});
 
@@ -466,8 +416,8 @@ describe('DynamicFormAdapter', () => {
 				fields: [{ name: 'skill', label: 'Skill', type: 'slider', min: 20, max: 100 }]
 			});
 			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
-			const slider = screen.getByTestId('slider');
-			expect(slider).toHaveValue('20');
+			const slider = screen.getByRole('slider');
+			expect(slider).toHaveAttribute('aria-valuenow', '20');
 		});
 
 		it('pre-populates array items from initialValues when formKey matches', () => {
@@ -497,8 +447,8 @@ describe('DynamicFormAdapter', () => {
 			});
 			render(<DynamicFormAdapter config={config} onFieldChange={onFieldChange} />);
 
-			const slider = screen.getByTestId('slider');
-			fireEvent.change(slider, { target: { value: '80' } });
+			const slider = screen.getByRole('slider');
+			fireEvent.keyDown(slider, { key: 'ArrowRight' });
 
 			await waitFor(() => {
 				expect(onFieldChange).toHaveBeenCalledWith('skill', expect.anything());
