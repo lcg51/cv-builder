@@ -10,6 +10,8 @@ const config: Config = {
 	transformIgnorePatterns: ['node_modules/(?!(.*\\.mjs$))', '<rootDir>/tailwind.config.ts'],
 	moduleNameMapper: {
 		'\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+		// Stub @/auth before the general @/* mapping to avoid loading next-auth (ESM) in Jest
+		'^@/auth$': '<rootDir>/src/__mocks__/auth.ts',
 		'^@/(.*)$': '<rootDir>/src/$1'
 	},
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node']
