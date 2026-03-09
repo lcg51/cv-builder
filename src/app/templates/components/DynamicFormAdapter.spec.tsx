@@ -34,8 +34,6 @@ const mockUseFormValidation = useFormValidation as jest.MockedFunction<typeof us
 // Note: jest.mock factories cannot reference out-of-scope variables, so we
 // use require() inside to access React.
 
-// ─── Factories ───────────────────────────────────────────────────────────────
-
 const makeConfig = (overrides: Partial<DynamicFormConfig> = {}): DynamicFormConfig => ({
 	header: {
 		title: 'Test Form',
@@ -59,8 +57,6 @@ const arrayField: ArrayFieldConfig = {
 	}
 };
 
-// ─── Setup ───────────────────────────────────────────────────────────────────
-
 beforeEach(() => {
 	jest.clearAllMocks();
 	mockUseFormValidation.mockReturnValue({
@@ -73,8 +69,6 @@ beforeEach(() => {
 afterEach(() => {
 	jest.restoreAllMocks();
 });
-
-// ─── Tests ───────────────────────────────────────────────────────────────────
 
 describe('DynamicFormAdapter', () => {
 	describe('Header rendering', () => {

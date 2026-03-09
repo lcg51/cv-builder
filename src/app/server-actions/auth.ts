@@ -86,9 +86,9 @@ export const googleSignOut = async (path: string) => {
 	await signOut({ redirectTo: path });
 };
 
-export const credentialsSignIn = async (email: string, password: string) => {
+export const credentialsSignIn = async (email: string, password: string, redirectTo = '/') => {
 	try {
-		await signIn('credentials', { email, password, redirectTo: '/' });
+		await signIn('credentials', { email, password, redirectTo });
 	} catch (error) {
 		// NextAuth throws NEXT_REDIRECT on success — re-throw it
 		if (error instanceof Error && 'digest' in error) {
@@ -99,11 +99,11 @@ export const credentialsSignIn = async (email: string, password: string) => {
 	}
 };
 
-export const credentialsSignUp = async (name: string, email: string, password: string) => {
+export const credentialsSignUp = async (name: string, email: string, password: string, redirectTo = '/') => {
 	try {
 		const user = await payloadCreateUser({ name, email, password });
 		if (!user) return { error: 'Failed to create account' };
-		await signIn('credentials', { email, password, redirectTo: '/' });
+		await signIn('credentials', { email, password, redirectTo });
 	} catch (error) {
 		if (error instanceof Error && 'digest' in error) {
 			const digest = (error as Error & { digest: string }).digest;
