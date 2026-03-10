@@ -287,9 +287,8 @@
 		"completedText": "Todos los secciones completadas!",
 		"incompleteText": "Completa todas las secciones para habilitar la descarga",
 		"generatingPDF": "Generando PDF...",
-		"signInRequired": "Inicia sesión para descargar",
 		"signInDescription": "Crea una cuenta gratuita para descargar tu currículum en PDF",
-		"signInButton": "Continuar con Google",
+		"signInSubtitle": "Es gratis y solo toma un momento",
 		"additionalInformation": {
 			"title": "Lo que obtendrás",
 			"description": "Tu currículum se generará como un archivo PDF de alta calidad que puedes usar para aplicaciones laborales, networking profesional y avance en tu carrera.",

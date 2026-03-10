@@ -287,9 +287,8 @@
 		"completedText": "All sections completed!",
 		"incompleteText": "Complete all sections to enable download",
 		"generatingPDF": "Generating PDF...",
-		"signInRequired": "Sign in to download",
 		"signInDescription": "Create a free account to download your resume as PDF",
-		"signInButton": "Continue with Google",
+		"signInSubtitle": "It's free and only takes a moment",
 		"additionalInformation": {
 			"title": "What You'll Get",
 			"description": "Your resume will be generated as a high-quality PDF file that you can use for job applications, professional networking, and career advancement.",

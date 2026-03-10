@@ -11,7 +11,17 @@ import { useFlags } from '@/hooks/useFlags';
 
 type Tab = 'sign-in' | 'sign-up';
 
-export default function LoginForm({ searchParams }: { searchParams: Message }) {
+export default function LoginForm({
+	searchParams,
+	redirectTo = '/',
+	showHeader = true,
+	dividerBgClass = 'bg-white dark:bg-slate-800'
+}: {
+	searchParams?: Message;
+	redirectTo?: string;
+	showHeader?: boolean;
+	dividerBgClass?: string;
+}) {
 	const $t = useTranslations('LoginPage');
 	const { flags } = useFlags();
 	const isEmailAuthEnabled = flags?.isEmailAuthEnabled;
@@ -33,7 +43,7 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 		setSignInError('');
 		setIsSignInLoading(true);
 		try {
-			const result = await credentialsSignIn(signInEmail, signInPassword);
+			const result = await credentialsSignIn(signInEmail, signInPassword, redirectTo);
 			if (result?.error) setSignInError($t('invalidCredentials'));
 		} catch {
 			// NEXT_REDIRECT is re-thrown — this is expected on success
@@ -47,7 +57,7 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 		setSignUpError('');
 		setIsSignUpLoading(true);
 		try {
-			const result = await credentialsSignUp(name, signUpEmail, signUpPassword);
+			const result = await credentialsSignUp(name, signUpEmail, signUpPassword, redirectTo);
 			if (result?.error) setSignUpError($t('registrationFailed'));
 		} catch {
 			// NEXT_REDIRECT is re-thrown — this is expected on success
@@ -57,10 +67,10 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 	};
 
 	const googleButton = (
-		<form action={() => googleSignIn('/')}>
+		<form action={() => googleSignIn(redirectTo)}>
 			<Button
 				variant="default"
-				formAction={() => googleSignIn('/')}
+				formAction={() => googleSignIn(redirectTo)}
 				className="w-full h-12 text-base font-medium"
 			>
 				<GoogleIcon />
@@ -75,7 +85,7 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 				<span className="w-full border-t border-slate-300 dark:border-slate-600" />
 			</div>
 			<div className="relative flex justify-center text-xs uppercase">
-				<span className="bg-white dark:bg-slate-800 px-2 text-slate-500 dark:text-slate-400">{$t('or')}</span>
+				<span className={`${dividerBgClass} px-2 text-slate-500 dark:text-slate-400`}>{$t('or')}</span>
 			</div>
 		</div>
 	);
@@ -83,14 +93,16 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 	return (
 		<div className="space-y-6">
 			{/* Header */}
-			<div className="text-center">
-				<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-1">
-					{activeTab === 'sign-in' ? $t('title') : $t('titleSignUp')}
-				</h1>
-				<p className="text-slate-600 dark:text-slate-400 text-base">
-					{activeTab === 'sign-in' ? $t('description') : $t('descriptionSignUp')}
-				</p>
-			</div>
+			{showHeader && (
+				<div className="text-center">
+					<h1 className="text-3xl lg:text-4xl font-bold text-slate-800 dark:text-slate-200 mb-1">
+						{activeTab === 'sign-in' ? $t('title') : $t('titleSignUp')}
+					</h1>
+					<p className="text-slate-600 dark:text-slate-400 text-base">
+						{activeTab === 'sign-in' ? $t('description') : $t('descriptionSignUp')}
+					</p>
+				</div>
+			)}
 
 			<Tabs defaultValue="sign-in" onValueChange={v => setActiveTab(v as Tab)}>
 				<TabsList className="w-full">
@@ -186,7 +198,7 @@ export default function LoginForm({ searchParams }: { searchParams: Message }) {
 			</Tabs>
 
 			{/* Error/Success Messages */}
-			<FormMessage message={searchParams} />
+			{searchParams && <FormMessage message={searchParams} />}
 		</div>
 	);
 }

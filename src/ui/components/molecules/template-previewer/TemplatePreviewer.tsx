@@ -14,6 +14,7 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const shadowHostRef = useRef<HTMLDivElement>(null);
 	const shadowRootRef = useRef<ShadowRoot | null>(null);
+	const attachedNodeRef = useRef<HTMLDivElement | null>(null);
 	const [scale, setScale] = useState(1);
 
 	const calculateOptimalScale = useCallback(() => {
@@ -55,19 +56,18 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 		setScale(optimalScale);
 	}, [containerRef]);
 
-	// Attach shadow root and update content in a single effect
 	useEffect(() => {
 		if (!shadowHostRef.current || !compiledTemplate) return;
 
-		// Attach shadow root if not already attached
-		if (!shadowRootRef.current) {
+		if (attachedNodeRef.current !== shadowHostRef.current) {
 			shadowRootRef.current = shadowHostRef.current.attachShadow({ mode: 'closed' });
+			attachedNodeRef.current = shadowHostRef.current;
 		}
 
 		const html = compiledTemplate(userData);
 		calculateOptimalScale();
 
-		shadowRootRef.current.innerHTML = `
+		shadowRootRef.current!.innerHTML = `
 			<style>
 				:host {
 					all: initial;
