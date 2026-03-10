@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { Button } from '@/ui/components/button';
-import { DownloadIcon, CheckIcon, LockIcon, GoogleIcon, CheckCircle } from '@/ui/icons';
+import { DownloadIcon, CheckIcon, CheckCircle, LockIconCustom } from '@/ui/icons';
 import { ProgressBar, TemplatePreviewer } from '@/ui/components';
 import { TemplateDataType } from '@/types/payload-types';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
-import { googleSignIn } from '@/app/server-actions/auth';
+import LoginForm from '@/app/login/components/LoginForm';
 import { TemplateDownloadSkeleton } from './TemplateDownloadSkeleton';
 
 export type TemplateDownloadProps = {
@@ -72,59 +72,62 @@ export const TemplateDownload = ({
 							/>
 
 							{/* Additional Information */}
-							<div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 sm:p-6 text-center">
-								<div className="max-w-2xl mx-auto space-y-3">
-									<h4 className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300">
-										{$t('additionalInformation.title')}
-									</h4>
-									<div className="grid grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-										<div className="flex flex-col items-center gap-2">
-											<div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
-												<CheckIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+							{isAuthenticated && (
+								<div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 sm:p-6 text-center">
+									<div className="max-w-2xl mx-auto space-y-3">
+										<h4 className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300">
+											{$t('additionalInformation.title')}
+										</h4>
+										<div className="grid grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+											<div className="flex flex-col items-center gap-2">
+												<div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
+													<CheckIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+												</div>
+												<span>{$t('additionalInformation.items.0')}</span>
 											</div>
-											<span>{$t('additionalInformation.items.0')}</span>
-										</div>
-										<div className="flex flex-col items-center gap-2">
-											<div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
-												<CheckIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+											<div className="flex flex-col items-center gap-2">
+												<div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
+													<CheckIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+												</div>
+												<span>{$t('additionalInformation.items.1')}</span>
 											</div>
-											<span>{$t('additionalInformation.items.1')}</span>
-										</div>
-										<div className="flex flex-col items-center gap-2">
-											<div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
-												<CheckIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+											<div className="flex flex-col items-center gap-2">
+												<div className="w-8 h-8 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
+													<CheckIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+												</div>
+												<span>{$t('additionalInformation.items.2')}</span>
 											</div>
-											<span>{$t('additionalInformation.items.2')}</span>
 										</div>
+										<p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 pt-2">
+											{$t('additionalInformation.description')}
+										</p>
 									</div>
-									<p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 pt-2">
-										{$t('additionalInformation.description')}
-									</p>
 								</div>
-							</div>
+							)}
 
 							{/* Download / Sign-in Section */}
 							{!isAuthenticated ? (
-								<div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-4 sm:p-6 text-center space-y-4">
-									<div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30">
-										<LockIcon className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+								<div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm overflow-hidden">
+									<div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border-b border-slate-200 dark:border-slate-700 px-4 sm:px-6 py-4 flex items-center gap-3">
+										<div className="flex-shrink-0 w-9 h-9 bg-blue-100 dark:bg-blue-800/50 rounded-lg flex items-center justify-center">
+											<LockIconCustom className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+										</div>
+										<div>
+											<h4 className="text-base font-semibold text-slate-800 dark:text-slate-200">
+												{$t('signInDescription')}
+											</h4>
+											<p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+												{$t('signInSubtitle')}
+											</p>
+										</div>
 									</div>
-									<h4 className="text-lg font-semibold text-slate-700 dark:text-slate-300">
-										{$t('signInRequired')}
-									</h4>
-									<p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-										{$t('signInDescription')}
-									</p>
-									<form action={() => googleSignIn(pathname)}>
-										<Button
-											type="submit"
-											variant="default"
-											className="inline-flex items-center gap-3 px-8 py-3 text-base font-semibold text-white shadow-lg hover:shadow-xl rounded-xl transition-all duration-300"
-										>
-											<GoogleIcon className="w-5 h-5" />
-											<span>{$t('signInButton')}</span>
-										</Button>
-									</form>
+									<div className="px-4 sm:px-6 py-4">
+										<LoginForm
+											redirectTo={pathname}
+											showHeader={false}
+											dividerBgClass="bg-white dark:bg-slate-800"
+										/>
+									</div>
 								</div>
 							) : (
 								<div className="text-center py-2">
