@@ -10,9 +10,9 @@ type TemplateProps = {
 	isLoading?: boolean;
 };
 
-// Standard A4 dimensions at 96 DPI
-const A4_WIDTH = 8.5 * 96; // 816px
-const A4_HEIGHT = 11 * 96; // 1056px
+// US Letter dimensions (8.5" × 11") at 96 DPI
+const US_LETTER_WIDTH = 8.5 * 96; // 816px
+const US_LETTER_HEIGHT = 11 * 96; // 1056px
 
 function computeScale(width: number, height: number): number {
 	const isHidden = width === 0 || height === 0;
@@ -30,8 +30,8 @@ function computeScale(width: number, height: number): number {
 		}
 	}
 
-	const scaleX = (effectiveWidth - 32) / A4_WIDTH; // 32px for padding
-	const scaleY = (effectiveHeight - 32) / A4_HEIGHT;
+	const scaleX = (effectiveWidth - 32) / US_LETTER_WIDTH; // 32px for padding
+	const scaleY = (effectiveHeight - 32) / US_LETTER_HEIGHT;
 	return Math.max(Math.min(scaleX, scaleY, 1), minScale);
 }
 
@@ -49,6 +49,7 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 		if (!container) return;
 
 		const observer = new ResizeObserver(entries => {
+			if (entries.length === 0) return;
 			const { width, height } = entries[0].contentRect;
 			setScale(computeScale(width, height));
 		});
@@ -67,7 +68,10 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 			attachedNodeRef.current = shadowHostRef.current;
 		}
 
-		shadowRootRef.current!.innerHTML = `
+		const root = shadowRootRef.current;
+		if (!root) return;
+
+		root.innerHTML = `
 			<style>
 				:host {
 					all: initial;
