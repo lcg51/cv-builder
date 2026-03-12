@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TemplateDataType } from '@/types/payload-types';
 import { TemplatePreviewerSkeleton } from './TemplatePreviewerSkeleton';
 
@@ -10,6 +10,31 @@ type TemplateProps = {
 	isLoading?: boolean;
 };
 
+// Standard A4 dimensions at 96 DPI
+const A4_WIDTH = 8.5 * 96; // 816px
+const A4_HEIGHT = 11 * 96; // 1056px
+
+function computeScale(width: number, height: number): number {
+	const isHidden = width === 0 || height === 0;
+	let effectiveWidth = width;
+	let effectiveHeight = height;
+	let minScale = 0.75;
+
+	if (isHidden) {
+		const vw = window.innerWidth;
+		const vh = window.innerHeight;
+		if (vw < 1024) {
+			effectiveWidth = Math.min(vw, 800);
+			effectiveHeight = Math.min(vh * 0.6, 800);
+			minScale = 0.5;
+		}
+	}
+
+	const scaleX = (effectiveWidth - 32) / A4_WIDTH; // 32px for padding
+	const scaleY = (effectiveHeight - 32) / A4_HEIGHT;
+	return Math.max(Math.min(scaleX, scaleY, 1), minScale);
+}
+
 export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, isLoading }: TemplateProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const shadowHostRef = useRef<HTMLDivElement>(null);
@@ -17,44 +42,22 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 	const attachedNodeRef = useRef<HTMLDivElement | null>(null);
 	const [scale, setScale] = useState(1);
 
-	const calculateOptimalScale = useCallback(() => {
-		if (!containerRef.current) return;
-
+	// Observe container resize — fires on layout shifts too, not just window resize
+	useEffect(() => {
+		if (isLoading) return;
 		const container = containerRef.current;
-		const containerWidth = container.offsetWidth;
-		const containerHeight = container.offsetHeight;
+		if (!container) return;
 
-		// Standard A4 dimensions (8.5in x 11in) in pixels at 96 DPI
-		const standardWidth = 8.5 * 96; // 816px
-		const standardHeight = 11 * 96; // 1056px
+		const observer = new ResizeObserver(entries => {
+			const { width, height } = entries[0].contentRect;
+			setScale(computeScale(width, height));
+		});
 
-		// Check if container is hidden (width or height is 0)
-		const isHidden = containerWidth === 0 || containerHeight === 0;
+		observer.observe(container);
+		setScale(computeScale(container.offsetWidth, container.offsetHeight));
 
-		let effectiveWidth = containerWidth;
-		let effectiveHeight = containerHeight;
-		let minScale = 0.75;
-
-		if (isHidden) {
-			const viewportWidth = window.innerWidth;
-			const viewportHeight = window.innerHeight;
-
-			if (viewportWidth < 1024) {
-				effectiveWidth = Math.min(viewportWidth, 800);
-				effectiveHeight = Math.min(viewportHeight * 0.6, 800);
-				minScale = 0.5;
-			}
-		}
-
-		// Calculate scale based on container dimensions
-		const scaleX = (effectiveWidth - 32) / standardWidth; // 32px for padding
-		const scaleY = (effectiveHeight - 32) / standardHeight; // 32px for padding
-
-		// Use the smaller scale to ensure the entire template fits
-		const optimalScale = Math.max(Math.min(scaleX, scaleY, 1), minScale);
-
-		setScale(optimalScale);
-	}, [containerRef]);
+		return () => observer.disconnect();
+	}, [isLoading]);
 
 	useEffect(() => {
 		if (!shadowHostRef.current || !compiledTemplate) return;
@@ -63,9 +66,6 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 			shadowRootRef.current = shadowHostRef.current.attachShadow({ mode: 'closed' });
 			attachedNodeRef.current = shadowHostRef.current;
 		}
-
-		const html = compiledTemplate(userData);
-		calculateOptimalScale();
 
 		shadowRootRef.current!.innerHTML = `
 			<style>
@@ -84,9 +84,9 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 				}
 				${templateStyles}
 			</style>
-			<div class="cv-wrapper">${html}</div>
+			<div class="cv-wrapper">${compiledTemplate(userData)}</div>
 		`;
-	}, [userData, compiledTemplate, templateStyles, scale, calculateOptimalScale]);
+	}, [userData, compiledTemplate, templateStyles, scale]);
 
 	// Disable right-click context menu on the preview
 	useEffect(() => {
@@ -96,11 +96,6 @@ export const TemplatePreviewer = ({ userData, templateStyles, compiledTemplate, 
 		host.addEventListener('contextmenu', preventContextMenu);
 		return () => host.removeEventListener('contextmenu', preventContextMenu);
 	}, []);
-
-	useEffect(() => {
-		window.addEventListener('resize', calculateOptimalScale);
-		return () => window.removeEventListener('resize', calculateOptimalScale);
-	}, [calculateOptimalScale]);
 
 	if (isLoading) {
 		return <TemplatePreviewerSkeleton />;
