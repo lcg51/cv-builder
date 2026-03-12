@@ -1,4 +1,6 @@
 import React from 'react';
+import { withSkeleton } from '@/ui/components/withSkeleton';
+import { ProgressBarSkeleton } from './ProgressBarSkeleton';
 
 export interface ProgressBarProps {
 	/** The title displayed above the progress bar */
@@ -52,3 +54,5 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 		</div>
 	);
 };
+
+export const ProgressBarWithSkeleton = withSkeleton(ProgressBar, ProgressBarSkeleton);
