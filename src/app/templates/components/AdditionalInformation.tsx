@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { withSkeleton } from '@/ui/components/withSkeleton';
 import { AdditionalInformationSkeleton } from './AdditionalInformationSkeleton';
 
-export type AdditionalInformationProps = object;
+export type AdditionalInformationProps = Record<never, never>;
 
 export const AdditionalInformation: React.FC<AdditionalInformationProps> = () => {
 	const $t = useTranslations('TemplateDownload');
