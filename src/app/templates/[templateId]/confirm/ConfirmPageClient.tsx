@@ -26,7 +26,7 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		resetResumeUserData
 	} = resumeDataStore((state: ResumeDataStoreType) => state);
 
-	const calculateCompletion = () => {
+	const completionPercentage = useMemo(() => {
 		if (!userResumeData) return 0;
 		let completed = 0;
 		const total = 7;
@@ -40,7 +40,7 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 		if (userResumeData.aboutMe) completed++;
 
 		return Math.round((completed / total) * 100);
-	};
+	}, [userResumeData]);
 
 	const resetResumeProccess = useCallback(() => {
 		replace('/templates');
@@ -99,7 +99,7 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 	const NavigationStateComponent = useMemo(() => {
 		return (
 			<TemplateDownload
-				completionPercentage={calculateCompletion()}
+				completionPercentage={completionPercentage}
 				onDownloadPDF={handleDownloadPDF}
 				isDownloading={isDownloading}
 				userResumeData={userResumeData}
@@ -110,7 +110,8 @@ export default function ConfirmPageClient({ isAuthenticated }: ConfirmPageClient
 			/>
 		);
 	}, [
-		selectedTemplate,
+		completionPercentage,
+		compiledTemplate,
 		templateIsLoading,
 		styles,
 		handleDownloadPDF,

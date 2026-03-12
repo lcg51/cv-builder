@@ -11,7 +11,6 @@ import { DownloadSectionWithSkeleton } from './DownloadSection';
 
 export type TemplateDownloadProps = {
 	onDownloadPDF?: () => void;
-	isDownloadEnabled?: boolean;
 	isDownloading?: boolean;
 	completionPercentage: number;
 	userResumeData: TemplateDataType;
@@ -33,6 +32,8 @@ export const TemplateDownload = ({
 }: TemplateDownloadProps) => {
 	const $t = useTranslations('TemplateDownload');
 
+	const showAdditionalInfoContent = isAuthenticated;
+
 	return (
 		<div className="container mx-auto p-4">
 			<div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-115px)]">
@@ -51,7 +52,7 @@ export const TemplateDownload = ({
 					/>
 
 					{/* Additional Information (authenticated users only) */}
-					{(isLoading || isAuthenticated) && <AdditionalInformationWithSkeleton isLoading={isLoading} />}
+					{showAdditionalInfoContent && <AdditionalInformationWithSkeleton isLoading={isLoading} />}
 
 					{/* Download / Sign-in Section */}
 					<DownloadSectionWithSkeleton

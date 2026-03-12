@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { withSkeleton } from '@/ui/components/withSkeleton';
 import { SuccessBannerSkeleton } from './SuccessBannerSkeleton';
 
-export type SuccessBannerProps = object;
+export type SuccessBannerProps = Record<never, never>;
 
 export const SuccessBanner: React.FC<SuccessBannerProps> = () => {
 	const $t = useTranslations('TemplateDownload');

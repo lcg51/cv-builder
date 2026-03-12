@@ -1,7 +1,8 @@
 import React from 'react';
 import { Skeleton } from '@/ui/components/skeleton';
+import type { AdditionalInformationProps } from './AdditionalInformation';
 
-export const AdditionalInformationSkeleton: React.FC<{ mainComponentProps: object }> = () => {
+export const AdditionalInformationSkeleton: React.FC<{ mainComponentProps: AdditionalInformationProps }> = () => {
 	return (
 		<div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 sm:p-6 text-center">
 			<div className="max-w-2xl mx-auto space-y-3">
