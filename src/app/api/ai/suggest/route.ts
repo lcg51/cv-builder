@@ -72,6 +72,9 @@ export async function POST(req: NextRequest) {
 		});
 
 		const suggestion = completion.choices[0]?.message?.content?.trim() ?? '';
+		if (!suggestion) {
+			return NextResponse.json({ error: 'AI service unavailable' }, { status: 503 });
+		}
 		return NextResponse.json({ suggestion });
 	} catch (error) {
 		console.error('Groq error:', error);
