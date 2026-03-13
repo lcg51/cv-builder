@@ -279,7 +279,8 @@
 	"AIAssist": {
 		"button": "Mejorar con IA",
 		"loading": "Mejorando...",
-		"error": "Sugerencia de IA fallida. Inténtalo de nuevo."
+		"error": "Sugerencia de IA fallida. Inténtalo de nuevo.",
+		"ariaLabel": "Mejorar {field} con IA"
 	},
 	"TemplateDownload": {
 		"successBanner": {

@@ -68,7 +68,7 @@ export const AboutForm: React.FC<AboutFormProps> = props => {
 					minLength: 2,
 					gridColumn: 'full',
 					helpText: $t('fields.aboutMe.helpText'),
-					aiAssist: { type: 'improve-summary' as const }
+					aiAssist: { type: 'improve-summary' }
 				},
 				{
 					name: 'github',

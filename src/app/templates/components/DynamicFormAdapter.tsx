@@ -50,6 +50,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name, get
 			return (
 				<AITextarea
 					{...base}
+					aria-label={field.label}
 					value={typeof formFieldValue === 'string' ? formFieldValue : ''}
 					aiAssist={{ type: field.aiAssist.type, getContext: resolveContext }}
 					onAISuggestion={text => onChange?.(text)}

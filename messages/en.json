@@ -279,7 +279,8 @@
 	"AIAssist": {
 		"button": "Improve with AI",
 		"loading": "Improving...",
-		"error": "AI suggestion failed. Try again."
+		"error": "AI suggestion failed. Try again.",
+		"ariaLabel": "Improve {field} with AI"
 	},
 	"TemplateDownload": {
 		"successBanner": {

@@ -30,5 +30,7 @@ export function useAISuggest(errorMessage: string) {
 		[errorMessage]
 	);
 
-	return { suggest, isLoading, error };
+	const clearError = useCallback(() => setError(null), []);
+
+	return { suggest, isLoading, error, clearError };
 }

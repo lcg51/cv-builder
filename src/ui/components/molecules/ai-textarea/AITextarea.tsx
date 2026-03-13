@@ -16,8 +16,9 @@ interface AITextareaProps extends React.ComponentProps<typeof Textarea> {
 }
 
 export const AITextarea: React.FC<AITextareaProps> = ({ aiAssist, onAISuggestion, ...props }) => {
+	const fieldLabel = (props['aria-label'] ?? props.placeholder ?? '').toString();
 	const t = useTranslations('AIAssist');
-	const { suggest, isLoading, error } = useAISuggest(t('error'));
+	const { suggest, isLoading, error, clearError } = useAISuggest(t('error'));
 
 	const handleClick = async () => {
 		const currentText = typeof props.value === 'string' ? props.value : '';
@@ -31,13 +32,21 @@ export const AITextarea: React.FC<AITextareaProps> = ({ aiAssist, onAISuggestion
 
 	return (
 		<div>
-			<Textarea {...props} />
+			<Textarea
+				{...props}
+				onChange={e => {
+					clearError();
+					props.onChange?.(e);
+				}}
+			/>
 			<div className="flex items-center justify-end mt-1.5 gap-2">
 				{error && <span className="text-xs text-red-500">{error}</span>}
 				<button
 					type="button"
 					onClick={handleClick}
 					disabled={isLoading || isEmpty}
+					aria-label={t('ariaLabel', { field: fieldLabel })}
+					aria-busy={isLoading}
 					className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					{isLoading ? (

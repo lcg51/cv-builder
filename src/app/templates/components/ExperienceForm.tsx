@@ -77,7 +77,7 @@ export const ExperienceForm: React.FC<ExperienceFormProps> = props => {
 							required: true,
 							minLength: 2,
 							gridColumn: 'full',
-							aiAssist: { type: 'improve-description' as const }
+							aiAssist: { type: 'improve-description' }
 						}
 					}
 				}
