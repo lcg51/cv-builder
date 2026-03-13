@@ -276,6 +276,12 @@
 		"description": "Tu currículum ha sido descargado y está listo para usar. ¡Buena suerte con tus aplicaciones!",
 		"button": "Ir a las plantillas"
 	},
+	"AIAssist": {
+		"button": "Mejorar con IA",
+		"loading": "Mejorando...",
+		"error": "Sugerencia de IA fallida. Inténtalo de nuevo.",
+		"ariaLabel": "Mejorar {field} con IA"
+	},
 	"TemplateDownload": {
 		"successBanner": {
 			"title": "Listo para descargar! 🎉",

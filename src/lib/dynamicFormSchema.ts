@@ -7,6 +7,8 @@ import type { TemplateDataType } from '@/types/payload-types';
 
 export type FieldType = 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'date' | 'slider' | 'number';
 
+export type AISuggestType = 'improve-summary' | 'improve-description';
+
 export interface BaseFieldConfig {
 	name: string;
 	label: string;
@@ -25,6 +27,9 @@ export interface BaseFieldConfig {
 		labels?: string[];
 		showValue?: boolean;
 		valueFormat?: (value: number) => string;
+	};
+	aiAssist?: {
+		type: AISuggestType;
 	};
 }
 

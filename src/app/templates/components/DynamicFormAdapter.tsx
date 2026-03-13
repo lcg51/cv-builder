@@ -4,6 +4,7 @@ import React from 'react';
 import { useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
 import { Input, Textarea, MonthYearPicker, Slider } from '@/ui/components';
+import { AITextarea } from '@/ui/components/molecules/ai-textarea/AITextarea';
 import { PlusIcon, Trash } from '@/ui/icons';
 import { type StepsBarComponentProps } from '@/ui/components';
 import { type BaseFieldConfig, type ArrayFieldConfig, type SimpleFieldConfig } from '@/lib/dynamicFormSchema';
@@ -26,16 +27,36 @@ interface FieldRendererProps {
 	field: BaseFieldConfig;
 	control: Control<Record<string, unknown>>;
 	name: string;
+	getValues?: (path: string) => unknown;
+	arrayParent?: string;
 }
 
-const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name }) => {
+const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name, getValues, arrayParent }) => {
 	const inputClass =
 		field.type === 'textarea'
 			? 'min-h-24 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary'
 			: 'h-11 border-slate-300 dark:border-slate-600 focus:border-primary dark:focus:border-primary';
 
-	const getInputComponent = () => {
+	const getInputComponent = (formFieldValue?: unknown, onChange?: (v: unknown) => void) => {
 		const base = { placeholder: field.placeholder, className: inputClass };
+		if (field.type === 'textarea' && field.aiAssist) {
+			const resolveContext = () => {
+				if (arrayParent && getValues) {
+					const item = getValues(arrayParent) as Record<string, string>;
+					return { jobTitle: item?.jobTitle, company: item?.company };
+				}
+				return {};
+			};
+			return (
+				<AITextarea
+					{...base}
+					aria-label={field.label}
+					value={typeof formFieldValue === 'string' ? formFieldValue : ''}
+					aiAssist={{ type: field.aiAssist.type, getContext: resolveContext }}
+					onAISuggestion={text => onChange?.(text)}
+				/>
+			);
+		}
 		switch (field.type) {
 			case 'textarea':
 				return <Textarea {...base} />;
@@ -88,6 +109,8 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name }) =
 								onChange={formField.onChange}
 								ref={formField.ref}
 							/>
+						) : field.type === 'textarea' && field.aiAssist ? (
+							getInputComponent(formField.value, formField.onChange)
 						) : (
 							React.cloneElement(getInputComponent(), formField)
 						)}
@@ -109,18 +132,28 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({ field, control, name }) =
 	);
 };
 
-const SimpleField = ({ field, control }: { field: SimpleFieldConfig; control: Control<Record<string, unknown>> }) => (
+const SimpleField = ({
+	field,
+	control,
+	getValues
+}: {
+	field: SimpleFieldConfig;
+	control: Control<Record<string, unknown>>;
+	getValues: (path: string) => unknown;
+}) => (
 	<div className={field.gridColumn === 'full' ? 'col-span-full' : 'col-span-1'}>
-		<FieldRenderer field={field} control={control} name={field.name} />
+		<FieldRenderer field={field} control={control} name={field.name} getValues={getValues} />
 	</div>
 );
 
 const ArrayFieldSection = ({
 	field,
-	control
+	control,
+	getValues
 }: {
 	field: ArrayFieldConfig;
 	control: Control<Record<string, unknown>>;
+	getValues: (path: string) => unknown;
 }) => {
 	type FormWithArray = Record<string, Record<string, unknown>[]>;
 
@@ -164,6 +197,8 @@ const ArrayFieldSection = ({
 									field={itemField}
 									control={control}
 									name={`${field.name}.${index}.${key}`}
+									getValues={getValues}
+									arrayParent={`${field.name}.${index}`}
 								/>
 							</div>
 						))}
@@ -202,6 +237,7 @@ const DynamicFormHeader = ({ title, description, icon }: FormHeader) => (
 export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = props => {
 	const { config } = props;
 	const { form, control } = useDynamicForm(props);
+	const getValues = (path: string) => form.getValues(path as never);
 
 	return (
 		<>
@@ -213,9 +249,14 @@ export const DynamicFormAdapter: React.FC<DynamicFormAdapterProps> = props => {
 					>
 						{config.fields.map(field =>
 							field.isArray ? (
-								<ArrayFieldSection key={field.name} field={field} control={control} />
+								<ArrayFieldSection
+									key={field.name}
+									field={field}
+									control={control}
+									getValues={getValues}
+								/>
 							) : (
-								<SimpleField key={field.name} field={field} control={control} />
+								<SimpleField key={field.name} field={field} control={control} getValues={getValues} />
 							)
 						)}
 					</div>
