@@ -35,12 +35,6 @@ pnpm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# xata
-/.xata
-
-
-.env
-
 # Claude Code, Cursor & AI agent config (local dev tooling, not for the repo)
 .claude/
 .agents/
