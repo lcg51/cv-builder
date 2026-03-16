@@ -26,6 +26,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # local env files
+.env
 .env*.local
 
 # vercel
@@ -34,12 +35,6 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# xata
-/.xata
-
-
-.env
 
 # Claude Code, Cursor & AI agent config (local dev tooling, not for the repo)
 .claude/

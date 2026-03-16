@@ -4,6 +4,25 @@ import { TemplateDataType } from '@/types/payload-types';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+/** Shape written to sessionStorage at version 0. */
+type PersistedV0 = {
+	userData: {
+		// field was renamed to userResumeData in v1
+		workExperience?: { startDate: string; endDate: string; [k: string]: unknown }[];
+		education?: { finishDate: string; [k: string]: unknown }[];
+		[k: string]: unknown;
+	};
+	activeStep: number;
+	selectedTemplate: string;
+};
+
+/** Shape written to sessionStorage at version 1 (current). */
+type PersistedV1 = {
+	userResumeData: TemplateDataType;
+	activeStep: number;
+	selectedTemplate: string;
+};
+
 export const NavigationStateEnum = {
 	TEMPLATE_UPDATE: 'templateUpdate',
 	TEMPLATE_DOWNLOAD: 'templateDownload'
@@ -64,19 +83,47 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 				activeStep: state.activeStep,
 				selectedTemplate: state.selectedTemplate
 			}),
-			// Version control for migrations
+			/*
+			 * STORE VERSIONING CONVENTION
+			 * ────────────────────────────
+			 * Bump `version` and add a migration branch whenever:
+			 *   • A persisted field is renamed or removed
+			 *   • A new *required* field is added (provide a safe default in the migration)
+			 *
+			 * Adding a new optional field with a default in `defaultUserData` does NOT
+			 * require a version bump — Zustand deep-merges the default state over the
+			 * rehydrated state automatically.
+			 *
+			 * Migration function signature:
+			 *   migrate(persistedState, fromVersion) => PersistedV<current>
+			 *
+			 * Always chain versions explicitly (0→1, 1→2, …).
+			 * Do NOT use a catch-all `return persistedState` for unknown future versions
+			 * — it silently loads incompatible data. Unknown versions should return null
+			 * to reset to defaults instead.
+			 *
+			 * Add a PersistedV<N> type for each version so renames are caught at
+			 * compile time.
+			 *
+			 * Version history:
+			 *   v0 → v1  Field renamed: userData → userResumeData; dates deserialized.
+			 */
 			version: 1,
-			// Migration function for future updates
-			migrate: (persistedState: unknown, version: number) => {
+			migrate: (persistedState: unknown, version: number): PersistedV1 => {
 				if (version === 0) {
-					// Handle migration from version 0 to 1
-					const state = persistedState as Record<string, unknown>;
+					const s = persistedState as PersistedV0;
 					return {
-						...state,
-						userData: deserializeDates(state.userData)
+						userResumeData: deserializeDates(s.userData) as TemplateDataType,
+						activeStep: s.activeStep ?? 0,
+						selectedTemplate: s.selectedTemplate ?? ''
 					};
 				}
-				return persistedState;
+				if (version === 1) {
+					return persistedState as PersistedV1;
+				}
+				// Unrecognised version — safe reset rather than loading incompatible state
+				console.warn(`[resume-store] Unknown persisted version ${version}, resetting to defaults`);
+				return null as unknown as PersistedV1; // Zustand treats null as "use initial state"
 			},
 			// Add onRehydrateStorage callback to track hydration
 			onRehydrateStorage: () => state => {
