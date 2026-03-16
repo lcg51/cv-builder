@@ -10,14 +10,7 @@ interface SuggestRequestBody {
 	context?: { jobTitle?: string; company?: string };
 }
 
-if (!process.env.GROQ_API_KEY) throw new Error('GROQ_API_KEY is not set');
-
 const MAX_TEXT_LENGTH = 2000;
-
-const client = new OpenAI({
-	apiKey: process.env.GROQ_API_KEY,
-	baseURL: 'https://api.groq.com/openai/v1'
-});
 
 function sanitize(value: string, maxLength = 100): string {
 	return value.replace(/[\r\n]+/g, ' ').slice(0, maxLength);
@@ -61,6 +54,13 @@ export async function POST(req: NextRequest) {
 	if (type !== 'improve-summary' && type !== 'improve-description') {
 		return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
 	}
+
+	const apiKey = process.env.GROQ_API_KEY;
+	if (!apiKey) {
+		return NextResponse.json({ error: 'AI service is not configured' }, { status: 503 });
+	}
+
+	const client = new OpenAI({ apiKey, baseURL: 'https://api.groq.com/openai/v1' });
 
 	try {
 		const completion = await client.chat.completions.create({
