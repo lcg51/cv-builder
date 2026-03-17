@@ -8,6 +8,19 @@ import { useTranslations } from 'next-intl';
 
 export type SkillsFormProps = StepsBarComponentProps;
 
+const SUGGESTED_SKILLS = [
+	'JavaScript',
+	'TypeScript',
+	'React',
+	'Node.js',
+	'Python',
+	'SQL',
+	'Git',
+	'Docker',
+	'CSS',
+	'HTML'
+];
+
 export const SkillsForm: React.FC<SkillsFormProps> = props => {
 	const $t = useTranslations('SkillsForm');
 
@@ -27,6 +40,8 @@ export const SkillsForm: React.FC<SkillsFormProps> = props => {
 					isArray: true,
 					addButtonText: $t('button'),
 					itemTitle: (index: number) => `${$t('title')} ${index + 1}`,
+					suggestedItems: SUGGESTED_SKILLS,
+					suggestedItemsLabel: $t('suggestedSkillsLabel'),
 					arrayItemSchema: {
 						title: {
 							name: 'title',
