@@ -38,6 +38,8 @@ export interface ArrayFieldConfig extends BaseFieldConfig {
 	arrayItemSchema: Record<string, BaseFieldConfig>;
 	addButtonText?: string;
 	itemTitle?: (index: number) => string;
+	suggestedItems?: string[];
+	suggestedItemsLabel?: string;
 }
 
 export interface SimpleFieldConfig extends BaseFieldConfig {

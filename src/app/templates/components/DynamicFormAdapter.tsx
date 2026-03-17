@@ -162,17 +162,47 @@ const ArrayFieldSection = ({
 		name: field.name as FieldArrayPath<FormWithArray>
 	});
 
-	const addNewItem = () => {
+	const buildNewItem = (prefillValue?: string) => {
 		const newItem: Record<string, unknown> = {};
+		const firstTextField = Object.entries(field.arrayItemSchema).find(([, f]) => f.type === 'text');
 		Object.entries(field.arrayItemSchema).forEach(([key, itemField]) => {
-			newItem[key] =
-				itemField.type === 'slider' ? [itemField.min || 50] : itemField.type === 'date' ? new Date() : '';
+			if (prefillValue && firstTextField && key === firstTextField[0]) {
+				newItem[key] = prefillValue;
+			} else {
+				newItem[key] =
+					itemField.type === 'slider' ? [itemField.min || 50] : itemField.type === 'date' ? new Date() : '';
+			}
 		});
-		append(newItem as Record<string, unknown>);
+		return newItem;
 	};
+
+	const addNewItem = () => append(buildNewItem() as Record<string, unknown>);
+	const addSuggestedItem = (value: string) => append(buildNewItem(value) as Record<string, unknown>);
 
 	return (
 		<div className="col-span-full space-y-6">
+			{field.suggestedItems && field.suggestedItems.length > 0 && (
+				<div className="space-y-2">
+					{field.suggestedItemsLabel && (
+						<p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+							{field.suggestedItemsLabel}
+						</p>
+					)}
+					<div className="flex flex-wrap gap-2">
+						{field.suggestedItems.map(skill => (
+							<button
+								key={skill}
+								type="button"
+								className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary hover:border-primary transition-colors duration-200"
+								onClick={() => addSuggestedItem(skill)}
+							>
+								<PlusIcon className="w-3 h-3" />
+								{skill}
+							</button>
+						))}
+					</div>
+				</div>
+			)}
 			{fields.map((arrayField, index) => (
 				<div
 					key={arrayField.id}

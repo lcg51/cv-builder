@@ -249,7 +249,8 @@
 			"beginner": "Principiante",
 			"intermediate": "Intermedio",
 			"expert": "Experto"
-		}
+		},
+		"suggestedSkillsLabel": "Habilidades populares"
 	},
 	"TemplateUpdate": {
 		"steps": {

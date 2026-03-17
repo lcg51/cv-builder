@@ -249,7 +249,8 @@
 			"beginner": "Beginner",
 			"intermediate": "Intermediate",
 			"expert": "Expert"
-		}
+		},
+		"suggestedSkillsLabel": "Popular skills"
 	},
 	"TemplateUpdate": {
 		"steps": {
