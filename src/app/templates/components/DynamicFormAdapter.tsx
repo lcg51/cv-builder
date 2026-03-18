@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
+import { useFieldArray, useWatch, Control, type FieldArrayPath } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
 import { Input, Textarea, MonthYearPicker, Slider } from '@/ui/components';
 import { AITextarea } from '@/ui/components/molecules/ai-textarea/AITextarea';
@@ -177,64 +177,51 @@ const ArrayFieldSection = ({
 	};
 
 	const addNewItem = () => append(buildNewItem() as Record<string, unknown>);
-	const addSuggestedItem = (value: string) => append(buildNewItem(value) as Record<string, unknown>);
+	const addSuggestedItem = (value?: string) => append(buildNewItem(value) as Record<string, unknown>);
+
+	const watchedItems = useWatch({
+		control: control as Control<FormWithArray>,
+		name: field.name as FieldArrayPath<FormWithArray>
+	}) as Record<string, unknown>[] | undefined;
 
 	return (
 		<div className="col-span-full space-y-6">
-			{field.suggestedItems && field.suggestedItems.length > 0 && (
-				<div className="space-y-2">
-					{field.suggestedItemsLabel && (
-						<p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-							{field.suggestedItemsLabel}
-						</p>
-					)}
-					<div className="flex flex-wrap gap-2">
-						{field.suggestedItems.map(skill => (
+			{field.headerSection?.(addSuggestedItem)}
+			{fields.map((arrayField, index) => {
+				const itemValues = watchedItems?.[index] ?? {};
+				return (
+					<div
+						key={arrayField.id}
+						className="relative bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700"
+					>
+						<div className="flex items-center justify-between mb-4">
+							<h4 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
+								{field.itemTitle ? field.itemTitle(index, itemValues) : `${field.label} ${index + 1}`}
+							</h4>
 							<button
-								key={skill}
 								type="button"
-								className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary hover:border-primary transition-colors duration-200"
-								onClick={() => addSuggestedItem(skill)}
+								className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+								onClick={() => remove(index)}
 							>
-								<PlusIcon className="w-3 h-3" />
-								{skill}
+								<Trash className="w-4 h-4" />
 							</button>
-						))}
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							{Object.entries(field.arrayItemSchema).map(([key, itemField]) => (
+								<div key={key} className={itemField.gridColumn === 'full' ? 'col-span-full' : ''}>
+									<FieldRenderer
+										field={itemField}
+										control={control}
+										name={`${field.name}.${index}.${key}`}
+										getValues={getValues}
+										arrayParent={`${field.name}.${index}`}
+									/>
+								</div>
+							))}
+						</div>
 					</div>
-				</div>
-			)}
-			{fields.map((arrayField, index) => (
-				<div
-					key={arrayField.id}
-					className="relative bg-slate-50 dark:bg-slate-800 rounded-lg p-6 border border-slate-200 dark:border-slate-700"
-				>
-					<div className="flex items-center justify-between mb-4">
-						<h4 className="text-lg font-semibold text-slate-800 dark:text-slate-200">
-							{field.itemTitle ? field.itemTitle(index) : `${field.label} ${index + 1}`}
-						</h4>
-						<button
-							type="button"
-							className="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
-							onClick={() => remove(index)}
-						>
-							<Trash className="w-4 h-4" />
-						</button>
-					</div>
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-						{Object.entries(field.arrayItemSchema).map(([key, itemField]) => (
-							<div key={key} className={itemField.gridColumn === 'full' ? 'col-span-full' : ''}>
-								<FieldRenderer
-									field={itemField}
-									control={control}
-									name={`${field.name}.${index}.${key}`}
-									getValues={getValues}
-									arrayParent={`${field.name}.${index}`}
-								/>
-							</div>
-						))}
-					</div>
-				</div>
-			))}
+				);
+			})}
 
 			<div className="flex justify-center">
 				<button

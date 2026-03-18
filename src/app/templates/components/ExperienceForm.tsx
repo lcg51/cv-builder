@@ -8,6 +8,8 @@ import { useTranslations } from 'next-intl';
 
 export type ExperienceFormProps = StepsBarComponentProps;
 
+type ExperienceItem = { jobTitle: string; company: string };
+
 export const ExperienceForm: React.FC<ExperienceFormProps> = props => {
 	const $t = useTranslations('ExperienceForm');
 
@@ -26,7 +28,11 @@ export const ExperienceForm: React.FC<ExperienceFormProps> = props => {
 					type: 'text', // This is required but not used for array fields
 					isArray: true,
 					addButtonText: $t('button'),
-					itemTitle: (index: number) => `${$t('title')} ${index + 1}`,
+					itemTitle: (index, values: ExperienceItem) => {
+						if (values.jobTitle && values.company) return `${values.jobTitle} @ ${values.company}`;
+						if (values.jobTitle || values.company) return values.jobTitle || values.company;
+						return `${$t('title')} ${index + 1}`;
+					},
 					arrayItemSchema: {
 						jobTitle: {
 							name: 'jobTitle',

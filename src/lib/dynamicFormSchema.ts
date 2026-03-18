@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { ReactNode } from 'react';
 import type { TemplateDataType } from '@/types/payload-types';
 
 // ---------------------------------------------------------------------------
@@ -33,13 +34,13 @@ export interface BaseFieldConfig {
 	};
 }
 
-export interface ArrayFieldConfig extends BaseFieldConfig {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface ArrayFieldConfig<TItem extends Record<string, unknown> = any> extends BaseFieldConfig {
 	isArray: true;
 	arrayItemSchema: Record<string, BaseFieldConfig>;
 	addButtonText?: string;
-	itemTitle?: (index: number) => string;
-	suggestedItems?: string[];
-	suggestedItemsLabel?: string;
+	itemTitle?: (index: number, values: TItem) => string;
+	headerSection?: (addItem: (prefillValue?: string) => void) => ReactNode;
 }
 
 export interface SimpleFieldConfig extends BaseFieldConfig {

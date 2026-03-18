@@ -34,10 +34,5 @@ export const defaultUserData: TemplateDataType = {
 			description: 'Worked on the Google Search team to improve search results for users.'
 		}
 	],
-	skills: [
-		{
-			title: 'JavaScript',
-			level: [50]
-		}
-	]
+	skills: []
 };
