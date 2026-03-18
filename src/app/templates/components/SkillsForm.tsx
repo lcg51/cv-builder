@@ -9,6 +9,8 @@ import { useTranslations } from 'next-intl';
 
 export type SkillsFormProps = StepsBarComponentProps;
 
+type SkillItem = { title: string; level: number[] };
+
 const SUGGESTED_SKILLS = [
 	'JavaScript',
 	'TypeScript',
@@ -40,7 +42,7 @@ export const SkillsForm: React.FC<SkillsFormProps> = props => {
 					type: 'text', // This is required but not used for array fields
 					isArray: true,
 					addButtonText: $t('button'),
-					itemTitle: (index: number) => `${$t('title')} ${index + 1}`,
+					itemTitle: (index, values: SkillItem) => values.title || `${$t('title')} ${index + 1}`,
 					headerSection: addItem => (
 						<div className="space-y-2">
 							<p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">

@@ -8,6 +8,8 @@ import { useTranslations } from 'next-intl';
 
 export type EducationFormProps = StepsBarComponentProps;
 
+type EducationItem = { degree: string; university: string };
+
 export const EducationForm: React.FC<EducationFormProps> = props => {
 	const $t = useTranslations('EducationForm');
 	// Configuration for the Education form using the dynamic adapter
@@ -26,7 +28,11 @@ export const EducationForm: React.FC<EducationFormProps> = props => {
 					type: 'text', // This is required but not used for array fields
 					isArray: true,
 					addButtonText: $t('button'),
-					itemTitle: (index: number) => `${$t('title')} ${index + 1}`,
+					itemTitle: (index, values: EducationItem) => {
+						if (values.degree && values.university) return `${values.degree} - ${values.university}`;
+						if (values.degree || values.university) return values.degree || values.university;
+						return `${$t('title')} ${index + 1}`;
+					},
 					arrayItemSchema: {
 						university: {
 							name: 'university',
