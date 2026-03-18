@@ -3,7 +3,7 @@
 import React from 'react';
 import { useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
-import { Input, Textarea, MonthYearPicker, Slider, ChipButton } from '@/ui/components';
+import { Input, Textarea, MonthYearPicker, Slider } from '@/ui/components';
 import { AITextarea } from '@/ui/components/molecules/ai-textarea/AITextarea';
 import { PlusIcon, Trash } from '@/ui/icons';
 import { type StepsBarComponentProps } from '@/ui/components';
@@ -177,29 +177,11 @@ const ArrayFieldSection = ({
 	};
 
 	const addNewItem = () => append(buildNewItem() as Record<string, unknown>);
-	const addSuggestedItem = (value: string) => append(buildNewItem(value) as Record<string, unknown>);
+	const addSuggestedItem = (value?: string) => append(buildNewItem(value) as Record<string, unknown>);
 
 	return (
 		<div className="col-span-full space-y-6">
-			{field.suggestedItems && field.suggestedItems.length > 0 && (
-				<div className="space-y-2">
-					{field.suggestedItemsLabel && (
-						<p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-							{field.suggestedItemsLabel}
-						</p>
-					)}
-					<div className="flex flex-wrap gap-2">
-						{field.suggestedItems.map(skill => (
-							<ChipButton
-								key={skill}
-								label={skill}
-								icon={<PlusIcon className="w-3 h-3" />}
-								onClick={() => addSuggestedItem(skill)}
-							/>
-						))}
-					</div>
-				</div>
-			)}
+			{field.headerSection?.(addSuggestedItem)}
 			{fields.map((arrayField, index) => (
 				<div
 					key={arrayField.id}

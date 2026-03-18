@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { ReactNode } from 'react';
 import type { TemplateDataType } from '@/types/payload-types';
 
 // ---------------------------------------------------------------------------
@@ -38,8 +39,7 @@ export interface ArrayFieldConfig extends BaseFieldConfig {
 	arrayItemSchema: Record<string, BaseFieldConfig>;
 	addButtonText?: string;
 	itemTitle?: (index: number) => string;
-	suggestedItems?: string[];
-	suggestedItemsLabel?: string;
+	headerSection?: (addItem: (prefillValue?: string) => void) => ReactNode;
 }
 
 export interface SimpleFieldConfig extends BaseFieldConfig {

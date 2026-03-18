@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { SkillsIcon } from '@/ui/icons';
+import { SkillsIcon, PlusIcon } from '@/ui/icons';
+import { ChipButton } from '@/ui/components';
 import { DynamicFormAdapter, type DynamicFormConfig } from './DynamicFormAdapter';
 import { type StepsBarComponentProps } from '@/ui/components';
 import { useTranslations } from 'next-intl';
@@ -40,8 +41,23 @@ export const SkillsForm: React.FC<SkillsFormProps> = props => {
 					isArray: true,
 					addButtonText: $t('button'),
 					itemTitle: (index: number) => `${$t('title')} ${index + 1}`,
-					suggestedItems: SUGGESTED_SKILLS,
-					suggestedItemsLabel: $t('suggestedSkillsLabel'),
+					headerSection: addItem => (
+						<div className="space-y-2">
+							<p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+								{$t('suggestedSkillsLabel')}
+							</p>
+							<div className="flex flex-wrap gap-2">
+								{SUGGESTED_SKILLS.map(skill => (
+									<ChipButton
+										key={skill}
+										label={skill}
+										icon={<PlusIcon className="w-3 h-3" />}
+										onClick={() => addItem(skill)}
+									/>
+								))}
+							</div>
+						</div>
+					),
 					arrayItemSchema: {
 						title: {
 							name: 'title',
