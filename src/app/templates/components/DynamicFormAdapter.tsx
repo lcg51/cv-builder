@@ -3,7 +3,7 @@
 import React from 'react';
 import { useFieldArray, Control, type FieldArrayPath } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/ui/components/form';
-import { Input, Textarea, MonthYearPicker, Slider } from '@/ui/components';
+import { Input, Textarea, MonthYearPicker, Slider, ChipButton } from '@/ui/components';
 import { AITextarea } from '@/ui/components/molecules/ai-textarea/AITextarea';
 import { PlusIcon, Trash } from '@/ui/icons';
 import { type StepsBarComponentProps } from '@/ui/components';
@@ -190,15 +190,12 @@ const ArrayFieldSection = ({
 					)}
 					<div className="flex flex-wrap gap-2">
 						{field.suggestedItems.map(skill => (
-							<button
+							<ChipButton
 								key={skill}
-								type="button"
-								className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary hover:border-primary transition-colors duration-200"
+								label={skill}
+								icon={<PlusIcon className="w-3 h-3" />}
 								onClick={() => addSuggestedItem(skill)}
-							>
-								<PlusIcon className="w-3 h-3" />
-								{skill}
-							</button>
+							/>
 						))}
 					</div>
 				</div>
