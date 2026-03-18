@@ -496,4 +496,99 @@ describe('DynamicFormAdapter', () => {
 			expect(screen.getByText(/5 yrs/)).toBeInTheDocument();
 		});
 	});
+
+	describe('headerSection render prop', () => {
+		it('renders content returned by headerSection', () => {
+			const config = makeConfig({
+				fields: [
+					{
+						...arrayField,
+						headerSection: () => <div data-testid="custom-header">My Header</div>
+					}
+				]
+			});
+			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+			expect(screen.getByTestId('custom-header')).toBeInTheDocument();
+		});
+
+		it('calls addItem from headerSection and adds a pre-filled item', async () => {
+			const user = userEvent.setup();
+			const config = makeConfig({
+				fields: [
+					{
+						...arrayField,
+						headerSection: (addItem: (prefillValue?: string) => void) => (
+							<button type="button" onClick={() => addItem('Acme')}>
+								Add Acme
+							</button>
+						)
+					}
+				]
+			});
+			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+
+			await user.click(screen.getByText('Add Acme'));
+
+			// company is the first text field, so it should be pre-filled with 'Acme'
+			expect(screen.getByDisplayValue('Acme')).toBeInTheDocument();
+		});
+
+		it('does not render headerSection area when not provided', () => {
+			const config = makeConfig({ fields: [arrayField] });
+			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+			expect(screen.queryByTestId('custom-header')).not.toBeInTheDocument();
+		});
+	});
+
+	describe('itemTitle with values', () => {
+		it('shows fallback index title when fields are empty', async () => {
+			const user = userEvent.setup();
+			type Item = { company: string; role: string };
+			const config = makeConfig({
+				fields: [
+					{
+						...arrayField,
+						itemTitle: (index: number, values: Item) => values.company || `Experience ${index + 1}`
+					}
+				]
+			});
+			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+
+			await user.click(screen.getByText('Add Experience'));
+
+			// Company field is empty initially, so should show fallback title
+			expect(screen.getByText('Experience 1')).toBeInTheDocument();
+		});
+
+		it('updates item title reactively as user types', async () => {
+			const user = userEvent.setup();
+			type Item = { company: string; role: string };
+			const config = makeConfig({
+				fields: [
+					{
+						...arrayField,
+						itemTitle: (index: number, values: Item) => values.company || `Experience ${index + 1}`
+					}
+				]
+			});
+			render(<DynamicFormAdapter config={config} onFieldChange={jest.fn()} />);
+
+			await user.click(screen.getByText('Add Experience'));
+
+			// Initially shows fallback title
+			expect(screen.getByText('Experience 1')).toBeInTheDocument();
+
+			// Type company name
+			const companyInput = screen.getByPlaceholderText('Company name');
+			await user.type(companyInput, 'Google');
+
+			// Title should update reactively via useWatch
+			await waitFor(() => {
+				expect(screen.getByText('Google')).toBeInTheDocument();
+			});
+
+			// Fallback title should no longer be in document
+			expect(screen.queryByText('Experience 1')).not.toBeInTheDocument();
+		});
+	});
 });
