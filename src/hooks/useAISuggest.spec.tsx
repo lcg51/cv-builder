@@ -1,26 +1,26 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useAISuggestSkills } from './useAISuggestSkills';
+import { useAISuggest } from './useAISuggest';
 import { fetchSuggestion } from '@/app/api/ai/suggest/types';
 
 jest.mock('@/app/api/ai/suggest/types');
 const mockFetchSuggestion = fetchSuggestion as jest.Mock;
 
-describe('useAISuggestSkills', () => {
+describe('useAISuggest (skills mode)', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});
 
 	describe('empty jobTitles', () => {
 		it('should not call fetchSuggestion when jobTitles is empty', () => {
-			renderHook(() => useAISuggestSkills([], ['JavaScript', 'React']));
+			renderHook(() => useAISuggest('', { jobTitles: [], fallback: ['JavaScript', 'React'] }));
 
 			expect(mockFetchSuggestion).not.toHaveBeenCalled();
 		});
 
 		it('should return fallback skills and false for isLoading when jobTitles is empty', () => {
 			const fallback = ['JavaScript', 'React'];
-			const { result } = renderHook(() => useAISuggestSkills([], fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles: [], fallback }));
 
 			expect(result.current.skills).toEqual(fallback);
 			expect(result.current.isLoading).toBe(false);
@@ -35,13 +35,14 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			expect(result.current.skills).toEqual(fallback);
 			expect(result.current.isLoading).toBe(true);
 
 			expect(mockFetchSuggestion).toHaveBeenCalledWith({
 				type: 'suggest-skills',
+				currentText: '',
 				context: { jobTitles }
 			});
 
@@ -59,7 +60,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			expect(result.current.isLoading).toBe(true);
 
@@ -78,7 +79,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify('just a string') });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -95,7 +96,7 @@ describe('useAISuggestSkills', () => {
 				suggestion: JSON.stringify({ skills: ['TypeScript'] })
 			});
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -110,7 +111,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(null) });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -127,7 +128,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify([]) });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -144,7 +145,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockRejectedValueOnce(new Error('Failed'));
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -160,7 +161,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockRejectedValueOnce(new Error('Network error'));
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -175,7 +176,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -190,7 +191,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: 'not valid json' });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -218,7 +219,7 @@ describe('useAISuggestSkills', () => {
 			mockFetchSuggestion.mockReturnValueOnce(first.promise);
 
 			const { result, rerender } = renderHook(
-				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
+				({ jobTitles }: { jobTitles: string[] }) => useAISuggest('', { jobTitles, fallback }),
 				{ initialProps: { jobTitles: ['Developer'] } }
 			);
 
@@ -249,7 +250,7 @@ describe('useAISuggestSkills', () => {
 			const deferred = makeDeferredFetch(suggestedSkills);
 			mockFetchSuggestion.mockReturnValueOnce(deferred.promise);
 
-			const { unmount } = renderHook(() => useAISuggestSkills(['Developer'], fallback));
+			const { unmount } = renderHook(() => useAISuggest('', { jobTitles: ['Developer'], fallback }));
 
 			expect(mockFetchSuggestion).toHaveBeenCalled();
 
@@ -273,7 +274,7 @@ describe('useAISuggestSkills', () => {
 				.mockResolvedValueOnce({ suggestion: JSON.stringify(secondSuggestion) });
 
 			const { result, rerender } = renderHook(
-				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
+				({ jobTitles }: { jobTitles: string[] }) => useAISuggest('', { jobTitles, fallback }),
 				{ initialProps: { jobTitles: ['Frontend Developer'] } }
 			);
 
@@ -294,6 +295,7 @@ describe('useAISuggestSkills', () => {
 			expect(mockFetchSuggestion).toHaveBeenCalledTimes(2);
 			expect(mockFetchSuggestion).toHaveBeenLastCalledWith({
 				type: 'suggest-skills',
+				currentText: '',
 				context: { jobTitles: ['Backend Developer', 'Python Developer'] }
 			});
 		});
@@ -305,7 +307,7 @@ describe('useAISuggestSkills', () => {
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
 			const { result, rerender } = renderHook(
-				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
+				({ jobTitles }: { jobTitles: string[] }) => useAISuggest('', { jobTitles, fallback }),
 				{ initialProps: { jobTitles: ['Frontend Developer', 'React Developer'] } }
 			);
 
@@ -332,7 +334,7 @@ describe('useAISuggestSkills', () => {
 				.mockResolvedValueOnce({ suggestion: JSON.stringify(secondSuggestion) });
 
 			const { result, rerender } = renderHook(
-				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
+				({ jobTitles }: { jobTitles: string[] }) => useAISuggest('', { jobTitles, fallback }),
 				{ initialProps: { jobTitles: ['Frontend Developer', 'React Developer'] } }
 			);
 
@@ -356,7 +358,7 @@ describe('useAISuggestSkills', () => {
 
 	describe('edge cases', () => {
 		it('should handle fallback with empty array', () => {
-			const { result } = renderHook(() => useAISuggestSkills([], []));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles: [], fallback: [] }));
 
 			expect(result.current.skills).toEqual([]);
 			expect(result.current.isLoading).toBe(false);
@@ -364,7 +366,7 @@ describe('useAISuggestSkills', () => {
 
 		it('should handle fallback with single skill', () => {
 			const fallback = ['JavaScript'];
-			const { result } = renderHook(() => useAISuggestSkills([], fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles: [], fallback }));
 
 			expect(result.current.skills).toEqual(fallback);
 		});
@@ -376,7 +378,7 @@ describe('useAISuggestSkills', () => {
 
 			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -398,7 +400,7 @@ describe('useAISuggestSkills', () => {
 				suggestion: JSON.stringify(['TypeScript', 'React', 123])
 			});
 
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
+			const { result } = renderHook(() => useAISuggest('', { jobTitles, fallback }));
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
