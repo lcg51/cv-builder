@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { auth } from '@/auth';
-import type { SuggestRequestBody } from './types';
+import type { SuggestRequestBody } from '@/services/aiSuggest';
 import { type AISuggestType as SuggestType } from '@/lib/dynamicFormSchema';
 
 const MAX_TEXT_LENGTH = 2000;
@@ -14,7 +14,16 @@ function isRateLimited(userId: string): boolean {
 	const now = Date.now();
 	const windowStart = now - RATE_LIMIT_WINDOW_MS;
 	const timestamps = (rateLimitMap.get(userId) ?? []).filter(t => t > windowStart);
-	if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) return true;
+
+	if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
+		rateLimitMap.set(userId, timestamps);
+		return true;
+	}
+
+	if (timestamps.length === 0) {
+		rateLimitMap.delete(userId);
+	}
+
 	timestamps.push(now);
 	rateLimitMap.set(userId, timestamps);
 	return false;
@@ -35,7 +44,7 @@ const SYSTEM_PROMPTS: Record<SuggestType, string> = {
 
 function buildUserContent({ type, currentText, context }: SuggestRequestBody): string {
 	if (type === 'improve-summary') {
-		return `<summary>${currentText ?? ''}</summary>`;
+		return `<summary>${sanitize(currentText ?? '', MAX_TEXT_LENGTH)}</summary>`;
 	}
 	if (type === 'suggest-skills') {
 		const roles = (context?.jobTitles ?? [])
@@ -46,16 +55,15 @@ function buildUserContent({ type, currentText, context }: SuggestRequestBody): s
 	}
 	const jobTitle = sanitize(context?.jobTitle ?? 'the candidate');
 	const company = sanitize(context?.company ?? 'the company');
-	return `<job_title>${jobTitle}</job_title>\n<company>${company}</company>\n<description>${currentText ?? ''}</description>`;
+	return `<job_title>${jobTitle}</job_title>\n<company>${company}</company>\n<description>${sanitize(currentText ?? '', MAX_TEXT_LENGTH)}</description>`;
 }
 
 export async function POST(req: NextRequest) {
 	const session = await auth();
-	if (!session) {
+	const userId = session?.user?.id;
+	if (!userId) {
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 	}
-
-	const userId = session.user?.id ?? '';
 
 	if (isRateLimited(userId)) {
 		return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
