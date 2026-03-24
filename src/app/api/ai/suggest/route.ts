@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { auth } from '@/auth';
+import type { SuggestRequestBody } from './types';
 import { type AISuggestType as SuggestType } from '@/lib/dynamicFormSchema';
-
-interface SuggestRequestBody {
-	type: SuggestType;
-	currentText?: string;
-	context?: { jobTitle?: string; company?: string; jobTitles?: string[] };
-}
 
 const MAX_TEXT_LENGTH = 2000;
 const RATE_LIMIT_WINDOW_MS = 60_000;

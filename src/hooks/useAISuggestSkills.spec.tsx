@@ -1,9 +1,10 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useAISuggestSkills } from './useAISuggestSkills';
+import { fetchSuggestion } from '@/app/api/ai/suggest/types';
 
-global.fetch = jest.fn();
-const mockFetch = global.fetch as jest.Mock;
+jest.mock('@/app/api/ai/suggest/types');
+const mockFetchSuggestion = fetchSuggestion as jest.Mock;
 
 describe('useAISuggestSkills', () => {
 	beforeEach(() => {
@@ -11,10 +12,10 @@ describe('useAISuggestSkills', () => {
 	});
 
 	describe('empty jobTitles', () => {
-		it('should not call fetch when jobTitles is empty', () => {
+		it('should not call fetchSuggestion when jobTitles is empty', () => {
 			renderHook(() => useAISuggestSkills([], ['JavaScript', 'React']));
 
-			expect(mockFetch).not.toHaveBeenCalled();
+			expect(mockFetchSuggestion).not.toHaveBeenCalled();
 		});
 
 		it('should return fallback skills and false for isLoading when jobTitles is empty', () => {
@@ -27,35 +28,23 @@ describe('useAISuggestSkills', () => {
 	});
 
 	describe('successful fetch', () => {
-		it('should fetch with correct body and update skills on success', async () => {
+		it('should call fetchSuggestion with correct body and update skills on success', async () => {
 			const jobTitles = ['Frontend Developer', 'React Developer'];
 			const fallback = ['JavaScript'];
 			const suggestedSkills = ['TypeScript', 'Next.js', 'Tailwind CSS'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify(suggestedSkills)
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
-			// Initially shows fallback and isLoading is true
 			expect(result.current.skills).toEqual(fallback);
 			expect(result.current.isLoading).toBe(true);
 
-			// Verify fetch was called with correct arguments
-			expect(mockFetch).toHaveBeenCalledWith('/api/ai/suggest', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					type: 'suggest-skills',
-					context: { jobTitles }
-				})
+			expect(mockFetchSuggestion).toHaveBeenCalledWith({
+				type: 'suggest-skills',
+				context: { jobTitles }
 			});
 
-			// Wait for skills to update and isLoading to become false
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
 			});
@@ -68,12 +57,7 @@ describe('useAISuggestSkills', () => {
 			const fallback = ['JavaScript'];
 			const suggestedSkills = ['TypeScript'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify(suggestedSkills)
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -92,12 +76,7 @@ describe('useAISuggestSkills', () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify('just a string')
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify('just a string') });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -112,11 +91,8 @@ describe('useAISuggestSkills', () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify({ skills: ['TypeScript'] })
-				})
+			mockFetchSuggestion.mockResolvedValueOnce({
+				suggestion: JSON.stringify({ skills: ['TypeScript'] })
 			});
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
@@ -132,12 +108,7 @@ describe('useAISuggestSkills', () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify(null)
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(null) });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -154,12 +125,7 @@ describe('useAISuggestSkills', () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify([])
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify([]) });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -171,14 +137,12 @@ describe('useAISuggestSkills', () => {
 		});
 	});
 
-	describe('HTTP error (res.ok = false)', () => {
-		it('should keep fallback and set isLoading to false when response is not ok', async () => {
+	describe('error handling', () => {
+		it('should keep fallback and set isLoading to false on HTTP error', async () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: false
-			});
+			mockFetchSuggestion.mockRejectedValueOnce(new Error('Failed'));
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -187,54 +151,14 @@ describe('useAISuggestSkills', () => {
 			});
 
 			expect(result.current.skills).toEqual(fallback);
-			expect(mockFetch).toHaveBeenCalled();
+			expect(mockFetchSuggestion).toHaveBeenCalled();
 		});
 
-		it('should handle 500 server error gracefully', async () => {
-			const jobTitles = ['Developer'];
-			const fallback = ['JavaScript', 'React'];
-
-			mockFetch.mockResolvedValueOnce({
-				ok: false,
-				status: 500,
-				statusText: 'Internal Server Error'
-			});
-
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(result.current.skills).toEqual(fallback);
-		});
-
-		it('should handle 404 not found gracefully', async () => {
-			const jobTitles = ['Developer'];
-			const fallback = ['JavaScript', 'React'];
-
-			mockFetch.mockResolvedValueOnce({
-				ok: false,
-				status: 404,
-				statusText: 'Not Found'
-			});
-
-			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
-
-			await waitFor(() => {
-				expect(result.current.isLoading).toBe(false);
-			});
-
-			expect(result.current.skills).toEqual(fallback);
-		});
-	});
-
-	describe('network error (fetch rejects)', () => {
 		it('should keep fallback and set isLoading to false on network error', async () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockRejectedValueOnce(new Error('Network error'));
+			mockFetchSuggestion.mockRejectedValueOnce(new Error('Network error'));
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -249,7 +173,7 @@ describe('useAISuggestSkills', () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+			mockFetchSuggestion.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -264,12 +188,7 @@ describe('useAISuggestSkills', () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript', 'React'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: 'not valid json'
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: 'not valid json' });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -283,15 +202,11 @@ describe('useAISuggestSkills', () => {
 
 	describe('cancellation', () => {
 		function makeDeferredFetch(suggestion: string[]) {
-			let resolve: (value: unknown) => void;
-			const promise = new Promise(r => {
+			let resolve: (value: { suggestion: string }) => void;
+			const promise = new Promise<{ suggestion: string }>(r => {
 				resolve = r;
 			});
-			const fetchPromise = promise.then(() => ({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({ suggestion: JSON.stringify(suggestion) })
-			}));
-			return { fetchPromise, resolve: () => resolve({}) };
+			return { promise, resolve: () => resolve({ suggestion: JSON.stringify(suggestion) }) };
 		}
 
 		it('should discard stale response when jobTitles change before fetch completes', async () => {
@@ -300,7 +215,7 @@ describe('useAISuggestSkills', () => {
 			const secondSuggestion = ['TypeScript', 'Next.js'];
 
 			const first = makeDeferredFetch(firstSuggestion);
-			mockFetch.mockReturnValueOnce(first.fetchPromise);
+			mockFetchSuggestion.mockReturnValueOnce(first.promise);
 
 			const { result, rerender } = renderHook(
 				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
@@ -309,13 +224,8 @@ describe('useAISuggestSkills', () => {
 
 			expect(result.current.isLoading).toBe(true);
 
-			// Change jobTitles before first fetch resolves
-			mockFetch.mockReturnValueOnce(
-				Promise.resolve({
-					ok: true,
-					json: jest.fn().mockResolvedValueOnce({ suggestion: JSON.stringify(secondSuggestion) })
-				})
-			);
+			const second = makeDeferredFetch(secondSuggestion);
+			mockFetchSuggestion.mockReturnValueOnce(second.promise);
 
 			act(() => {
 				rerender({ jobTitles: ['Senior Developer'] });
@@ -323,6 +233,7 @@ describe('useAISuggestSkills', () => {
 
 			// Resolve the first fetch — result should be discarded
 			first.resolve();
+			second.resolve();
 
 			await waitFor(() => {
 				expect(result.current.isLoading).toBe(false);
@@ -336,11 +247,11 @@ describe('useAISuggestSkills', () => {
 			const suggestedSkills = ['TypeScript', 'Next.js'];
 
 			const deferred = makeDeferredFetch(suggestedSkills);
-			mockFetch.mockReturnValueOnce(deferred.fetchPromise);
+			mockFetchSuggestion.mockReturnValueOnce(deferred.promise);
 
 			const { unmount } = renderHook(() => useAISuggestSkills(['Developer'], fallback));
 
-			expect(mockFetch).toHaveBeenCalled();
+			expect(mockFetchSuggestion).toHaveBeenCalled();
 
 			unmount();
 
@@ -357,65 +268,41 @@ describe('useAISuggestSkills', () => {
 			const firstSuggestion = ['Python'];
 			const secondSuggestion = ['TypeScript'];
 
-			mockFetch
-				.mockResolvedValueOnce({
-					ok: true,
-					json: jest.fn().mockResolvedValueOnce({
-						suggestion: JSON.stringify(firstSuggestion)
-					})
-				})
-				.mockResolvedValueOnce({
-					ok: true,
-					json: jest.fn().mockResolvedValueOnce({
-						suggestion: JSON.stringify(secondSuggestion)
-					})
-				});
+			mockFetchSuggestion
+				.mockResolvedValueOnce({ suggestion: JSON.stringify(firstSuggestion) })
+				.mockResolvedValueOnce({ suggestion: JSON.stringify(secondSuggestion) });
 
 			const { result, rerender } = renderHook(
 				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
 				{ initialProps: { jobTitles: ['Frontend Developer'] } }
 			);
 
-			// Wait for first fetch
 			await waitFor(() => {
 				expect(result.current.skills).toEqual(firstSuggestion);
 			});
 
-			expect(mockFetch).toHaveBeenCalledTimes(1);
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(1);
 
-			// Change jobTitles
 			act(() => {
 				rerender({ jobTitles: ['Backend Developer', 'Python Developer'] });
 			});
 
-			// Wait for second fetch
 			await waitFor(() => {
 				expect(result.current.skills).toEqual(secondSuggestion);
 			});
 
-			expect(mockFetch).toHaveBeenCalledTimes(2);
-
-			// Verify second fetch had correct jobTitles
-			expect(mockFetch).toHaveBeenLastCalledWith('/api/ai/suggest', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					type: 'suggest-skills',
-					context: { jobTitles: ['Backend Developer', 'Python Developer'] }
-				})
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(2);
+			expect(mockFetchSuggestion).toHaveBeenLastCalledWith({
+				type: 'suggest-skills',
+				context: { jobTitles: ['Backend Developer', 'Python Developer'] }
 			});
 		});
 
-		it('should not fetch again if jobTitles order changes but content is same', async () => {
+		it('should not fetch again when jobTitles is a new array reference with the same content', async () => {
 			const fallback = ['JavaScript'];
 			const suggestedSkills = ['TypeScript'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify(suggestedSkills)
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
 			const { result, rerender } = renderHook(
 				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
@@ -426,17 +313,13 @@ describe('useAISuggestSkills', () => {
 				expect(result.current.skills).toEqual(suggestedSkills);
 			});
 
-			expect(mockFetch).toHaveBeenCalledTimes(1);
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(1);
 
-			// Change order but content is same when joined
 			act(() => {
-				rerender({
-					jobTitles: ['Frontend Developer', 'React Developer']
-				});
+				rerender({ jobTitles: ['Frontend Developer', 'React Developer'] });
 			});
 
-			// Should not trigger new fetch (same joined string)
-			expect(mockFetch).toHaveBeenCalledTimes(1);
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(1);
 		});
 
 		it('should fetch again when a jobTitle is removed', async () => {
@@ -444,19 +327,9 @@ describe('useAISuggestSkills', () => {
 			const firstSuggestion = ['Python', 'Django'];
 			const secondSuggestion = ['TypeScript'];
 
-			mockFetch
-				.mockResolvedValueOnce({
-					ok: true,
-					json: jest.fn().mockResolvedValueOnce({
-						suggestion: JSON.stringify(firstSuggestion)
-					})
-				})
-				.mockResolvedValueOnce({
-					ok: true,
-					json: jest.fn().mockResolvedValueOnce({
-						suggestion: JSON.stringify(secondSuggestion)
-					})
-				});
+			mockFetchSuggestion
+				.mockResolvedValueOnce({ suggestion: JSON.stringify(firstSuggestion) })
+				.mockResolvedValueOnce({ suggestion: JSON.stringify(secondSuggestion) });
 
 			const { result, rerender } = renderHook(
 				({ jobTitles }: { jobTitles: string[] }) => useAISuggestSkills(jobTitles, fallback),
@@ -467,9 +340,8 @@ describe('useAISuggestSkills', () => {
 				expect(result.current.skills).toEqual(firstSuggestion);
 			});
 
-			expect(mockFetch).toHaveBeenCalledTimes(1);
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(1);
 
-			// Remove a jobTitle
 			act(() => {
 				rerender({ jobTitles: ['Frontend Developer'] });
 			});
@@ -478,7 +350,7 @@ describe('useAISuggestSkills', () => {
 				expect(result.current.skills).toEqual(secondSuggestion);
 			});
 
-			expect(mockFetch).toHaveBeenCalledTimes(2);
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(2);
 		});
 	});
 
@@ -502,12 +374,7 @@ describe('useAISuggestSkills', () => {
 			const fallback = ['JavaScript'];
 			const suggestedSkills = ['TypeScript', 'Python'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify(suggestedSkills)
-				})
-			});
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
 
@@ -516,23 +383,19 @@ describe('useAISuggestSkills', () => {
 			});
 
 			expect(result.current.skills).toEqual(suggestedSkills);
-			expect(mockFetch).toHaveBeenCalledWith(
-				'/api/ai/suggest',
+			expect(mockFetchSuggestion).toHaveBeenCalledWith(
 				expect.objectContaining({
-					body: expect.stringContaining('Job0')
+					context: expect.objectContaining({ jobTitles: expect.arrayContaining(['Job0']) })
 				})
 			);
 		});
 
-		it('should return array of strings even with mixed types in suggestion', async () => {
+		it('should return array even with mixed types in suggestion', async () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript'];
 
-			mockFetch.mockResolvedValueOnce({
-				ok: true,
-				json: jest.fn().mockResolvedValueOnce({
-					suggestion: JSON.stringify(['TypeScript', 'React', 123])
-				})
+			mockFetchSuggestion.mockResolvedValueOnce({
+				suggestion: JSON.stringify(['TypeScript', 'React', 123])
 			});
 
 			const { result } = renderHook(() => useAISuggestSkills(jobTitles, fallback));
@@ -541,7 +404,6 @@ describe('useAISuggestSkills', () => {
 				expect(result.current.isLoading).toBe(false);
 			});
 
-			// The hook doesn't validate array content, just checks Array.isArray
 			expect(Array.isArray(result.current.skills)).toBe(true);
 		});
 	});

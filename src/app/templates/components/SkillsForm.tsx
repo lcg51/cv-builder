@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useStore } from 'zustand';
 import { resumeDataStore } from '@/app/store/resume';
 import { useAISuggestSkills } from '@/hooks/useAISuggestSkills';
+import { useStoreHydration } from '@/hooks/useStoreHydration';
 
 export type SkillsFormProps = StepsBarComponentProps;
 
@@ -30,13 +31,17 @@ const SUGGESTED_SKILLS = [
 export const SkillsForm: React.FC<SkillsFormProps> = props => {
 	const $t = useTranslations('SkillsForm');
 
+	const { isHydrated } = useStoreHydration();
 	const workExperience = useStore(resumeDataStore, s => s.userResumeData.workExperience);
 	const jobTitles = useMemo(
 		() => [...new Set((workExperience ?? []).map(e => e.jobTitle).filter(Boolean))],
 		[workExperience]
 	);
 
-	const { skills: suggestedSkills, isLoading: isLoadingSkills } = useAISuggestSkills(jobTitles, SUGGESTED_SKILLS);
+	const { skills: suggestedSkills, isLoading: isLoadingSkills } = useAISuggestSkills(
+		isHydrated ? jobTitles : [],
+		SUGGESTED_SKILLS
+	);
 
 	const skillsFormConfig: DynamicFormConfig = useMemo(
 		() => ({
