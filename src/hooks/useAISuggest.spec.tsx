@@ -2,6 +2,7 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useAISuggest } from './useAISuggest';
 import { fetchSuggestion } from '@/services/aiSuggest';
+import { resumeDataStore } from '@/app/store/resume';
 
 jest.mock('@/services/aiSuggest');
 const mockFetchSuggestion = fetchSuggestion as jest.Mock;
@@ -9,6 +10,7 @@ const mockFetchSuggestion = fetchSuggestion as jest.Mock;
 describe('useAISuggest (skills mode)', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
+		resumeDataStore.setState({ suggestedSkills: {} });
 	});
 
 	describe('empty jobTitles', () => {
@@ -390,7 +392,7 @@ describe('useAISuggest (skills mode)', () => {
 			);
 		});
 
-		it('should return array even with mixed types in suggestion', async () => {
+		it('should keep fallback when suggestion contains non-string elements', async () => {
 			const jobTitles = ['Developer'];
 			const fallback = ['JavaScript'];
 
@@ -404,7 +406,45 @@ describe('useAISuggest (skills mode)', () => {
 				expect(result.current.isLoading).toBe(false);
 			});
 
-			expect(Array.isArray(result.current.skills)).toBe(true);
+			expect(result.current.skills).toEqual(fallback);
+		});
+	});
+
+	describe('store cache', () => {
+		it('should not fetch again on remount when cache has entry for same jobTitles', async () => {
+			const jobTitles = ['Frontend Developer'];
+			const suggestedSkills = ['TypeScript', 'Next.js'];
+
+			mockFetchSuggestion.mockResolvedValueOnce({ suggestion: JSON.stringify(suggestedSkills) });
+
+			const { unmount } = renderHook(() => useAISuggest({ jobTitles, fallback: [] }));
+
+			await waitFor(() => {
+				expect(mockFetchSuggestion).toHaveBeenCalledTimes(1);
+			});
+
+			unmount();
+
+			const { result } = renderHook(() => useAISuggest({ jobTitles, fallback: [] }));
+
+			expect(result.current.isLoading).toBe(false);
+			expect(result.current.skills).toEqual(suggestedSkills);
+			expect(mockFetchSuggestion).toHaveBeenCalledTimes(1); // not 2
+		});
+
+		it('should return cached skills synchronously from store without fetching', () => {
+			const jobTitles = ['Senior Engineer'];
+			const cachedSkills = ['TypeScript', 'System Design'];
+
+			resumeDataStore.setState({
+				suggestedSkills: { [JSON.stringify(jobTitles)]: cachedSkills }
+			});
+
+			const { result } = renderHook(() => useAISuggest({ jobTitles, fallback: [] }));
+
+			expect(result.current.isLoading).toBe(false);
+			expect(result.current.skills).toEqual(cachedSkills);
+			expect(mockFetchSuggestion).not.toHaveBeenCalled();
 		});
 	});
 });

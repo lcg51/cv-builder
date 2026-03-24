@@ -44,6 +44,9 @@ type ResumeDataStoreType = {
 	// Add hydration state
 	_hasHydrated: boolean;
 	setHasHydrated: (hasHydrated: boolean) => void;
+	// Ephemeral AI cache — not persisted to sessionStorage
+	suggestedSkills: Record<string, string[]>;
+	setSuggestedSkills: (key: string, skills: string[]) => void;
 };
 
 const STORAGE_KEY = 'resume-data-store';
@@ -56,6 +59,11 @@ const resumeDataStore = create<ResumeDataStoreType>()(
 			selectedTemplate: '',
 			navigationState: NavigationStateEnum.TEMPLATE_UPDATE,
 			_hasHydrated: false,
+			suggestedSkills: {},
+			setSuggestedSkills: (key: string, skills: string[]) =>
+				set((state: ResumeDataStoreType) => ({
+					suggestedSkills: { ...state.suggestedSkills, [key]: skills }
+				})),
 			resetResumeUserData: () => set({ userResumeData: defaultUserData, activeStep: 0, selectedTemplate: '' }),
 			setResumeUserDataValue: (key: string, value: string) =>
 				set((state: ResumeDataStoreType) => ({
