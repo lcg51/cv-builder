@@ -19,6 +19,7 @@ const config: Config = {
 	testMatch: [
 		'<rootDir>/src/app/templates/components/**/*.spec.tsx',
 		'<rootDir>/src/app/templates/hooks/**/*.spec.tsx',
+		'<rootDir>/src/hooks/**/*.spec.tsx',
 		'<rootDir>/src/ui/components/molecules/steps-bar/**/*.spec.tsx',
 		'<rootDir>/src/ui/components/molecules/top-bar/**/*.spec.tsx'
 	],

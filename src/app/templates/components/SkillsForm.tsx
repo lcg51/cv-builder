@@ -6,6 +6,10 @@ import { ChipButton } from '@/ui/components';
 import { DynamicFormAdapter, type DynamicFormConfig } from './DynamicFormAdapter';
 import { type StepsBarComponentProps } from '@/ui/components';
 import { useTranslations } from 'next-intl';
+import { useStore } from 'zustand';
+import { resumeDataStore } from '@/app/store/resume';
+import { useAISuggest } from '@/hooks/useAISuggest';
+import { useStoreHydration } from '@/hooks/useStoreHydration';
 
 export type SkillsFormProps = StepsBarComponentProps;
 
@@ -26,6 +30,18 @@ const SUGGESTED_SKILLS = [
 
 export const SkillsForm: React.FC<SkillsFormProps> = props => {
 	const $t = useTranslations('SkillsForm');
+
+	const { isHydrated } = useStoreHydration();
+	const workExperience = useStore(resumeDataStore, s => s.userResumeData.workExperience);
+	const jobTitles = useMemo(
+		() => [...new Set((workExperience ?? []).map(e => e.jobTitle).filter(Boolean))],
+		[workExperience]
+	);
+
+	const { skills: suggestedSkills, isLoading: isLoadingSkills } = useAISuggest({
+		jobTitles: isHydrated ? jobTitles : [],
+		fallback: SUGGESTED_SKILLS
+	});
 
 	const skillsFormConfig: DynamicFormConfig = useMemo(
 		() => ({
@@ -48,16 +64,20 @@ export const SkillsForm: React.FC<SkillsFormProps> = props => {
 							<p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
 								{$t('suggestedSkillsLabel')}
 							</p>
-							<div className="flex flex-wrap gap-2">
-								{SUGGESTED_SKILLS.map(skill => (
-									<ChipButton
-										key={skill}
-										label={skill}
-										icon={<PlusIcon className="w-3 h-3" />}
-										onClick={() => addItem(skill)}
-									/>
-								))}
-							</div>
+							{isLoadingSkills ? (
+								<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-500" />
+							) : (
+								<div className="flex flex-wrap gap-2">
+									{suggestedSkills.map(skill => (
+										<ChipButton
+											key={skill}
+											label={skill}
+											icon={<PlusIcon className="w-3 h-3" />}
+											onClick={() => addItem(skill)}
+										/>
+									))}
+								</div>
+							)}
 						</div>
 					),
 					arrayItemSchema: {
@@ -93,7 +113,7 @@ export const SkillsForm: React.FC<SkillsFormProps> = props => {
 				}
 			]
 		}),
-		[$t]
+		[$t, suggestedSkills, isLoadingSkills]
 	);
 	return <DynamicFormAdapter config={skillsFormConfig} {...props} />;
 };

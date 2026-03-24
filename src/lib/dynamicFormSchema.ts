@@ -8,7 +8,7 @@ import type { TemplateDataType } from '@/types/payload-types';
 
 export type FieldType = 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'date' | 'slider' | 'number';
 
-export type AISuggestType = 'improve-summary' | 'improve-description';
+export type AISuggestType = 'improve-summary' | 'improve-description' | 'suggest-skills';
 
 export interface BaseFieldConfig {
 	name: string;
