@@ -38,7 +38,7 @@ export const SkillsForm: React.FC<SkillsFormProps> = props => {
 		[workExperience]
 	);
 
-	const { skills: suggestedSkills, isLoading: isLoadingSkills } = useAISuggest('', {
+	const { skills: suggestedSkills, isLoading: isLoadingSkills } = useAISuggest({
 		jobTitles: isHydrated ? jobTitles : [],
 		fallback: SUGGESTED_SKILLS
 	});

@@ -18,7 +18,7 @@ interface AITextareaProps extends React.ComponentProps<typeof Textarea> {
 export const AITextarea: React.FC<AITextareaProps> = ({ aiAssist, onAISuggestion, ...props }) => {
 	const fieldLabel = (props['aria-label'] ?? props.placeholder ?? '').toString();
 	const t = useTranslations('AIAssist');
-	const { suggest, isLoading, error, clearError } = useAISuggest(t('error'));
+	const { suggest, isLoading, error, clearError } = useAISuggest({ errorMessage: t('error') });
 
 	const handleClick = async () => {
 		const currentText = typeof props.value === 'string' ? props.value : '';

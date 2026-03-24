@@ -3,12 +3,17 @@ import { fetchSuggestion } from '@/app/api/ai/suggest/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type AISuggestContext = { jobTitle?: string; company?: string };
-export type AISuggestSkillsConfig = { jobTitles: string[]; fallback: string[] };
 
-export function useAISuggest(errorMessage: string, skillsConfig?: AISuggestSkillsConfig) {
+export interface UseAISuggestOptions {
+	errorMessage?: string;
+	jobTitles?: string[];
+	fallback?: string[];
+}
+
+export function useAISuggest({ errorMessage = '', jobTitles, fallback = [] }: UseAISuggestOptions = {}) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [skills, setSkills] = useState<string[]>(skillsConfig?.fallback ?? []);
+	const [skills, setSkills] = useState<string[]>(fallback);
 	const cancelledRef = useRef(false);
 
 	const suggest = useCallback(
@@ -28,11 +33,7 @@ export function useAISuggest(errorMessage: string, skillsConfig?: AISuggestSkill
 		[errorMessage]
 	);
 
-	const jobTitlesKey = skillsConfig
-		? skillsConfig.jobTitles.length === 0
-			? ''
-			: JSON.stringify(skillsConfig.jobTitles)
-		: null;
+	const jobTitlesKey = jobTitles === undefined ? null : jobTitles.length === 0 ? '' : JSON.stringify(jobTitles);
 
 	useEffect(() => {
 		if (!jobTitlesKey) return;
