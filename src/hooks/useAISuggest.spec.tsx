@@ -1,9 +1,9 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useAISuggest } from './useAISuggest';
-import { fetchSuggestion } from '@/app/api/ai/suggest/types';
+import { fetchSuggestion } from '@/services/aiSuggest';
 
-jest.mock('@/app/api/ai/suggest/types');
+jest.mock('@/services/aiSuggest');
 const mockFetchSuggestion = fetchSuggestion as jest.Mock;
 
 describe('useAISuggest (skills mode)', () => {

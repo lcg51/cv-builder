@@ -1,5 +1,5 @@
 import { AISuggestType } from '@/lib/dynamicFormSchema';
-import { fetchSuggestion } from '@/app/api/ai/suggest/types';
+import { fetchSuggestion } from '@/services/aiSuggest';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type AISuggestContext = { jobTitle?: string; company?: string };
