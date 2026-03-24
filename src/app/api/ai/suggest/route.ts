@@ -1,10 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { z } from 'zod';
 import { auth } from '@/auth';
 import type { SuggestRequestBody } from '@/services/aiSuggest';
 import { type AISuggestType as SuggestType } from '@/lib/dynamicFormSchema';
 
 const MAX_TEXT_LENGTH = 2000;
+
+const suggestBodySchema = z
+	.object({
+		type: z.enum(['improve-summary', 'improve-description', 'suggest-skills']),
+		currentText: z.string().max(MAX_TEXT_LENGTH).optional(),
+		context: z
+			.object({
+				jobTitle: z.string().optional(),
+				company: z.string().optional(),
+				jobTitles: z.array(z.string()).optional()
+			})
+			.optional()
+	})
+	.superRefine((data, ctx) => {
+		if (data.type !== 'suggest-skills' && !data.currentText?.trim()) {
+			ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'currentText is required', path: ['currentText'] });
+		}
+	});
+
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
 
@@ -31,6 +51,15 @@ function isRateLimited(userId: string): boolean {
 
 function sanitize(value: string, maxLength = 100): string {
 	return value.replace(/[\r\n]+/g, ' ').slice(0, maxLength);
+}
+
+let groqClient: OpenAI | null = null;
+
+function getGroqClient(): OpenAI {
+	const apiKey = process.env.GROQ_API_KEY;
+	if (!apiKey) throw new Error('GROQ_API_KEY is not set');
+	groqClient ??= new OpenAI({ apiKey, baseURL: 'https://api.groq.com/openai/v1' });
+	return groqClient;
 }
 
 const SYSTEM_PROMPTS: Record<SuggestType, string> = {
@@ -69,37 +98,26 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 	}
 
-	let body: SuggestRequestBody;
+	let rawBody: unknown;
 	try {
-		body = (await req.json()) as SuggestRequestBody;
+		rawBody = await req.json();
 	} catch {
 		return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
 	}
 
-	const { type, currentText, context } = body;
-
-	if (type !== 'improve-summary' && type !== 'improve-description' && type !== 'suggest-skills') {
-		return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
+	const parsed = suggestBodySchema.safeParse(rawBody);
+	if (!parsed.success) {
+		return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
 	}
 
-	if (type !== 'suggest-skills') {
-		if (!currentText || typeof currentText !== 'string' || currentText.trim() === '') {
-			return NextResponse.json({ error: 'currentText is required' }, { status: 400 });
-		}
-		if (currentText.length > MAX_TEXT_LENGTH) {
-			return NextResponse.json(
-				{ error: `currentText exceeds maximum length of ${MAX_TEXT_LENGTH} characters` },
-				{ status: 400 }
-			);
-		}
-	}
+	const { type, currentText, context } = parsed.data;
 
-	const apiKey = process.env.GROQ_API_KEY;
-	if (!apiKey) {
+	let client: OpenAI;
+	try {
+		client = getGroqClient();
+	} catch {
 		return NextResponse.json({ error: 'AI service is not configured' }, { status: 503 });
 	}
-
-	const client = new OpenAI({ apiKey, baseURL: 'https://api.groq.com/openai/v1' });
 
 	try {
 		const completion = await client.chat.completions.create({
@@ -115,8 +133,11 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: 'AI service unavailable' }, { status: 503 });
 		}
 		return NextResponse.json({ suggestion });
-	} catch (error) {
-		console.error('Groq error:', error);
-		return NextResponse.json({ error: 'AI service unavailable' }, { status: 503 });
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			console.error('Groq error:', error.message);
+			return NextResponse.json({ error: error.message }, { status: 500 });
+		}
+		return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
 	}
 }
