@@ -10,6 +10,20 @@ interface SuggestRequestBody {
 }
 
 const MAX_TEXT_LENGTH = 2000;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 10;
+
+const rateLimitMap = new Map<string, number[]>();
+
+function isRateLimited(userId: string): boolean {
+	const now = Date.now();
+	const windowStart = now - RATE_LIMIT_WINDOW_MS;
+	const timestamps = (rateLimitMap.get(userId) ?? []).filter(t => t > windowStart);
+	if (timestamps.length >= RATE_LIMIT_MAX_REQUESTS) return true;
+	timestamps.push(now);
+	rateLimitMap.set(userId, timestamps);
+	return false;
+}
 
 function sanitize(value: string, maxLength = 100): string {
 	return value.replace(/[\r\n]+/g, ' ').slice(0, maxLength);
@@ -44,6 +58,12 @@ export async function POST(req: NextRequest) {
 	const session = await auth();
 	if (!session) {
 		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
+	const userId = session.user?.id ?? '';
+
+	if (isRateLimited(userId)) {
+		return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 	}
 
 	let body: SuggestRequestBody;
