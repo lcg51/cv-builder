@@ -19,7 +19,8 @@
 		"next": "Siguiente",
 		"previous": "Anterior",
 		"submit": "Enviar",
-		"pickDate": "Elige una fecha"
+		"pickDate": "Elige una fecha",
+		"skipToContent": "Saltar al contenido"
 	},
 	"navigation": {
 		"login": "Iniciar sesión",
