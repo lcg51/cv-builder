@@ -1,9 +1,11 @@
 'use client';
 
 import * as React from 'react';
+import { useLocale } from 'next-intl';
 import { ChevronLeft, ChevronRight } from '@/ui/icons';
 import { DayPicker } from 'react-day-picker';
 
+import { getDateLocale } from '@/lib/date-locale';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/ui/components/button';
 
@@ -14,8 +16,11 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
 };
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+	const locale = useLocale();
+
 	return (
 		<DayPicker
+			locale={getDateLocale(locale)}
 			showOutsideDays={showOutsideDays}
 			className={cn('p-3', className)}
 			classNames={{

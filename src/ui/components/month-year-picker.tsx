@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState, useMemo, forwardRef } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@/ui/icons';
 
+import { getDateLocale } from '@/lib/date-locale';
 import { cn } from '@/lib/utils';
 import { Button } from '@/ui/components/button';
 import { Calendar } from '@/ui/components/calendar';
@@ -14,7 +16,9 @@ export interface MonthYearPickerProps {
 	value?: Date;
 }
 
-export const MonthYearPicker = forwardRef<HTMLInputElement, MonthYearPickerProps>(({ onChange, value }, ref) => {
+export const MonthYearPicker = forwardRef<HTMLButtonElement, MonthYearPickerProps>(({ onChange, value }, ref) => {
+	const locale = useLocale();
+	const $t = useTranslations('common');
 	const [date, setDate] = useState<Date | undefined>(value);
 
 	useEffect(() => {
@@ -30,13 +34,17 @@ export const MonthYearPicker = forwardRef<HTMLInputElement, MonthYearPickerProps
 		}
 	};
 
-	const formattedDate = useMemo(() => (date ? `${format(date, 'MMM yyyy')}` : 'Pick a date'), [date]);
+	const formattedDate = useMemo(
+		() => (date ? format(date, 'MMM yyyy', { locale: getDateLocale(locale) }) : $t('pickDate')),
+		[date, locale, $t]
+	);
 
 	return (
-		<Popover>
-			<PopoverTrigger asChild>
-				<div className="flex" ref={ref}>
+		<div className="flex">
+			<Popover>
+				<PopoverTrigger asChild>
 					<Button
+						ref={ref}
 						type="button"
 						variant={'outline'}
 						className={cn(
@@ -47,19 +55,19 @@ export const MonthYearPicker = forwardRef<HTMLInputElement, MonthYearPickerProps
 						<CalendarIcon className="mr-2 h-4 w-4" />
 						{formattedDate}
 					</Button>
-				</div>
-			</PopoverTrigger>
-			<PopoverContent className="w-auto p-0">
-				<Calendar
-					mode="single"
-					selected={date}
-					onSelect={onSelect}
-					initialFocus
-					showOutsideDays={false}
-					disabled={date => date > new Date()}
-				/>
-			</PopoverContent>
-		</Popover>
+				</PopoverTrigger>
+				<PopoverContent className="w-auto p-0">
+					<Calendar
+						mode="single"
+						selected={date}
+						onSelect={onSelect}
+						initialFocus
+						showOutsideDays={false}
+						disabled={date => date > new Date()}
+					/>
+				</PopoverContent>
+			</Popover>
+		</div>
 	);
 });
 MonthYearPicker.displayName = 'MonthYearPicker';
