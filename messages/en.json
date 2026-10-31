@@ -18,7 +18,8 @@
 		"cancel": "Cancel",
 		"next": "Next",
 		"previous": "Previous",
-		"submit": "Submit"
+		"submit": "Submit",
+		"pickDate": "Pick a date"
 	},
 	"navigation": {
 		"login": "Login",

@@ -18,7 +18,8 @@
 		"cancel": "Cancelar",
 		"next": "Siguiente",
 		"previous": "Anterior",
-		"submit": "Enviar"
+		"submit": "Enviar",
+		"pickDate": "Elige una fecha"
 	},
 	"navigation": {
 		"login": "Iniciar sesión",

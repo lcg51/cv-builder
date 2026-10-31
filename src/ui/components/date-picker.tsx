@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState, useMemo, forwardRef } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
 import { format } from 'date-fns';
 import { CalendarIcon } from '@/ui/icons';
 
+import { getDateLocale } from '@/lib/date-locale';
 import { cn } from '@/lib/utils';
 import { Button } from '@/ui/components/button';
 import { Calendar } from '@/ui/components/calendar';
@@ -14,7 +16,9 @@ export interface DatePickerProps {
 	value?: Date;
 }
 
-export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(({ onChange, value }, ref) => {
+export const DatePicker = forwardRef<HTMLButtonElement, DatePickerProps>(({ onChange, value }, ref) => {
+	const locale = useLocale();
+	const $t = useTranslations('common');
 	const [date, setDate] = useState<Date | undefined>(value);
 
 	useEffect(() => {
@@ -29,15 +33,16 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(({ onCha
 	};
 
 	const formattedDate = useMemo(
-		() => (date ? `${format(date, 'MMM')} ${format(date, 'yyyy')}` : 'Pick a date'),
-		[date]
+		() => (date ? format(date, 'MMM yyyy', { locale: getDateLocale(locale) }) : $t('pickDate')),
+		[date, locale, $t]
 	);
 
 	return (
-		<Popover>
-			<PopoverTrigger asChild>
-				<div className="flex" ref={ref}>
+		<div className="flex">
+			<Popover>
+				<PopoverTrigger asChild>
 					<Button
+						ref={ref}
 						type="button"
 						variant={'outline'}
 						className={cn(
@@ -48,12 +53,12 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(({ onCha
 						<CalendarIcon />
 						{formattedDate}
 					</Button>
-				</div>
-			</PopoverTrigger>
-			<PopoverContent className="w-auto p-0">
-				<Calendar mode="single" selected={date} onSelect={onSelect} initialFocus />
-			</PopoverContent>
-		</Popover>
+				</PopoverTrigger>
+				<PopoverContent className="w-auto p-0">
+					<Calendar mode="single" selected={date} onSelect={onSelect} initialFocus />
+				</PopoverContent>
+			</Popover>
+		</div>
 	);
 });
 DatePicker.displayName = 'DatePicker';

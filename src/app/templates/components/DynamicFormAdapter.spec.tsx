@@ -9,6 +9,7 @@ import { useFormValidation } from '@/hooks/useFormValidation';
 // ─── Mocks ───────────────────────────────────────────────────────────────────
 
 jest.mock('next-intl', () => ({
+	useLocale: () => 'en',
 	useTranslations: () => (key: string, values?: Record<string, string | number>) => {
 		switch (key) {
 			case 'invalidEmail':
